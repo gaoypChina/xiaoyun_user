@@ -1,0 +1,85 @@
+name: xiaoyun_user
+description: 鲸轿洗车用户端
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 2.0.0+47
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite:
+  path:
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.0
+
+  dio: ^4.0.0
+  image_picker: ^0.8.4+3
+  multi_image_picker: ^4.8.0
+  wechat_assets_picker: ^8.0.0
+  pull_to_refresh: ^2.0.0
+  cached_network_image: ^3.1.0
+  shared_preferences: ^2.0.6
+  permission_handler: ^10.0.0
+  package_info: ^2.0.2
+  flutter_screenutil: ^5.0.0+2
+  fluro: ^2.0.3
+  flutter_easyloading: ^3.0.0
+  logger: ^1.0.0
+  url_launcher: ^6.1.2
+  flutter_rating_bar: ^4.0.0
+  smooth_page_indicator: ^1.0.0+2  
+  webview_flutter: ^2.1.1
+  azlistview: ^2.0.0
+  flutter_slidable: ^2.0.0
+  image_gallery_saver: ^1.6.1
+  awesome_dialog: ^2.1.0
+  modal_bottom_sheet: ^2.0.0
+  wakelock: ^0.6.1+2
+  lottie: ^1.1.0
+  date_format: ^2.0.2
+  lpinyin: ^2.0.3
+  event_bus: ^2.0.0
+  mobile_scanner: ^3.2.0
+  qr_code_scanner: ^1.0.1
+  photo_view: ^0.14.0
+  flutter_html: ^2.1.0
+  pin_code_fields: ^7.3.0
+  shimmer: ^2.0.0
+  auto_size_text: ^3.0.0
+
+  sign_in_with_apple: ^4.0.0
+  jpush_flutter: ^2.3.8
+  tobias: ^2.1.2+1
+  fluwx: ^4.0.1+1
+  amap_location_fluttify: ^0.22.0
+  amap_map_fluttify: ^2.0.0
+  # rongcloud_im_plugin: ^5.1.8+6
+  device_info_plus: ^4.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/location/
+    - assets/images/
+    - assets/images/tabbar/
+    - assets/images/home/
+    - assets/images/order/
+    - assets/images/mine/
+    - assets/images/login/
+    - assets/images/navigation/
+    - assets/images/common/
