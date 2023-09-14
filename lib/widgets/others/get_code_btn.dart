@@ -5,29 +5,29 @@ import '../../constant/constant.dart';
 import '../../utils/toast_utils.dart';
 
 class GetCodeBtn extends StatefulWidget {
-  final TextEditingController phoneController;
+  final TextEditingController? phoneController;
   final String title;
   final Function(VoidCallback resetTimer) onClicked;
   final double width;
-  final String phoneNo;
+  final String? phoneNo;
   final bool startOnBuild;
 
   const GetCodeBtn({
-    Key key,
-    @required this.onClicked,
+    super.key,
+    required this.onClicked,
     this.width = 90,
     this.title = "获取验证码",
     this.phoneController,
     this.phoneNo,
     this.startOnBuild = false,
-  }) : super(key: key);
+  });
 
   @override
   _GetCodeBtnState createState() => _GetCodeBtnState();
 }
 
 class _GetCodeBtnState extends State<GetCodeBtn> {
-  Timer _timer;
+  Timer? _timer;
   int _countdownTime = 0;
 
   @override
@@ -36,14 +36,6 @@ class _GetCodeBtnState extends State<GetCodeBtn> {
     if (widget.startOnBuild) {
       _countdownTime = 60;
       _startCountdownTimer();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    if (_timer != null) {
-      _timer.cancel();
     }
   }
 
@@ -61,8 +53,8 @@ class _GetCodeBtnState extends State<GetCodeBtn> {
           ),
         ),
         onTap: () {
-          String phoneNo = widget.phoneNo ?? widget.phoneController.text;
-          if (phoneNo == null) {
+          String phoneNo = widget.phoneNo ?? widget.phoneController?.text??'';
+          if (phoneNo.isEmpty) {
             ToastUtils.showInfo("无法获取到手机号");
             return;
           }
@@ -82,31 +74,39 @@ class _GetCodeBtnState extends State<GetCodeBtn> {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+  }
+
   void _resetTimer() {
     setState(() {
       _countdownTime = 0;
       if (_timer != null) {
-        _timer.cancel();
+        _timer!.cancel();
       }
     });
   }
 
   void _startCountdownTimer() {
     if (_timer != null) {
-      _timer.cancel();
+      _timer!.cancel();
     }
     const oneSec = const Duration(seconds: 1);
     var callback = (_timer) => {
-          setState(
+      setState(
             () {
-              if (_countdownTime < 1) {
-                _timer.cancel();
-              } else {
-                _countdownTime = _countdownTime - 1;
-              }
-            },
-          )
-        };
+          if (_countdownTime < 1) {
+            _timer.cancel();
+          } else {
+            _countdownTime = _countdownTime - 1;
+          }
+        },
+      )
+    };
     _timer = Timer.periodic(oneSec, callback);
   }
 }

@@ -12,7 +12,7 @@ import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 import 'package:xiaoyun_user/widgets/mine/balance_cell.dart';
 
 class BalanceDetailPage extends StatefulWidget {
-  const BalanceDetailPage({Key key}) : super(key: key);
+  const BalanceDetailPage({super.key});
 
   @override
   State<BalanceDetailPage> createState() => _BalanceDetailPageState();

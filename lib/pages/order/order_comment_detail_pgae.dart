@@ -11,15 +11,15 @@ import '../../widgets/common/common_local_image.dart';
 import '../../widgets/order/order_evaluate_tag.dart';
 
 class OrderCommentDetailPage extends StatefulWidget {
-  final int orderId;
-  const OrderCommentDetailPage({Key key, this.orderId}) : super(key: key);
+  final int? orderId;
+  const OrderCommentDetailPage({super.key, this.orderId});
 
   @override
   State<OrderCommentDetailPage> createState() => _OrderCommentDetailPageState();
 }
 
 class _OrderCommentDetailPageState extends State<OrderCommentDetailPage> {
-  EvaluateModel _evaluateModel;
+  EvaluateModel? _evaluateModel;
   List<String> _tagList = [];
 
   @override
@@ -46,7 +46,7 @@ class _OrderCommentDetailPageState extends State<OrderCommentDetailPage> {
                     Center(
                       child: RatingBar(
                         itemSize: 32,
-                        initialRating: _evaluateModel.evaluateStar.toDouble(),
+                        initialRating: _evaluateModel!.evaluateStar.toDouble(),
                         ignoreGestures: true,
                         itemPadding: const EdgeInsets.symmetric(horizontal: 5),
                         ratingWidget: RatingWidget(
@@ -80,9 +80,9 @@ class _OrderCommentDetailPageState extends State<OrderCommentDetailPage> {
                       child: SizedBox(
                         width: double.infinity,
                         child: Text(
-                          _evaluateModel.evaluationContent.isEmpty
+                          _evaluateModel!.evaluationContent.isEmpty
                               ? "未填写"
-                              : _evaluateModel.evaluationContent,
+                              : _evaluateModel!.evaluationContent,
                           style: TextStyle(
                             fontSize: 13,
                             color: DYColors.text_gray,
@@ -93,7 +93,7 @@ class _OrderCommentDetailPageState extends State<OrderCommentDetailPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: Text(
-                        _evaluateModel.evaluationTime,
+                        _evaluateModel!.evaluationTime,
                         style: TextStyle(
                           fontSize: 12,
                           color: DYColors.text_light_gray,
@@ -124,7 +124,7 @@ class _OrderCommentDetailPageState extends State<OrderCommentDetailPage> {
         ToastUtils.dismiss();
         setState(() {
           _evaluateModel = EvaluateModel.fromJson(resultData.data);
-          _tagList = _evaluateModel.evaluateTags.split(",");
+          _tagList = _evaluateModel!.evaluateTags.split(",");
         });
       },
     );

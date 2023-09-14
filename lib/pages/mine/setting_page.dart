@@ -31,8 +31,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  File _photoFile;
-  UserModel _userInfo;
+  File? _photoFile;
+  UserModel? _userInfo;
   bool _hasPwd = true;
 
   @override
@@ -67,20 +67,18 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 CommonCellWidget(
                   title: "昵称",
-                  subtitle:
-                      _userInfo.nickname.isEmpty ? "未设置" : _userInfo.nickname,
+                  subtitle: _userInfo!.nickname.isEmpty ? "未设置" : _userInfo!.nickname,
                   onClicked: () async {
-                    String nickName = await NavigatorUtils.showPage(
-                        context, ModifyNicknamePage());
+                    String? nickName = await NavigatorUtils.showPage(context, ModifyNicknamePage());
                     if (nickName != null) {
-                      _userInfo.nickname = nickName;
+                      _userInfo!.nickname = nickName;
                       setState(() {});
                     }
                   },
                 ),
                 CommonCellWidget(
                   title: "性别",
-                  subtitle: _userInfo.sexDesc,
+                  subtitle: _userInfo!.sexDesc,
                   onClicked: () {
                     DialogUtils.showActionSheetDialog(
                       context,
@@ -89,14 +87,14 @@ class _SettingPageState extends State<SettingPage> {
                         ActionSheetDialogItem(
                           title: "男",
                           onPressed: () {
-                            _userInfo.sexDesc = "男";
+                            _userInfo!.sexDesc = "男";
                             _updateUserInfo({"sex": 1, "type": 2});
                           },
                         ),
                         ActionSheetDialogItem(
                           title: "女",
                           onPressed: () {
-                            _userInfo.sexDesc = "女";
+                            _userInfo!.sexDesc = "女";
                             _updateUserInfo({"sex": 2, "type": 2});
                           },
                         )
@@ -106,14 +104,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 CommonCellWidget(
                   title: "生日",
-                  subtitle: _userInfo.birthday ?? "保密",
+                  subtitle: _userInfo!.birthday ?? "保密",
                   onClicked: () {
                     _showDatePicker();
                   },
                 ),
                 CommonCellWidget(
                   title: "手机号码",
-                  subtitle: _userInfo.phone,
+                  subtitle: _userInfo!.phone,
                   hiddenDivider: true,
                   onClicked: () {
                     NavigatorUtils.showPage(context, ModifyPhonePwdPage());
@@ -182,15 +180,15 @@ class _SettingPageState extends State<SettingPage> {
     Widget header = userDefault;
     if (_photoFile != null) {
       header = Image.file(
-        _photoFile,
+        _photoFile!,
         width: 45,
         height: 45,
         fit: BoxFit.cover,
       );
-    } else if (_userInfo.avatarImgUrl != null &&
-        _userInfo.avatarImgUrl.isNotEmpty) {
+    } else if (_userInfo!.avatarImgUrl != null &&
+        _userInfo!.avatarImgUrl!.isNotEmpty) {
       header = DYNetworkImage(
-        imageUrl: _userInfo.avatarImgUrl,
+        imageUrl: _userInfo!.avatarImgUrl!,
         placeholder: userDefault,
         size: 45,
       );
@@ -201,7 +199,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _choosePhoto() async {
-    File photoFile = await PhotoPickerUtils.pickPhoto(context, maxWidth: 500);
+    File? photoFile = await PhotoPickerUtils.pickPhoto(context, maxWidth: 500);
     if (photoFile == null) return;
 
     _photoFile = photoFile;
@@ -211,22 +209,22 @@ class _SettingPageState extends State<SettingPage> {
 
   void _showDatePicker() {
     DateTime birthday =
-        DateTime.tryParse(_userInfo.birthday ?? "") ?? DateTime(1985, 6, 15);
+        DateTime.tryParse(_userInfo!.birthday ?? "") ?? DateTime(1985, 6, 15);
 
     DatePickerUtils.showDatePicker(
       context,
       maxTime: DateTime.now(),
       initialDateTime: birthday,
       onConfirm: (time) {
-        _userInfo.birthday = formatDate(time, [yyyy, '-', mm, '-', dd]);
-        _updateUserInfo({"birthDay": _userInfo.birthday, "type": 1});
+        _userInfo!.birthday = formatDate(time, [yyyy, '-', mm, '-', dd]);
+        _updateUserInfo({"birthDay": _userInfo!.birthday, "type": 1});
       },
     );
   }
 
   void _uploadPhoto() async {
     ToastUtils.showLoading("上传中...");
-    PhotoModel photoModel = await UploadUtils.uploadPhoto(_photoFile);
+    PhotoModel? photoModel = await UploadUtils.uploadPhoto(_photoFile!);
     ToastUtils.dismiss();
     if (photoModel == null) return;
     _updateUserInfo({"avatar": photoModel.id, "type": 3});
@@ -239,7 +237,7 @@ class _SettingPageState extends State<SettingPage> {
       onSuccess: (resultData) {
         ToastUtils.dismiss();
         _userInfo = UserModel.fromJson(resultData.data);
-        _hasPwd = _userInfo.password.isNotEmpty;
+        _hasPwd = _userInfo!.password.isNotEmpty;
         setState(() {});
       },
     );

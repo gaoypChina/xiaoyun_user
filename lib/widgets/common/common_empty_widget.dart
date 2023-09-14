@@ -4,9 +4,9 @@ class CommonEmptyWidget extends StatelessWidget {
   final String emptyTips;
 
   const CommonEmptyWidget({
-    Key key,
+    super.key,
     this.emptyTips = '暂无数据',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

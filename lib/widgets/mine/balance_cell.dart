@@ -4,7 +4,7 @@ import 'package:xiaoyun_user/models/balance_model.dart';
 
 class BalanceCell extends StatelessWidget {
   final BalanceModel balanceItem;
-  const BalanceCell({Key key, @required this.balanceItem}) : super(key: key);
+  const BalanceCell({super.key, required this.balanceItem});
 
   @override
   Widget build(BuildContext context) {

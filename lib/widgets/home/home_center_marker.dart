@@ -5,7 +5,7 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 class HomeCenterMarker extends StatelessWidget {
   final bool isEnd;
 
-  const HomeCenterMarker({Key key, this.isEnd = false}) : super(key: key);
+  const HomeCenterMarker({super.key, this.isEnd = false});
   @override
   Widget build(BuildContext context) {
     return Center(

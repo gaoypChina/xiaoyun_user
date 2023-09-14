@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 
 class CommonTextView extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String placeholder;
   final int maxLines;
-  final EdgeInsets margin;
+  final EdgeInsets? margin;
   final bool enabled;
 
   const CommonTextView({
-    Key key,
+    super.key,
     this.controller,
     this.placeholder = "请输入",
     this.maxLines = 8,
     this.margin,
     this.enabled = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

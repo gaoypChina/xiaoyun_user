@@ -7,7 +7,7 @@ import '../common/common_cell_widget.dart';
 
 class OrderOtherFeeCard extends StatelessWidget {
   final OtherFeeModel feeModel;
-  const OrderOtherFeeCard({Key key, @required this.feeModel}) : super(key: key);
+  const OrderOtherFeeCard({super.key, required this.feeModel});
 
   @override
   Widget build(BuildContext context) {

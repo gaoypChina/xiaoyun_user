@@ -12,12 +12,12 @@ import 'package:xiaoyun_user/utils/toast_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_action_button.dart';
 
 class MainAgreementDialog extends StatelessWidget {
-  final Function onConfirmed;
+  final Function? onConfirmed;
 
   const MainAgreementDialog({
-    Key key,
+    super.key,
     this.onConfirmed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +111,7 @@ class MainAgreementDialog extends StatelessWidget {
                 onPressed: () {
                   SpUtil.putBool(Constant.agreement, true);
                   Navigator.of(context).pop();
-                  if (this.onConfirmed != null) {
-                    this.onConfirmed();
-                  }
+                  this.onConfirmed?.call();
                 },
               ),
             ],

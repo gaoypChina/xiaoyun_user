@@ -10,17 +10,17 @@ class PhotoBrowser extends StatefulWidget {
   final int initialIndex;
 
   const PhotoBrowser({
-    Key key,
-    @required this.photoUrls,
+    super.key,
+    required this.photoUrls,
     this.initialIndex = 0,
-  }) : super(key: key);
+  });
 
   @override
   _PhotoBrowserState createState() => _PhotoBrowserState();
 }
 
 class _PhotoBrowserState extends State<PhotoBrowser> {
-  PageController _pageController;
+  late PageController _pageController;
   @override
   void initState() {
     super.initState();
@@ -52,7 +52,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
                     value: event == null
                         ? 0
                         : event.cumulativeBytesLoaded /
-                            event.expectedTotalBytes,
+                        (event.expectedTotalBytes??1),
                   ),
                 ),
               ),

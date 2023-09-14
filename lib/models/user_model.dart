@@ -1,17 +1,17 @@
 class UserModel {
-  String phone;
-  String nickname;
-  String birthday;
-  String avatarImgUrl;
-  int id;
-  int sex;
-  String sexDesc;
-  String password;
+  String phone = '';
+  String nickname = '';
+  String? birthday;
+  String? avatarImgUrl;
+  int id = 0;
+  int sex = 0;
+  String sexDesc = '';
+  String password = '';
 
   UserModel.fromJson(Map<String, dynamic> json) {
     phone = json["phone"];
     String nicknameTmp = json["nickname"];
-    nickname = nicknameTmp == null || nicknameTmp.isEmpty ? "未设置" : nicknameTmp;
+    nickname = nicknameTmp.isEmpty ? "未设置" : nicknameTmp;
     birthday = json["birthday"];
     avatarImgUrl = json["avatarImgUrl"];
     id = json["id"];

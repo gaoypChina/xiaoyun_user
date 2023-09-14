@@ -12,9 +12,9 @@ class OrderEffectPage extends StatefulWidget {
   final int orderId;
 
   const OrderEffectPage({
-    Key key,
-    @required this.orderId,
-  }) : super(key: key);
+    super.key,
+    required this.orderId,
+  });
   @override
   _OrderEffectPageState createState() => _OrderEffectPageState();
 }

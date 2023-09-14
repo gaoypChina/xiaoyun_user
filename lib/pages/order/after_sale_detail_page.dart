@@ -17,15 +17,14 @@ import 'package:xiaoyun_user/widgets/order/order_action_btn.dart';
 class AfterSaleDetailPage extends StatefulWidget {
   final int orderId;
 
-  const AfterSaleDetailPage({Key key, @required this.orderId})
-      : super(key: key);
+  const AfterSaleDetailPage({super.key, required this.orderId});
 
   @override
   _AfterSaleDetailPageState createState() => _AfterSaleDetailPageState();
 }
 
 class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
-  AfterSaleDetailModel _detailModel;
+  AfterSaleDetailModel? _detailModel;
 
   @override
   void initState() {
@@ -51,7 +50,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
             ],
           ),
         ),
-        if (_detailModel != null && _detailModel.status == 1) _buildToolBar(),
+        if (_detailModel != null && _detailModel!.status == 1) _buildToolBar(),
       ],
     );
   }
@@ -89,7 +88,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
     ToastUtils.showLoading("撤销中...");
     HttpUtils.get(
       "order/cancelPetition.do",
-      params: {"orderId": _detailModel.orderId},
+      params: {"orderId": _detailModel!.orderId},
       onSuccess: (resultData) {
         ToastUtils.showSuccess("撤销成功");
         Future.delayed(Duration(seconds: 1)).then((value) {
@@ -111,43 +110,43 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (_detailModel.status == 4)
+                  if (_detailModel!.status == 4)
                     CommonCellWidget(
                       title: "退款金额",
-                      subtitle: _detailModel.refundFeeMoney,
+                      subtitle: _detailModel!.refundFeeMoney,
                       subtitleStyle: TextStyle(color: DYColors.text_normal),
                       showArrow: false,
                     ),
                   CommonCellWidget(
                     title: "售后原因",
-                    subtitle: _detailModel.reason,
+                    subtitle: _detailModel!.reason,
                     subtitleStyle: TextStyle(color: DYColors.text_normal),
                     showArrow: false,
                   ),
-                  if (_detailModel.comment.isNotEmpty)
+                  if (_detailModel!.comment.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: Constant.padding),
-                      child: Text(_detailModel.comment),
+                      child: Text(_detailModel!.comment),
                     ),
-                  if (_detailModel.photoList.isNotEmpty)
+                  if (_detailModel!.photoList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: Constant.padding),
                       child: Wrap(
                         runSpacing: 16,
                         spacing: 16,
-                        children: List.generate(_detailModel.photoList.length,
+                        children: List.generate(_detailModel!.photoList.length,
                             (index) {
                           double photoWH = MediaQuery.of(context).size.width -
                               Constant.padding * 6 -
                               50;
-                          String imageUrl = _detailModel.photoList[index];
+                          String imageUrl = _detailModel!.photoList[index];
                           return GestureDetector(
                             child: Hero(
                               tag: imageUrl,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: DYNetworkImage(
-                                  imageUrl: _detailModel.photoList[index],
+                                  imageUrl: _detailModel!.photoList[index],
                                   size: photoWH / 3,
                                 ),
                               ),
@@ -156,7 +155,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
                               NavigatorUtils.showPage(
                                 context,
                                 PhotoBrowser(
-                                  photoUrls: _detailModel.photoList,
+                                  photoUrls: _detailModel!.photoList,
                                   initialIndex: index,
                                 ),
                               );
@@ -184,7 +183,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
                   ),
                   CommonCellWidget(
                     title: "订单编号",
-                    subtitle: _detailModel.no,
+                    subtitle: _detailModel!.no,
                     showArrow: false,
                     subtitleStyle: TextStyle(
                       color: DYColors.text_normal,
@@ -192,7 +191,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
                   ),
                   CommonCellWidget(
                     title: "申请时间",
-                    subtitle: _detailModel.createTime,
+                    subtitle: _detailModel!.createTime,
                     showArrow: false,
                     hiddenDivider: true,
                     subtitleStyle: TextStyle(
@@ -241,7 +240,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _detailModel.statusTitle,
+                      _detailModel!.statusTitle,
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
@@ -250,7 +249,7 @@ class _AfterSaleDetailPageState extends State<AfterSaleDetailPage> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      _detailModel.statusDesc,
+                      _detailModel!.statusDesc,
                       maxLines: 2,
                       style: TextStyle(
                         fontSize: 14,

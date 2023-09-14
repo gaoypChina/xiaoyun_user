@@ -5,14 +5,13 @@ import '../constant/constant.dart';
 class PickerUtils {
   static int _selectedIndex = 0;
 
-  static Future showPicker(BuildContext context, List<String> titleList,
-      {int index = 0, Function(int selectedIndex) confirmCallback}) async {
+  static Future showPicker(BuildContext context, List<String> titleList, {int index = 0, Function(int selectedIndex)? confirmCallback}) async {
     final double _kPickerSheetHeight = 216.0;
     final FixedExtentScrollController scrollController =
         FixedExtentScrollController(initialItem: index);
     _selectedIndex = index;
 
-    int selectedIndex = await showCupertinoModalPopup<int>(
+    int selectedIndex = await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
         return Column(
@@ -83,7 +82,7 @@ class PickerUtils {
       },
     );
     if (selectedIndex != null && selectedIndex != -1) {
-      confirmCallback(selectedIndex);
+      confirmCallback?.call(selectedIndex);
     }
   }
 }

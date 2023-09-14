@@ -7,8 +7,7 @@ import 'order_car_info_widget.dart';
 
 class OrderCarInfoCard extends StatelessWidget {
   final OrderDetailModel detailModel;
-  const OrderCarInfoCard({Key key, @required this.detailModel})
-      : super(key: key);
+  const OrderCarInfoCard({super.key, required this.detailModel});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class OrderCarInfoCard extends StatelessWidget {
             child: Text(
               "期望时间：" +
                   (this.detailModel.isReserve
-                      ? this.detailModel.reserveStartTime
+                      ? this.detailModel.reserveStartTime!
                       : "立即洗车"),
               style: TextStyle(
                 fontSize: 11,

@@ -7,23 +7,23 @@ import 'common_text_field.dart';
 class TitleInputField extends StatelessWidget {
   final String title;
   final bool isRequired;
-  final String placeholder;
-  final TextEditingController controller;
+  final String? placeholder;
+  final TextEditingController? controller;
   final TextStyle style;
   final bool hiddenDivider;
   final double height;
   final TextInputType keyboardType;
-  final Widget endSlot;
+  final Widget? endSlot;
   final TextAlign textAlign;
   final double titleWidth;
-  final int maxLength;
+  final int? maxLength;
   final bool obscureText;
   final Color inputColor;
   final bool readOnly;
 
   const TitleInputField({
-    Key key,
-    this.title,
+    super.key,
+    required this.title,
     this.placeholder,
     this.controller,
     this.style = const TextStyle(
@@ -41,7 +41,7 @@ class TitleInputField extends StatelessWidget {
     this.inputColor = const Color(0xff333333),
     this.readOnly = false,
     this.isRequired = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class TitleInputField extends StatelessWidget {
               obscureText: this.obscureText,
             ),
           ),
-          if (this.endSlot != null) this.endSlot,
+          this.endSlot??Container(),
         ],
       ),
       decoration: BoxDecoration(

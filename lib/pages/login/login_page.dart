@@ -22,7 +22,7 @@ import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
 import 'package:xiaoyun_user/widgets/login/authcode_login_widget.dart';
 import 'package:xiaoyun_user/widgets/login/password_login_widget.dart';
 
-import 'package:fluwx/fluwx.dart' as fluwx;
+import 'package:fluwx/fluwx.dart';
 
 import '../../routes/routes.dart';
 
@@ -36,14 +36,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginType _loginType = LoginType.authcode;
 
-  TextEditingController _phoneController;
+  late TextEditingController _phoneController;
   TextEditingController _codeController = TextEditingController();
   TextEditingController _pwdController = TextEditingController();
 
   bool _isWeChatInstalled = false;
   bool _isSignInAppleAvailable = false;
   bool _isAgree = false;
-  StreamSubscription<fluwx.BaseWeChatResponse> _wxlogin;
+  late WeChatResponseSubscriber _listener;
 
   @override
   void initState() {
@@ -51,33 +51,36 @@ class _LoginPageState extends State<LoginPage> {
     _phoneController = TextEditingController(
       text: SpUtil.getString(Constant.phone),
     );
+    _listener = (response) {
+      if(response.errCode == null || response.errCode != 0) {
+        ToastUtils.showError('登录取消');
+      } else {
+        if (response is WeChatAuthResponse) {
+          print(response.code);
+          String? code = response.code;
+          if (code == null || code.isEmpty) return;
+          _thirdPartLogin(code, 0);
+        }
+      }
+    };
     _initConfirgure();
   }
 
   void _initConfirgure() async {
-    var result = await fluwx.isWeChatInstalled;
-    _isWeChatInstalled = result;
+    _isWeChatInstalled = await Fluwx().isWeChatInstalled;
     _isSignInAppleAvailable = await SignInWithApple.isAvailable();
     setState(() {});
-
-    _wxlogin = fluwx.weChatResponseEventHandler.listen((res) {
-      print("======weChatResponseEventHandler");
-      if (res.errCode != 0) {
-        ToastUtils.showError('登录取消');
-      } else {
-        if (res is fluwx.WeChatAuthResponse) {
-          print("weChatResponseEventHandler ：" + res.code.toString());
-          String code = res.code;
-          _thirdPartLogin(code, 0);
-        }
-      }
-    });
+    if (_isWeChatInstalled) {
+      Fluwx().addSubscriber(_listener);
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _wxlogin.cancel();
+    if (_isWeChatInstalled) {
+      Fluwx().removeSubscriber(_listener);
+    }
   }
 
   @override
@@ -211,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _thirdPartLoginBtn(String icon, String title, {Function onPressed}) {
+  Widget _thirdPartLoginBtn(String icon, String title, {VoidCallback? onPressed}) {
     return CupertinoButton(
       padding: const EdgeInsets.all(0),
       child: Column(
@@ -243,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
       ToastUtils.showInfo("请先阅读并同意\n用户服务协议和隐私政策");
       return;
     }
-    fluwx.sendWeChatAuth(scope: "snsapi_userinfo");
+    Fluwx().authBy(which: NormalAuth(scope: 'snsapi_userinfo'));
     // NavigatorUtils.showPage(context, AccountBindingPage());
   }
 
@@ -252,12 +255,14 @@ class _LoginPageState extends State<LoginPage> {
       ToastUtils.showInfo("请先阅读并同意\n用户服务协议和隐私政策");
       return;
     }
-    AuthorizationCredentialAppleID credential =
-        await SignInWithApple.getAppleIDCredential(
+    AuthorizationCredentialAppleID credential = await SignInWithApple.getAppleIDCredential(
       scopes: [],
     );
-    String userIdentifier = credential.userIdentifier;
+    String? userIdentifier = credential.userIdentifier;
     print(userIdentifier);
+    if (userIdentifier == null) {
+      return;
+    }
     _thirdPartLogin(userIdentifier, 1);
   }
 
@@ -270,7 +275,7 @@ class _LoginPageState extends State<LoginPage> {
         ToastUtils.dismiss();
         //审核状态，1：待审核，2：审核通过，3：审核失败,4:手机未绑定,5:密码未设置
         int status = resultData.data["status"];
-        String bindId = resultData.data["wxBindId"];
+        String bindId = resultData.data["wxBindId"]??'';
         String token = resultData.data["token"];
         if (status == 2) {
           int userId = resultData.data["user"]["id"];

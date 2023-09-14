@@ -5,10 +5,10 @@ import 'package:xiaoyun_user/utils/navigator_utils.dart';
 class DatePickerUtils {
   static showDatePicker(
     BuildContext context, {
-    DateTime maxTime,
-    DateTime initialDateTime,
+    DateTime? maxTime,
+    DateTime? initialDateTime,
     CupertinoDatePickerMode mode = CupertinoDatePickerMode.date,
-    ValueChanged<DateTime> onConfirm,
+    ValueChanged<DateTime>? onConfirm,
   }) {
     showCupertinoModalPopup(
       context: context,
@@ -25,32 +25,32 @@ class DatePickerUtils {
 }
 
 class _DatePickerComponent extends StatefulWidget {
-  final ValueChanged<DateTime> onConfirm;
-  final DateTime maxTime;
-  final DateTime initialDateTime;
+  final ValueChanged<DateTime>? onConfirm;
+  final DateTime? maxTime;
+  final DateTime? initialDateTime;
   final CupertinoDatePickerMode mode;
 
   const _DatePickerComponent({
-    Key key,
     this.onConfirm,
     this.maxTime,
     this.initialDateTime,
-    this.mode,
-  }) : super(key: key);
+    required this.mode,
+  });
 
   @override
   State<_DatePickerComponent> createState() => _DatePickerComponentState();
 }
 
 class _DatePickerComponentState extends State<_DatePickerComponent> {
-  DateTime _currentDateTime;
-  DateTime _initialDateTime;
+  late DateTime _currentDateTime;
+  late DateTime _initialDateTime;
   @override
   void initState() {
     _initialDateTime = widget.initialDateTime ?? DateTime.now();
 
-    if (widget.maxTime != null && widget.maxTime.isBefore(_initialDateTime)) {
-      _initialDateTime = widget.maxTime;
+    if (widget.maxTime != null) {
+      if (widget.maxTime!.isBefore(_initialDateTime))
+        _initialDateTime = widget.maxTime!;
     }
     _currentDateTime = _initialDateTime;
     super.initState();
@@ -81,7 +81,7 @@ class _DatePickerComponentState extends State<_DatePickerComponent> {
                 minSize: 44,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 onPressed: () {
-                  widget.onConfirm(_currentDateTime);
+                  widget.onConfirm?.call(_currentDateTime);
                   NavigatorUtils.goBack(context);
                 },
                 child: Text(

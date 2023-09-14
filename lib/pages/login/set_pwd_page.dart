@@ -14,10 +14,9 @@ import 'package:xiaoyun_user/widgets/others/divider_input_widget.dart';
 
 class SetPwdPage extends StatefulWidget {
   final bool isFromSetting;
-  final int userId;
+  final int? userId;
 
-  const SetPwdPage({Key key, this.userId, this.isFromSetting = false})
-      : super(key: key);
+  const SetPwdPage({super.key, this.userId, this.isFromSetting = false});
 
   @override
   _SetPwdPageState createState() => _SetPwdPageState();

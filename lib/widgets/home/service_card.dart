@@ -12,7 +12,7 @@ import '../common/common_network_image.dart';
 class ServiceCard extends StatelessWidget {
   final ServiceProjectModel projectModel;
 
-  const ServiceCard({Key key, @required this.projectModel}) : super(key: key);
+  const ServiceCard({super.key, required this.projectModel});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -200,7 +200,7 @@ class ServiceCard extends StatelessWidget {
 
 class ServiceTag extends StatelessWidget {
   final String title;
-  const ServiceTag({Key key, @required this.title}) : super(key: key);
+  const ServiceTag({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

@@ -1,17 +1,19 @@
 class CarModel {
-  int id;
-  String code;
-  int codeType;
-  int carBrandId;
-  String carBrandTitle;
-  int carColourId;
-  String carColourTitle;
-  int carTypeId;
-  String carTypeTitle;
-  int photo;
-  String photoImgUrl;
-  bool isDefault;
-  bool isJersey;
+  int? id;
+  String code = '';
+  int codeType = 1;
+  int? carBrandId;
+  String carBrandTitle = '';
+  int? carColourId;
+  String carColourTitle = '';
+  int carTypeId = 1;
+  String carTypeTitle = '';
+  int? photo;
+  String? photoImgUrl;
+  bool isDefault = false;
+  bool isJersey = true;
+
+   CarModel();
 
   CarModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -23,9 +25,9 @@ class CarModel {
     carColourTitle = json["carColourTitle"];
     carTypeId = json["carTypeId"];
     carTypeTitle = json["carTypeTitle"];
-    photo = json["photo"];
+    photo = json["photo"]??0;
     photoImgUrl = json["photoImgUrl"];
-    isDefault = json["isDefault"] == 1;
+    // isDefault = json["isDefault"] == 1;
     isJersey = json["isJersey"] == 1;
   }
 }

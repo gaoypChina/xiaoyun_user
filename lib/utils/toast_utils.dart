@@ -29,7 +29,7 @@ class ToastUtils {
     EasyLoading.showSuccess(msg);
   }
 
-  static showLoading([String msg]) {
+  static showLoading([String? msg]) {
     EasyLoading.show(status: msg);
   }
 

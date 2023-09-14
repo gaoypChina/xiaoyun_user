@@ -17,11 +17,11 @@ class BillApplySubmitPage extends StatefulWidget {
   final int billType;
 
   const BillApplySubmitPage({
-    Key key,
-    @required this.orderIds,
-    @required this.totalMoney,
+    super.key,
+    required this.orderIds,
+    required this.totalMoney,
     this.billType = 0,
-  }) : super(key: key);
+  });
 
   @override
   _BillApplySubmitPageState createState() => _BillApplySubmitPageState();
@@ -29,7 +29,7 @@ class BillApplySubmitPage extends StatefulWidget {
 
 class _BillApplySubmitPageState extends State<BillApplySubmitPage> {
   TextEditingController _emailController = TextEditingController();
-  BillTitleModel _billTitle;
+  BillTitleModel? _billTitle;
 
   @override
   void initState() {
@@ -79,7 +79,7 @@ class _BillApplySubmitPageState extends State<BillApplySubmitPage> {
                     children: [
                       CommonCellWidget(
                         title: "发票抬头",
-                        subtitle: _billTitle == null ? "请选择" : _billTitle.title,
+                        subtitle: _billTitle == null ? "请选择" : _billTitle?.title??'请选择',
                         subtitleStyle: TextStyle(
                           color: _billTitle == null
                               ? DYColors.text_gray
@@ -93,11 +93,9 @@ class _BillApplySubmitPageState extends State<BillApplySubmitPage> {
                               isCheckMode: true,
                             ),
                           );
-                          if (titleModel != null) {
-                            _billTitle = titleModel;
-                            setState(() {});
-                          }
-                        },
+                          _billTitle = titleModel;
+                          setState(() {});
+                                                },
                       ),
                       TitleInputField(
                         title: "接收邮箱",
@@ -134,7 +132,7 @@ class _BillApplySubmitPageState extends State<BillApplySubmitPage> {
     HttpUtils.post(
       "userBill/addOrderBill.do",
       params: {
-        "billHeadId": _billTitle.id,
+        "billHeadId": _billTitle?.id,
         "email": _emailController.text,
         "orderIds": widget.orderIds,
         "billType": widget.billType,
@@ -153,7 +151,7 @@ class _BillApplySubmitPageState extends State<BillApplySubmitPage> {
       "userBill/defaultOrderBill.do",
       onSuccess: (resultData) {
         _billTitle = BillTitleModel.fromJson(resultData.data);
-        if (_billTitle.id == null) {
+        if (_billTitle?.id == null) {
           _billTitle = null;
         }
         setState(() {});

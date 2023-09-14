@@ -11,7 +11,7 @@ import '../../utils/toast_utils.dart';
 import '../../widgets/common/navigation_item.dart';
 
 class ScannerPage extends StatefulWidget {
-  const ScannerPage({Key key}) : super(key: key);
+  const ScannerPage({super.key});
 
   @override
   State<ScannerPage> createState() => _ScannerPageState();
@@ -20,7 +20,7 @@ class ScannerPage extends StatefulWidget {
 class _ScannerPageState extends State<ScannerPage>
     with SingleTickerProviderStateMixin {
   MobileScannerController _scannerController = MobileScannerController();
-  AnimationController _controller;
+  late AnimationController _controller;
   bool _flashOn = false;
   bool _hasDetected = false;
 
@@ -148,8 +148,7 @@ class _ScannerPageState extends State<ScannerPage>
                         ),
                         iconSize: 32,
                         onPressed: () async {
-                          File image = await PhotoPickerUtils.pickPhoto(context,
-                              galleryOnly: true);
+                          File? image = await PhotoPickerUtils.pickPhoto(context, galleryOnly: true);
                           if (image != null) {
                             bool result = await _scannerController
                                 .analyzeImage(image.path);
@@ -230,7 +229,7 @@ class _ScannerPageState extends State<ScannerPage>
       ToastUtils.showError("识别失败！");
     } else {
       _hasDetected = true;
-      final String code = barcode.rawValue;
+      final String? code = barcode.rawValue;
       debugPrint('Barcode found! $code');
       Future.delayed(Duration(seconds: 1)).then((value) {
         if (!mounted) return;

@@ -8,7 +8,7 @@ import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 class MyCarCell extends StatelessWidget {
   final CarModel carModel;
 
-  const MyCarCell({Key key, this.carModel}) : super(key: key);
+  const MyCarCell({super.key, required this.carModel});
 
   @override
   Widget build(BuildContext context) {

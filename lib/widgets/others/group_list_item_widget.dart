@@ -5,11 +5,10 @@ class GroupListItemWidget extends StatelessWidget {
   final String tag;
   final String name;
   final double susHeight;
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
   const GroupListItemWidget(
-      {Key key, this.tag, this.name, this.susHeight = 40, this.onTap})
-      : super(key: key);
+      {super.key, this.tag = '', this.name = '', this.susHeight = 40, this.onTap});
 
   @override
   Widget build(BuildContext context) {

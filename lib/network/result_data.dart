@@ -1,6 +1,6 @@
 class ResultData {
   var data;
-  String msg;
+  String? msg;
   int code;
 
   bool get isSuccessful {

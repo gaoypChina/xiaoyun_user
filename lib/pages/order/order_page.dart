@@ -12,7 +12,7 @@ class _OrderPageState extends State<OrderPage>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final List<String> _tabs = ["全部", "待分配", "待服务", "已完成", "售后"];
   final List<int> _statusList = [0, 1, 2, 4, 5];
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {

@@ -4,17 +4,17 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 
 class MultiPhotoWidget extends StatelessWidget {
   final List<Asset> photoList;
-  final Function choosePhotoAction;
-  final Function(int index) deleteAction;
+  final Function? choosePhotoAction;
+  final Function(int index)? deleteAction;
   final int maxPhoto;
 
   const MultiPhotoWidget({
-    Key key,
-    @required this.photoList,
+    super.key,
+    required this.photoList,
     this.choosePhotoAction,
     this.deleteAction,
     this.maxPhoto = 6,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class MultiPhotoWidget extends StatelessWidget {
                         size: 24,
                       ),
                       onPressed: () {
-                        this.deleteAction(index);
+                        this.deleteAction?.call(index);
                       },
                     ),
                   ),
@@ -80,7 +80,7 @@ class MultiPhotoWidget extends StatelessWidget {
           ),
           onTap: () {
             if (index == photoCount && photoCount < this.maxPhoto) {
-              this.choosePhotoAction();
+              this.choosePhotoAction?.call();
             }
           },
         );

@@ -6,13 +6,13 @@ class CheckButton extends StatelessWidget {
   final bool isChecked;
   final String title;
   final TextStyle style;
-  final Function onPressed;
+  final VoidCallback? onPressed;
   final double iconSize;
 
   const CheckButton({
-    Key key,
+    super.key,
     this.isChecked = false,
-    this.title,
+    this.title = '',
     this.onPressed,
     this.style = const TextStyle(
       fontSize: 14,
@@ -20,7 +20,7 @@ class CheckButton extends StatelessWidget {
       fontWeight: FontWeight.normal,
     ),
     this.iconSize = 24,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(

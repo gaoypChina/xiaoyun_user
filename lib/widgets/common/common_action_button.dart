@@ -4,8 +4,8 @@ import 'package:xiaoyun_user/constant/constant.dart';
 
 class CommonActionButton extends StatelessWidget {
   final String title;
-  final Function onPressed;
-  final EdgeInsetsGeometry margin;
+  final VoidCallback? onPressed;
+  final EdgeInsetsGeometry? margin;
   final double width;
   final double height;
   final Color titleColor;
@@ -16,9 +16,9 @@ class CommonActionButton extends StatelessWidget {
   final double radius;
 
   const CommonActionButton({
-    Key key,
-    @required this.title,
-    @required this.onPressed,
+    super.key,
+    required this.title,
+    this.onPressed,
     this.margin,
     this.width = double.infinity,
     this.height = 50,
@@ -28,7 +28,7 @@ class CommonActionButton extends StatelessWidget {
     this.disable = false,
     this.radius = 16,
     this.fontWeight = FontWeight.bold,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

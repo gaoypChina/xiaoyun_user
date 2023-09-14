@@ -2,13 +2,13 @@ import 'package:azlistview/azlistview.dart';
 import 'package:lpinyin/lpinyin.dart';
 
 class CarBrandModel extends ISuspensionBean {
-  String title;
-  int brandId;
-  int id;
-  String firstLetter;
-  String pinyin;
+  String title = '';
+  int brandId = 0;
+  int id = 0;
+  String? firstLetter;
+  String pinyin = '';
 
-  CarBrandModel({this.title, this.brandId});
+  CarBrandModel({this.title = '', this.brandId = 0});
 
   List<CarBrandModel> child = [];
 
@@ -17,9 +17,9 @@ class CarBrandModel extends ISuspensionBean {
     brandId = json["brandId"];
     id = json["id"];
     firstLetter = json["firstLetter"];
-    pinyin = PinyinHelper.getPinyinE(title, separator: "");
+    pinyin = PinyinHelper.getPinyinE(title??'', separator: "");
   }
 
   @override
-  String getSuspensionTag() => firstLetter;
+  String getSuspensionTag() => firstLetter??'';
 }

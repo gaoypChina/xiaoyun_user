@@ -8,12 +8,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dialog_utils.dart';
 
 class PhotoPickerUtils {
-  static double maxWidth;
-  static int imageQuality;
-  static Future<File> pickPhoto(
+  static double maxWidth = 0;
+  static int imageQuality = 0;
+  static Future<File>? pickPhoto(
     BuildContext context, {
-    double maxWidth,
-    int imageQuality,
+    double maxWidth = 0,
+    int imageQuality = 0,
     bool cameraOnly = false,
     bool galleryOnly = false,
   }) {
@@ -56,15 +56,14 @@ class PhotoPickerUtils {
     );
     if (result == 1) {
       return _pickImageAction(context, ImageSource.camera);
-    } else if (result == 2) {
+    } else {
       return _pickImageAction(context, ImageSource.gallery);
     }
-    return null;
   }
 
   static Future<File> _pickImageAction(
       BuildContext context, ImageSource source) async {
-    File fileImage;
+    late File fileImage;
     final picker = ImagePicker();
     try {
       final pickedFile = await picker.pickImage(
@@ -72,7 +71,7 @@ class PhotoPickerUtils {
         maxWidth: maxWidth,
         imageQuality: imageQuality,
       );
-      fileImage = File(pickedFile.path);
+      fileImage = File(pickedFile!.path);
     } catch (error) {
       print(error);
     }

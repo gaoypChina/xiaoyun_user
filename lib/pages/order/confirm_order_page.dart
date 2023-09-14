@@ -31,33 +31,33 @@ import 'package:xiaoyun_user/widgets/others/check_button.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
-  final Poi poi;
+  final Poi? poi;
   final List<ServiceProjectModel> projectList;
   final bool isAppointment;
-  final String appointmentTime;
-  final DateTime startDate;
-  final String staffCode;
+  final String? appointmentTime;
+  final DateTime? startDate;
+  final String? staffCode;
 
   const ConfirmOrderPage({
-    Key key,
+    super.key,
     this.poi,
-    @required this.projectList,
+    required this.projectList,
     this.isAppointment = false,
     this.appointmentTime,
     this.startDate,
     this.staffCode,
-  }) : super(key: key);
+  });
   @override
   _ConfirmOrderPageState createState() => _ConfirmOrderPageState();
 }
 
 class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   bool _isStarServe = false;
-  CarModel _currentCar;
-  ConfirmOrderModel _orderGroupInfo;
-  CouponModel _selectedCoupon;
-  String _appointmentDate;
-  DateTime _startDate;
+  CarModel? _currentCar;
+  ConfirmOrderModel? _orderGroupInfo;
+  CouponModel? _selectedCoupon;
+  late String _appointmentDate;
+  late DateTime _startDate;
   int _expectTime = 1;
   List<CouponModel> _couponList = [];
   int _sexIndex = -1;
@@ -71,8 +71,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   @override
   void initState() {
     super.initState();
-    _appointmentDate = widget.appointmentTime;
-    _startDate = widget.startDate;
+    _appointmentDate = widget.appointmentTime??'';
+    _startDate = widget.startDate??DateTime.now();
     _calculatePrice();
     _calculateCouponList();
     if (!widget.isAppointment) {
@@ -119,7 +119,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
           Text.rich(
             TextSpan(text: "合计：￥", children: [
               TextSpan(
-                text: _orderGroupInfo.payFee,
+                text: _orderGroupInfo!.payFee,
                 style: TextStyle(fontSize: 24),
               )
             ]),
@@ -253,15 +253,13 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                     context,
                     ContactInfoPage(isSelectMode: true),
                   );
-                  if (contactInfo != null) {
-                    setState(() {
-                      _phoneController.text = contactInfo.contactPhone;
-                      _nameController.text = contactInfo.contactName;
-                      _locationController.text = contactInfo.address;
-                      _sexIndex = contactInfo.sex;
-                    });
-                  }
-                },
+                  setState(() {
+                    _phoneController.text = contactInfo.contactPhone;
+                    _nameController.text = contactInfo.contactName;
+                    _locationController.text = contactInfo.address;
+                    _sexIndex = contactInfo.sex;
+                  });
+                                },
               ),
             ),
           ),
@@ -309,7 +307,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     );
   }
 
-  Widget _genderBtn({bool isMale}) {
+  Widget _genderBtn({bool isMale = true}) {
     bool isSelected = isMale ? _sexIndex == 0 : _sexIndex == 1;
     return CommonActionButton(
       fontSize: 12,
@@ -330,8 +328,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
 
   Widget _buildServiceWidget() {
     List<Widget> children =
-        List.generate(_orderGroupInfo.projects.length, (index) {
-      ServiceProjectModel projectModel = _orderGroupInfo.projects[index];
+        List.generate(_orderGroupInfo!.projects.length, (index) {
+      ServiceProjectModel projectModel = _orderGroupInfo!.projects[index];
       return OrderServeCell(
         photoImgUrl: projectModel.photoImgUrl,
         title: projectModel.title,
@@ -347,7 +345,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       CommonCellWidget(
         title: "优惠券",
         subtitle: _selectedCoupon != null
-            ? "-￥${_orderGroupInfo.couponPrice}"
+            ? "-￥${_orderGroupInfo!.couponPrice}"
             : (_couponList.isEmpty ? "暂无可用" : "${_couponList.length}张可用"),
         titleStyle: TextStyle(fontSize: 12),
         subtitleStyle: TextStyle(
@@ -383,14 +381,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            if(_orderGroupInfo.discountPrice > 0)
+            if(_orderGroupInfo!.discountPrice > 0)
             Text(
               "已优惠",
               style: TextStyle(color: DYColors.text_gray),
             ),
-            if(_orderGroupInfo.discountPrice > 0)
+            if(_orderGroupInfo!.discountPrice > 0)
             Text(
-              "￥${_orderGroupInfo.discountPrice}",
+              "￥${_orderGroupInfo!.discountPrice}",
               style: TextStyle(
                 color: DYColors.text_red,
                 fontWeight: FontWeight.w600,
@@ -402,8 +400,11 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
             Text(
-              _orderGroupInfo.payFee,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              _orderGroupInfo!.payFee??'0.0',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
+              ),
             )
           ],
         ),
@@ -421,7 +422,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
 
   Widget _buildBaseInfoWidget() {
     return ConfirmBaseInfoCard(
-      currentCar: _currentCar,
+      currentCar: _currentCar!,
       poi: widget.poi,
       isAppointment: widget.isAppointment,
       appointmentDate: _appointmentDate,
@@ -432,15 +433,13 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
           context,
           MyCarPage(isSelectModel: true),
         );
-        if (carModel != null) {
-          setState(() {
-            _currentCar = carModel;
-            _selectedCoupon = null;
-          });
-          _calculatePrice();
-          _calculateCouponList();
-        }
-      },
+        setState(() {
+          _currentCar = carModel;
+          _selectedCoupon = null;
+        });
+        _calculatePrice();
+        _calculateCouponList();
+            },
     );
   }
 
@@ -478,7 +477,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     HttpUtils.get(
       "order/expectOrderTime.do",
       params: {
-        "gps": "${widget.poi.latLng.latitude},${widget.poi.latLng.longitude}",
+        "gps": "${widget.poi?.latLng?.latitude},${widget.poi?.latLng?.longitude}",
       },
       onSuccess: (resultData) {
         _expectTime = resultData.data;
@@ -494,12 +493,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       "projectIds": ids,
       "starfeeStatus": _isStarServe ? "1" : "0"
     };
-    if (_currentCar != null) {
-      params["carId"] = _currentCar.id;
-    }
-    if (_selectedCoupon != null) {
-      params["accountCouponId"] = _selectedCoupon.id;
-    }
+    params["carId"] = _currentCar?.id;
+    params["accountCouponId"] = _selectedCoupon?.id;
     ToastUtils.showLoading("加载中...");
     HttpUtils.get(
       "order/getProjectListPriceByCar.do",
@@ -509,11 +504,11 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         _orderGroupInfo = ConfirmOrderModel.fromJson(resultData.data);
 
         setState(() {
-          _currentCar = _orderGroupInfo.car;
-          _nameController.text = _orderGroupInfo.contact;
-          _phoneController.text = _orderGroupInfo.phone;
-          _locationController.text = _orderGroupInfo.address;
-          _sexIndex = _orderGroupInfo.sex;
+          _currentCar = _orderGroupInfo!.car;
+          _nameController.text = _orderGroupInfo!.contact??'';
+          _phoneController.text = _orderGroupInfo!.phone??'';
+          _locationController.text = _orderGroupInfo!.address??'';
+          _sexIndex = _orderGroupInfo!.sex;
         });
       },
       onError: (msg) {
@@ -530,10 +525,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       "projectIds": ids,
       "starfeeStatus": _isStarServe ? "1" : "0"
     };
-    if (_currentCar != null) {
-      params["carId"] = _currentCar.id;
-    }
-    HttpUtils.get(
+    params["carId"] = _currentCar?.id;
+      HttpUtils.get(
       "order/getProjectListPriceByCar.do",
       params: params,
       onSuccess: (resultData) {
@@ -599,16 +592,13 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     String ids = widget.projectList.map((e) => e.id).toList().join(",");
 
     Map<String, dynamic> params = {
-      "accountCarId": _currentCar.id,
-      "address": widget.poi.provinceName +
-          widget.poi.cityName +
-          widget.poi.adName +
-          widget.poi.title,
+      "accountCarId": _currentCar?.id,
+      "address": '${widget.poi?.provinceName}' + '${widget.poi?.cityName}' + '${widget.poi?.adName}' + '${widget.poi?.title}',
       "contact": _nameController.text,
-      "gps": "${widget.poi.latLng.latitude},${widget.poi.latLng.longitude}",
+      "gps": "${widget.poi?.latLng?.latitude},${widget.poi?.latLng?.longitude}",
       "isReserve": widget.isAppointment ? 1 : 0,
       "phone": _phoneController.text,
-      "projectFee": _orderGroupInfo.projectFee,
+      "projectFee": _orderGroupInfo!.projectFee,
       "projectIds": ids,
       "carLocation": _locationController.text,
       "starfeeStatus": _isStarServe ? 1 : 0,
@@ -625,9 +615,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     if (_markController.text.isNotEmpty) {
       params["comment"] = _markController.text;
     }
-    if (_selectedCoupon != null) {
-      params["accountCouponId"] = _selectedCoupon.id;
-    }
+    params["accountCouponId"] = _selectedCoupon?.id;
     if (widget.staffCode != null) {
       params["staffId"] = widget.staffCode;
     }

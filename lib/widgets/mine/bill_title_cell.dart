@@ -3,13 +3,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 
 class BillTitleCell extends StatelessWidget {
-  final Function onDeleteAction;
+  final Function? onDeleteAction;
   final String title;
   final bool isDefault;
 
   const BillTitleCell(
-      {Key key, this.onDeleteAction, this.title, this.isDefault = false})
-      : super(key: key);
+      {super.key, this.onDeleteAction, this.title = '', this.isDefault = false});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class BillTitleCell extends StatelessWidget {
             backgroundColor: DYColors.text_red,
             borderRadius: BorderRadius.circular(16),
             onPressed: (context) {
-              this.onDeleteAction();
+              this.onDeleteAction?.call();
             },
           ),
         ],

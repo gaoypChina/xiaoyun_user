@@ -44,6 +44,16 @@
 				<string>wx26c0ce7dc3abcbdd</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>weixin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>123456</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -55,6 +65,7 @@
 		<string>weixin</string>
 		<string>wechat</string>
 		<string>weixinULAPI</string>
+		<string>weixinURLParamsAPI</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -62,9 +73,17 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
 	</dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory._tcp</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>需要使用您的相机进行扫码以及头像上传等功能</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Looking for local devices with tcp Bonjour services</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>需要获取您的当前位置来获取您附近的洗车服务信息</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -73,6 +92,8 @@
 	<string>需要访问您的麦克风进行语音聊天功能</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>需要访问您的相册进行头像上传、图片文件上传以及客服聊天中图片发送等功能</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
@@ -96,13 +117,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
-	    <key>NSLocalNetworkUsageDescription</key>
-    <string>Looking for local devices with tcp Bonjour services</string>
-    <key>NSBonjourServices</key>
-    <array>
-        <string>_dartobservatory._tcp</string>
-    </array>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

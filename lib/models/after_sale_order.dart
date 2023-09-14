@@ -1,16 +1,16 @@
 import 'package:xiaoyun_user/models/project_model.dart';
 
 class AfterSaleOrder {
-  int id;
-  String no;
-  List<ProjectModel> orderPriceList;
-  String priceMoney;
+  int id = 0;
+  String no = '';
+  List<ProjectModel> orderPriceList = [];
+  String? priceMoney;
 
   bool isReserve = false;
-  String reserveStartTime;
-  String reserveEndTime;
+  String reserveStartTime = '';
+  String reserveEndTime = '';
 
-  int orderSta;
+  int orderSta =  0;
   String status = "";
 
   AfterSaleOrder.fromJson(Map<String, dynamic> json) {

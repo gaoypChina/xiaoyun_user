@@ -10,15 +10,15 @@ import 'home_action_btn.dart';
 
 class HomeTopBar extends StatelessWidget {
   final String city;
-  final Function onCityPressed;
-  final Function onScanAction;
+  final VoidCallback? onCityPressed;
+  final VoidCallback? onScanAction;
 
   const HomeTopBar({
-    Key key,
-    this.city,
+    super.key,
+    required this.city,
     this.onCityPressed,
     this.onScanAction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

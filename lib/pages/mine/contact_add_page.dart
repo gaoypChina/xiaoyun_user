@@ -15,8 +15,8 @@ import '../../constant/constant.dart';
 import '../../models/contact_info_model.dart';
 
 class ContactAddPage extends StatefulWidget {
-  final ContactInfo contactInfo;
-  const ContactAddPage({Key key, this.contactInfo}) : super(key: key);
+  final ContactInfo? contactInfo;
+  const ContactAddPage({super.key, this.contactInfo});
 
   @override
   State<ContactAddPage> createState() => _ContactAddPageState();
@@ -34,11 +34,11 @@ class _ContactAddPageState extends State<ContactAddPage> {
   void initState() {
     _isEditMode = widget.contactInfo != null;
     if (_isEditMode) {
-      _nameController.text = widget.contactInfo.contactName;
-      _phoneController.text = widget.contactInfo.contactPhone;
-      _addressController.text = widget.contactInfo.address;
-      _isDefault = widget.contactInfo.isDefault;
-      _sexIndex = widget.contactInfo.sex;
+      _nameController.text = widget.contactInfo!.contactName;
+      _phoneController.text = widget.contactInfo!.contactPhone;
+      _addressController.text = widget.contactInfo!.address;
+      _isDefault = widget.contactInfo!.isDefault;
+      _sexIndex = widget.contactInfo!.sex;
     }
     super.initState();
   }
@@ -138,7 +138,7 @@ class _ContactAddPageState extends State<ContactAddPage> {
     );
   }
 
-  Widget _genderBtn({bool isMale}) {
+  Widget _genderBtn({bool isMale = false}) {
     bool isSelected = isMale ? _sexIndex == 0 : _sexIndex == 1;
     return CommonActionButton(
       fontSize: 12,
@@ -184,7 +184,7 @@ class _ContactAddPageState extends State<ContactAddPage> {
       "isDefault": _isDefault ? 1 : 0,
     };
     if (_isEditMode) {
-      params["id"] = widget.contactInfo.id;
+      params["id"] = widget.contactInfo!.id;
     }
     ToastUtils.showLoading("保存中...");
     HttpUtils.post(
@@ -203,7 +203,7 @@ class _ContactAddPageState extends State<ContactAddPage> {
     ToastUtils.showLoading("删除中...");
     HttpUtils.get(
       "address/delete.do",
-      params: {"id": widget.contactInfo.id},
+      params: {"id": widget.contactInfo!.id},
       onSuccess: (resultData) {
         ToastUtils.showSuccess("删除成功");
         Future.delayed(Duration(seconds: 1), () {

@@ -9,13 +9,12 @@ import 'package:xiaoyun_user/widgets/others/divider_input_widget.dart';
 import 'package:xiaoyun_user/widgets/others/get_code_btn.dart';
 
 class AuthCodeLoginWidget extends StatefulWidget {
-  final Function onExchanged;
-  final TextEditingController phoneController;
-  final TextEditingController codeController;
+  final VoidCallback? onExchanged;
+  final TextEditingController? phoneController;
+  final TextEditingController? codeController;
 
   const AuthCodeLoginWidget(
-      {Key key, this.onExchanged, this.phoneController, this.codeController})
-      : super(key: key);
+      {super.key, this.onExchanged, this.phoneController, this.codeController});
   @override
   _AuthCodeLoginWidgetState createState() => _AuthCodeLoginWidgetState();
 }
@@ -70,7 +69,7 @@ class _AuthCodeLoginWidgetState extends State<AuthCodeLoginWidget> {
                     HttpUtils.post(
                       "approve/getSmsCode.do",
                       params: {
-                        "cellphone": widget.phoneController.text,
+                        "cellphone": widget.phoneController?.text??'',
                         "type": 1
                       },
                       onSuccess: (resultData) {},
@@ -79,7 +78,7 @@ class _AuthCodeLoginWidgetState extends State<AuthCodeLoginWidget> {
                           _verifySuccess = false;
                         });
                         resetTimer();
-                        _sliderBarKey.currentState.resetWidget();
+                        _sliderBarKey.currentState?.resetWidget();
                       },
                     );
                   },

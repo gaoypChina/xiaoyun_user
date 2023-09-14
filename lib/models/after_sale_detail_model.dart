@@ -1,13 +1,13 @@
 class AfterSaleDetailModel {
-  int id;
-  String no;
-  String createTime;
-  int orderId;
-  String reason;
-  String comment;
-  int status;
-  String refuseReason;
-  String refundFeeMoney;
+  int? id;
+  String no = '';
+  String createTime = '';
+  int? orderId;
+  String reason = '';
+  String comment = '';
+  int status = 0;
+  String refuseReason = '';
+  String refundFeeMoney = '';
 
   List<String> photoList = [];
   String statusTitle = "";

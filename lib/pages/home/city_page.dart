@@ -13,19 +13,23 @@ import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
 class CityPage extends StatefulWidget {
   final String locationCity;
 
-  const CityPage({Key key, @required this.locationCity}) : super(key: key);
+  const CityPage({super.key, required this.locationCity});
 
   @override
-  _CityPageState createState() => _CityPageState();
+  State<StatefulWidget> createState() {
+    return _CityPageState();
+  }
 }
 
 class _CityPageState extends State<CityPage> {
-  List<CityModel> _cityList = [];
-  final TextEditingController _searchController = TextEditingController();
+  late List<CityModel> _cityList;
+  late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
+    _cityList = [];
+    _searchController = TextEditingController();
     _loadCityList();
   }
 
@@ -78,7 +82,7 @@ class _CityPageState extends State<CityPage> {
     );
   }
 
-  void _loadCityList() {
+  void _loadCityList() async {
     ToastUtils.showLoading("加载中...");
     HttpUtils.get(
       "approve/cityList.do",

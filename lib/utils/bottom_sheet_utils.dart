@@ -4,7 +4,7 @@ import 'package:xiaoyun_user/widgets/others/bottom_sheet_container.dart';
 
 class BottomSheetUtil {
   static show(BuildContext context,
-      {@required Widget child, double height = 500}) {
+      {required Widget child, double height = 500}) {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,

@@ -7,10 +7,9 @@ import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 
 class BillApplyCell extends StatelessWidget {
   final OrderBillModel billModel;
-  final Function onCheck;
+  final VoidCallback? onCheck;
 
-  const BillApplyCell({Key key, this.billModel, this.onCheck})
-      : super(key: key);
+  const BillApplyCell({super.key, required this.billModel, this.onCheck});
 
   @override
   Widget build(BuildContext context) {

@@ -18,7 +18,7 @@ import 'package:xiaoyun_user/widgets/others/multi_photo_widget.dart';
 class ApplyAfterSalePage extends StatefulWidget {
   final int orderId;
 
-  const ApplyAfterSalePage({Key key, @required this.orderId}) : super(key: key);
+  const ApplyAfterSalePage({super.key, required this.orderId});
 
   @override
   _ApplyAfterSalePageState createState() => _ApplyAfterSalePageState();

@@ -19,8 +19,11 @@ class AccountBindingPage extends StatefulWidget {
   final int type;
 
   const AccountBindingPage(
-      {Key key, @required this.bindId, @required this.type})
-      : super(key: key);
+      {
+        super.key,
+        required this.bindId,
+        required this.type
+      });
   @override
   _AccountBindingPageState createState() => _AccountBindingPageState();
 }
@@ -89,7 +92,7 @@ class _AccountBindingPageState extends State<AccountBindingPage> {
                               _verifySuccess = false;
                             });
                             resetTimer();
-                            _sliderBarKey.currentState.resetWidget();
+                            _sliderBarKey.currentState?.resetWidget();
                           },
                         );
                       },

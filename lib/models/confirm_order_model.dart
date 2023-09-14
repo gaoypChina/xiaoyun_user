@@ -3,20 +3,20 @@ import 'package:xiaoyun_user/models/coupon_model.dart';
 import 'package:xiaoyun_user/models/service_project_model.dart';
 
 class ConfirmOrderModel {
-  String projectFee;
-  String starFee;
-  String allStarFee;
-  String payFee;
-  CarModel car;
-  List<ServiceProjectModel> projects;
-  List<CouponModel> couponList;
-  String address;
-  String phone;
-  String contact;
-  int sex;
+  String? projectFee;
+  String? starFee;
+  String? allStarFee;
+  String? payFee;
+  CarModel? car;
+  List<ServiceProjectModel> projects = [];
+  List<CouponModel> couponList = [];
+  String? address = '';
+  String? phone = '';
+  String? contact = '';
+  int sex = 0;
 
-  String couponPrice;
-  double discountPrice;
+  String? couponPrice;
+  double discountPrice = 0.0;
 
   ConfirmOrderModel.fromJson(Map<String, dynamic> json) {
     projectFee = json["projectFee"];

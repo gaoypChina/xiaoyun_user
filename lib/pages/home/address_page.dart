@@ -14,20 +14,19 @@ import 'package:xiaoyun_user/widgets/home/address_cell.dart';
 import 'package:xiaoyun_user/widgets/home/address_search_field.dart';
 
 class AddressPage extends StatefulWidget {
-  final LatLng latLng;
-  final String cityName;
+  final LatLng? latLng;
+  final String? cityName;
   final String locationCity;
 
   const AddressPage(
-      {Key key, this.latLng, this.cityName, @required this.locationCity})
-      : super(key: key);
+      {super.key, this.latLng, this.cityName, required this.locationCity});
   @override
   _AddressPageState createState() => _AddressPageState();
 }
 
 class _AddressPageState extends State<AddressPage> {
   List<Poi> _poiList = [];
-  String _cityName;
+  late String _cityName;
   bool _cityEditing = false;
   List<CityModel> _cityList = [];
 
@@ -39,7 +38,7 @@ class _AddressPageState extends State<AddressPage> {
   @override
   void initState() {
     super.initState();
-    _cityName = widget.cityName;
+    _cityName = widget.cityName??'';
     _cityController.text = _cityName;
     _addressNode.requestFocus();
     _searchAddress(center: widget.latLng);
@@ -98,11 +97,8 @@ class _AddressPageState extends State<AddressPage> {
               Poi poi = _poiList[index];
               return InkWell(
                 child: AddressCell(
-                  name: poi.title,
-                  address: poi.provinceName +
-                      poi.cityName +
-                      poi.adName +
-                      poi.address,
+                  name: poi.title??'',
+                  address: '${poi.provinceName}' + '${poi.cityName}' + '${poi.adName}' + '${poi.address}',
                 ),
                 onTap: () {
                   NavigatorUtils.goBackWithParams(context, poi);
@@ -146,13 +142,13 @@ class _AddressPageState extends State<AddressPage> {
     );
   }
 
-  void _searchAddress({LatLng center, String keyword}) async {
+  void _searchAddress({LatLng? center, String? keyword}) async {
     if (center != null) {
       _poiList = await AmapSearch.instance
           .searchAround(center, city: _cityName, pageSize: 10);
     } else {
       _poiList = await AmapSearch.instance
-          .searchKeyword(keyword, city: _cityName, pageSize: 10);
+          .searchKeyword(keyword??'', city: _cityName, pageSize: 10);
       print(_poiList);
     }
     setState(() {});

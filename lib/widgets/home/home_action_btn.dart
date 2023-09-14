@@ -6,14 +6,13 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 class HomeActionBtn extends StatelessWidget {
   final String imageName;
   final String title;
-  final Function onPressed;
+  final VoidCallback? onPressed;
 
   const HomeActionBtn(
-      {Key key,
-      @required this.imageName,
-      @required this.onPressed,
-      this.title = ""})
-      : super(key: key);
+      {super.key,
+      required this.imageName,
+      this.onPressed,
+      this.title = ""});
 
   @override
   Widget build(BuildContext context) {

@@ -12,9 +12,8 @@ class BillPage extends StatefulWidget {
   _BillPageState createState() => _BillPageState();
 }
 
-class _BillPageState extends State<BillPage>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
+class _BillPageState extends State<BillPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   @override
   void initState() {
     super.initState();

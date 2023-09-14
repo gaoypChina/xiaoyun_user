@@ -5,14 +5,14 @@ import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 class HomeSelectBtn extends StatelessWidget {
   final String placeholder;
   final String value;
-  final Function onPressed;
+  final VoidCallback? onPressed;
 
   const HomeSelectBtn({
-    Key key,
+    super.key,
     this.placeholder = "",
     this.value = "",
     this.onPressed,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Container(

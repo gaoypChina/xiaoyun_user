@@ -17,7 +17,7 @@ import 'package:xiaoyun_user/widgets/mine/recharge_card.dart';
 import 'package:xiaoyun_user/widgets/others/check_button.dart';
 
 class MyBalancePage extends StatefulWidget {
-  const MyBalancePage({Key key}) : super(key: key);
+  const MyBalancePage({super.key});
 
   @override
   State<MyBalancePage> createState() => _MyBalancePageState();

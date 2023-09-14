@@ -1,11 +1,11 @@
 class WechatPayModel {
-  String appid;
-  String noncestr;
-  String package;
-  String partnerid;
-  String prepayid;
-  String sign;
-  int timestamp;
+  String appid = '';
+  String noncestr = '';
+  String package = '';
+  String partnerid = '';
+  String prepayid = '';
+  String sign = '';
+  int timestamp = 0;
 
   WechatPayModel.fromJson(Map<String, dynamic> json) {
     appid = json["appid"];

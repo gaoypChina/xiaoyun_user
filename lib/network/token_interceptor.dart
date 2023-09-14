@@ -3,7 +3,7 @@ import '../utils/sp_utils.dart';
 import '../constant/constant.dart';
 
 class TokenIntercxeptor extends InterceptorsWrapper {
-  String _token;
+  String? _token;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -13,7 +13,7 @@ class TokenIntercxeptor extends InterceptorsWrapper {
         _token = authorizationCode;
       }
     }
-    options.headers["Authorization"] = "Bearer " + _token;
+    options.headers["Authorization"] = "Bearer " + _token!;
     super.onRequest(options, handler);
   }
 
@@ -30,7 +30,7 @@ class TokenIntercxeptor extends InterceptorsWrapper {
       if ((response.statusCode == 201 || response.statusCode == 200) &&
           responseJson["token"] != null) {
         _token = responseJson["token"];
-        SpUtil.putString(Constant.token, _token);
+        SpUtil.putString(Constant.token, _token??'');
       }
     } catch (e) {
       print(e);

@@ -5,14 +5,14 @@ class CommonInfoCell extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool hiddenDivider;
-  final Widget slot;
-  final Widget endSlot;
+  final Widget? slot;
+  final Widget? endSlot;
   final double titleWidth;
   final double verticalPadding;
   final TextStyle subtitleStyle;
 
   const CommonInfoCell({
-    Key key,
+    super.key,
     this.title = "",
     this.subtitle = "",
     this.hiddenDivider = false,
@@ -24,7 +24,7 @@ class CommonInfoCell extends StatelessWidget {
       fontSize: 14,
       color: DYColors.text_normal,
     ),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class CommonInfoCell extends StatelessWidget {
             width: this.titleWidth,
             child: Text(title),
           ),
-          if (slot != null) slot,
+          slot??Container(),
           Expanded(
             child: Text(
               subtitle,
@@ -44,7 +44,7 @@ class CommonInfoCell extends StatelessWidget {
               style: this.subtitleStyle,
             ),
           ),
-          if (endSlot != null) endSlot,
+          endSlot??Container(),
         ],
       ),
       decoration: BoxDecoration(

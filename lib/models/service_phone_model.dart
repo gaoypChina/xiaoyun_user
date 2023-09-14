@@ -1,6 +1,6 @@
 class ServicePhoneModel {
-  String name;
-  String phone;
+  String name = '';
+  String phone = '';
 
   ServicePhoneModel.fromJson(Map<String, dynamic> json) {
     name = json["name"];

@@ -4,7 +4,7 @@ class OrderStatusEventBus extends EventBus {
   factory OrderStatusEventBus() => _getInstance();
   static OrderStatusEventBus get instance => _getInstance();
 
-  static OrderStatusEventBus _instance;
+  static OrderStatusEventBus? _instance;
   OrderStatusEventBus._internal() {
     //初始化
   }
@@ -13,7 +13,7 @@ class OrderStatusEventBus extends EventBus {
     if (_instance == null) {
       _instance = OrderStatusEventBus._internal();
     }
-    return _instance;
+    return _instance!;
   }
 }
 

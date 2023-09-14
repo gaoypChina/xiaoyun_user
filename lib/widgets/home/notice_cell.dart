@@ -7,7 +7,7 @@ import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 class NoticeCell extends StatelessWidget {
   final NoticeModel noticeModel;
 
-  const NoticeCell({Key key, this.noticeModel}) : super(key: key);
+  const NoticeCell({super.key, required this.noticeModel});
 
   @override
   Widget build(BuildContext context) {

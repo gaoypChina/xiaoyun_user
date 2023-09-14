@@ -2,40 +2,40 @@ import 'package:xiaoyun_user/models/car_model.dart';
 import 'package:xiaoyun_user/models/order_model.dart';
 
 class OrderDetailModel extends OrderModel {
-  String address;
-  String gps;
-  String contact;
-  String phone;
-  String comment;
-  CarModel accountCar;
-  String carLocation;
-  String otherComment;
+  String address = '';
+  String gps = '';
+  String contact = '';
+  String phone = '';
+  String comment = '';
+  CarModel accountCar = CarModel();
+  String carLocation = '';
+  String otherComment = '';
 
-  String createTime;
-  String cancelTime;
-  String receiveTime;
-  String startTime;
-  String completeTime;
+  String createTime = '';
+  String? cancelTime;
+  String? receiveTime;
+  String? startTime;
+  String? completeTime;
 
-  bool isStarServe;
-  String starFeeMoney;
-  String payFeeMoney;
-  String priceMoney;
+  bool isStarServe = false;
+  String? starFeeMoney;
+  String payFeeMoney = '0.0';
+  String priceMoney = '';
 
-  String wxPayPriceTotal;
-  String aliPayPriceTotal;
+  String wxPayPriceTotal = '';
+  String aliPayPriceTotal = '';
 
-  int couponReduceFee;
-  String couponReduceFeeMoney;
+  int couponReduceFee = 0;
+  String couponReduceFeeMoney = '';
 
-  StaffModel staff;
+  StaffModel? staff;
 
-  int waitNumber;
+  int waitNumber = 0;
 
-  bool cancelable;
-  bool afterSalesable;
-  bool isRefundStatus;
-  String otherFeeTotalPrice;
+  bool cancelable = false;
+  bool afterSalesable = false;
+  bool isRefundStatus = false;
+  String otherFeeTotalPrice = '';
 
   List<String> beforePhotoList = [];
   List<String> afterPhotoList = [];
@@ -69,7 +69,7 @@ class OrderDetailModel extends OrderModel {
     afterSalesable = json["salesStatus"] == 0;
     isRefundStatus = json["isRefundStatus"] == 1;
 
-    waitNumber = json["waitNumber"];
+    // waitNumber = json["waitNumber"];
 
     List beforePhotoJsonList = json["beforePhotoList"] ?? [];
     beforePhotoJsonList.forEach((element) {
@@ -92,11 +92,13 @@ class OrderDetailModel extends OrderModel {
 }
 
 class StaffModel {
-  int id;
-  String phone;
-  String uname;
-  String avatarImgUrl;
-  String rating;
+  int id = 0;
+  String phone = '';
+  String uname = '';
+  String avatarImgUrl = '';
+  String rating = '';
+
+  StaffModel();
 
   StaffModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];

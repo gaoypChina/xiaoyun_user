@@ -4,7 +4,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 
 class ChatListPage extends StatefulWidget {
-  const ChatListPage({Key key}) : super(key: key);
+  const ChatListPage({super.key});
 
   @override
   _ChatListPageState createState() => _ChatListPageState();

@@ -5,7 +5,7 @@ import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 import '../../network/http_utils.dart';
 
 class RechargeAgreementPage extends StatefulWidget {
-  const RechargeAgreementPage({Key key}) : super(key: key);
+  const RechargeAgreementPage({super.key});
 
   @override
   State<RechargeAgreementPage> createState() => _RechargeAgreementPageState();

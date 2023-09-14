@@ -25,25 +25,25 @@ import 'appointment_time_widget.dart';
 
 class HomeMenuCard extends StatefulWidget {
   final Poi poi;
-  final String address;
-  final double height;
-  final String staffCode;
-  final Function(HomeMenuType menuType) menuChanged;
-  final Function(Poi poi) onAddressChanged;
-  final Function() showNextPageEnd;
+  final String? address;
+  final double? height;
+  final String? staffCode;
+  final Function(HomeMenuType menuType)? menuChanged;
+  final Function(Poi poi)? onAddressChanged;
+  final Function()? showNextPageEnd;
   final String locationCity;
 
   const HomeMenuCard({
-    Key key,
-    @required this.poi,
+    super.key,
+    required this.poi,
     this.height,
     this.menuChanged,
     this.onAddressChanged,
     this.showNextPageEnd,
     this.address,
-    @required this.locationCity,
+    required this.locationCity,
     this.staffCode,
-  }) : super(key: key);
+  });
 
   @override
   _HomeMenuCardState createState() => _HomeMenuCardState();
@@ -51,10 +51,10 @@ class HomeMenuCard extends StatefulWidget {
 
 class _HomeMenuCardState extends State<HomeMenuCard> {
   HomeMenuType _menuType = HomeMenuType.now;
-  String _address;
-  Poi _currentPoi;
-  String _dateTimeStr;
-  DateTime _startDate;
+  late String _address;
+  Poi? _currentPoi;
+  String? _dateTimeStr;
+  DateTime? _startDate;
 
   List<ServiceProjectModel> _projectList = [];
   List<ServiceProjectModel> _selectedProjectList = [];
@@ -62,14 +62,14 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
   @override
   void didUpdateWidget(covariant HomeMenuCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _address = widget.address;
+    _address = widget.address??'';
     _currentPoi = widget.poi;
   }
 
   @override
   void initState() {
     super.initState();
-    _address = widget.address;
+    _address = widget.address??'';
     _currentPoi = widget.poi;
   }
 
@@ -88,7 +88,7 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
             menuBtnClicked: (menuType) {
               _menuType = menuType;
               setState(() {});
-              widget.menuChanged(menuType);
+              widget.menuChanged?.call(menuType);
             },
           ),
           SizedBox(height: Constant.padding),
@@ -108,7 +108,7 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
               padding: const EdgeInsets.only(top: Constant.padding),
               child: HomeSelectBtn(
                 placeholder: "请选择预约时间段",
-                value: _dateTimeStr == null ? "" : _dateTimeStr,
+                value: _dateTimeStr == null ? "" : _dateTimeStr??'',
                 onPressed: _getAppointmentTime,
               ),
             ),
@@ -167,21 +167,21 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
             ToastUtils.showError("获取位置信息失败");
             return;
           }
-          Poi poi = await NavigatorUtils.showPage(
+          Poi? poi = await NavigatorUtils.showPage(
             context,
             AddressPage(
-              cityName: _currentPoi.cityName,
-              latLng: _currentPoi.latLng,
+              cityName: _currentPoi?.cityName,
+              latLng: _currentPoi?.latLng,
               locationCity: widget.locationCity,
             ),
           );
-          if (poi != null) {
-            _address = poi.title;
-            _currentPoi = poi;
-            setState(() {});
-            widget.onAddressChanged(poi);
-          }
-        },
+          if (poi == null) return;
+          _address = poi.title??'';
+          _currentPoi = poi;
+          setState(() {
+
+          });
+          widget.onAddressChanged?.call(poi);},
       ),
     );
   }
@@ -256,9 +256,7 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
         staffCode: widget.staffCode,
       ),
     );
-    if (widget.showNextPageEnd != null) {
-      widget.showNextPageEnd();
-    }
+    widget.showNextPageEnd?.call();
   }
 
   void _getStation() {
@@ -267,9 +265,9 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
     HttpUtils.get(
       "user/getStation.do",
       params: {
-        "province": _currentPoi.provinceName,
-        "city": _currentPoi.cityName,
-        "area": _currentPoi.adName,
+        "province": _currentPoi?.provinceName,
+        "city": _currentPoi?.cityName,
+        "area": _currentPoi?.adName,
       },
       onSuccess: (resultData) {
         bool result = resultData.data;

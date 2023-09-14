@@ -7,8 +7,7 @@ class BottomSheetContainer extends StatelessWidget {
   final Widget child;
 
   const BottomSheetContainer(
-      {Key key, @required this.height, @required this.child})
-      : super(key: key);
+      {super.key, required this.height, required this.child});
 
   @override
   Widget build(BuildContext context) {

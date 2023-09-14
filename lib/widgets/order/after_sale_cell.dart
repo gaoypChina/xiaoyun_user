@@ -11,10 +11,9 @@ import 'order_action_btn.dart';
 
 class AfterSaleCell extends StatelessWidget {
   final AfterSaleOrder orderModel;
-  final Function onRepeal;
+  final Function? onRepeal;
 
-  const AfterSaleCell({Key key, this.orderModel, this.onRepeal})
-      : super(key: key);
+  const AfterSaleCell({super.key, required this.orderModel, this.onRepeal});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +90,7 @@ class AfterSaleCell extends StatelessWidget {
                     title: this.orderModel.orderSta == 1 ? "撤销申请" : "售后详情",
                     onPressed: () {
                       if (this.orderModel.orderSta == 1) {
-                        this.onRepeal();
+                        this.onRepeal?.call();
                       } else {
                         NavigatorUtils.showPage(
                           context,

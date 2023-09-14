@@ -1,8 +1,8 @@
 class BillTitleModel {
-  int id;
-  String title;
-  int headType;
-  bool isDefault;
+  int? id;
+  String? title;
+  int? headType;
+  bool isDefault = true;
 
   BillTitleModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];

@@ -14,7 +14,7 @@ import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 class BillDetailPage extends StatefulWidget {
   final int id;
 
-  const BillDetailPage({Key key, @required this.id}) : super(key: key);
+  const BillDetailPage({super.key, required this.id});
 
   @override
   _BillDetailPageState createState() => _BillDetailPageState();
@@ -26,7 +26,7 @@ class _BillDetailPageState extends State<BillDetailPage> {
   );
 
   bool _isOpen = false;
-  BillHistoryDetailModel _detailModel;
+  BillHistoryDetailModel? _detailModel;
 
   @override
   void initState() {
@@ -72,26 +72,26 @@ class _BillDetailPageState extends State<BillDetailPage> {
                   child: Column(
                     children: [
                       CommonInfoCell(
-                        title: _detailModel.headType == 1 ? "公司名称" : "抬头名称",
-                        subtitle: _detailModel.billTitle,
+                        title: _detailModel!.headType == 1 ? "公司名称" : "抬头名称",
+                        subtitle: _detailModel!.billTitle??'',
                       ),
-                      if (_detailModel.headType == 1)
+                      if (_detailModel!.headType == 1)
                         CommonInfoCell(
                           title: "公司税号",
-                          subtitle: _detailModel.dutyNo,
+                          subtitle: _detailModel!.dutyNo??'',
                         ),
-                      if (_isOpen && _detailModel.headType == 1)
+                      if (_isOpen && _detailModel!.headType == 1)
                         _buildHiddenInfo(),
                       CommonInfoCell(
                         title: "发票金额",
-                        subtitle: "${_detailModel.priceMoney}元",
+                        subtitle: "${_detailModel!.priceMoney}元",
                       ),
                       CommonInfoCell(
                         title: "申请时间",
-                        subtitle: _detailModel.createTime,
+                        subtitle: _detailModel!.createTime??'',
                         hiddenDivider: true,
                       ),
-                      if (_detailModel.headType == 1)
+                      if (_detailModel!.headType == 1)
                         CupertinoButton(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: Row(
@@ -131,11 +131,11 @@ class _BillDetailPageState extends State<BillDetailPage> {
                     children: [
                       CommonInfoCell(
                         title: "接收邮箱",
-                        subtitle: _detailModel.email,
+                        subtitle: _detailModel!.email??'',
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: Constant.padding),
-                        child: Text("含${_detailModel.no.length}个订单"),
+                        child: Text("含${_detailModel!.no.length}个订单"),
                       ),
                       ..._orderNoList(),
                       SizedBox(height: 16),
@@ -152,7 +152,7 @@ class _BillDetailPageState extends State<BillDetailPage> {
 
   List<Widget> _orderNoList() {
     return List.generate(
-      _detailModel.no.length,
+      _detailModel!= null ? _detailModel!.no.length:0,
       (index) => Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Row(
@@ -162,7 +162,7 @@ class _BillDetailPageState extends State<BillDetailPage> {
             ),
             SizedBox(width: 8),
             Text(
-              _detailModel.no[index],
+              _detailModel!.no[index],
               style: TextStyle(
                 color: DYColors.text_gray,
               ),
@@ -178,20 +178,19 @@ class _BillDetailPageState extends State<BillDetailPage> {
       children: [
         CommonInfoCell(
           title: "注册地址",
-          subtitle:
-              _detailModel.regAddress.isEmpty ? "无" : _detailModel.regAddress,
+          subtitle: _detailModel!.regAddress.isEmpty ? "无" : _detailModel!.regAddress,
         ),
         CommonInfoCell(
           title: "注册电话",
-          subtitle: _detailModel.regPhone.isEmpty ? "无" : _detailModel.regPhone,
+          subtitle: _detailModel!.regPhone.isEmpty ? "无" : _detailModel!.regPhone,
         ),
         CommonInfoCell(
           title: "开户银行",
-          subtitle: _detailModel.openBank.isEmpty ? "无" : _detailModel.openBank,
+          subtitle: _detailModel!.openBank.isEmpty ? "无" : _detailModel!.openBank,
         ),
         CommonInfoCell(
           title: "银行账号",
-          subtitle: _detailModel.bankNo.isEmpty ? "无" : _detailModel.bankNo,
+          subtitle: _detailModel!.bankNo.isEmpty ? "无" : _detailModel!.bankNo,
         ),
       ],
     );
@@ -210,7 +209,7 @@ class _BillDetailPageState extends State<BillDetailPage> {
           Padding(
             padding: const EdgeInsets.only(left: Constant.padding, bottom: 30),
             child: Text(
-              _detailModel.status == 1 ? "已开票" : "待开票",
+              _detailModel != null?_detailModel!.status == 1 ? "已开票" : "待开票":'',
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -239,8 +238,9 @@ class _BillDetailPageState extends State<BillDetailPage> {
       "userBill/detail.do",
       params: {"id": widget.id},
       onSuccess: (resultData) {
-        _detailModel = BillHistoryDetailModel.fromJson(resultData.data);
-        setState(() {});
+        setState(() {
+          _detailModel = BillHistoryDetailModel.fromJson(resultData.data);
+        });
       },
     );
   }

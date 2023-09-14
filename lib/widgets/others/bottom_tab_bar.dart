@@ -4,11 +4,10 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 
 class BottomTabBar extends StatelessWidget {
   final int currentIndex;
-  final ValueChanged<int> onTap;
+  final ValueChanged<int>? onTap;
   final List<BottomTabBarItem> tabBarItems;
 
-  const BottomTabBar({Key key, this.currentIndex, this.onTap, this.tabBarItems})
-      : super(key: key);
+  const BottomTabBar({super.key, this.currentIndex = 0, this.onTap, required this.tabBarItems});
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +45,11 @@ class BottomTabBar extends StatelessWidget {
 class BottomTabBarItem extends BottomNavigationBarItem {
   final String iconName;
   final String activeIconName;
-  final String name;
+  final String? name;
 
   BottomTabBarItem({
-    this.iconName,
-    this.activeIconName,
+    required this.iconName,
+    required this.activeIconName,
     this.name,
   }) : super(
           icon: DYLocalImage(

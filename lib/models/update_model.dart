@@ -1,8 +1,8 @@
 class UpdateModel {
-  String appVersionNew;
-  String content;
-  String downloadLink;
-  bool isForce;
+  String appVersionNew = '';
+  String content = '';
+  String downloadLink = '';
+  bool isForce = false;
 
   UpdateModel.fromJson(Map<String, dynamic> json) {
     appVersionNew = json["appVersionNew"];

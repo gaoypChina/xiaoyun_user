@@ -9,7 +9,7 @@ import 'package:xiaoyun_user/utils/common_utils.dart';
 import 'package:xiaoyun_user/utils/dialog_utils.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/others/main_agreement_dialog.dart';
-import 'package:fluwx/fluwx.dart' as fluwx;
+import 'package:fluwx/fluwx.dart';
 
 import '../utils/toast_utils.dart';
 import '../utils/sp_utils.dart';
@@ -37,7 +37,7 @@ class _LoadingPageState extends State<LoadingPage> {
       iosKey: Constant.amapIOSKey,
       androidKey: Constant.amapAndroidKey,
     );
-    bool result = await fluwx.registerWxApi(
+    bool result = await Fluwx().registerApi(
       appId: Constant.weChatAppId,
       universalLink: Constant.universalLink,
     );
@@ -96,15 +96,14 @@ class _LoadingPageState extends State<LoadingPage> {
     String savedVersion = SpUtil.getString(Constant.bundleVersion);
     final PackageInfo info = await PackageInfo.fromPlatform();
     String currentVersion = info.version;
-    if (savedVersion != null && savedVersion == currentVersion) {
-      NavigatorUtils.push(context, Routes.main,
-          replace: true, clearStack: true);
+    if (savedVersion.isNotEmpty && savedVersion == currentVersion) {
+      NavigatorUtils.push(context, Routes.main, replace: true, clearStack: true);
     } else {
       //保存新版本
       SpUtil.putString(Constant.bundleVersion, currentVersion);
-      //新版本
-      NavigatorUtils.push(context, Routes.welcome,
-          replace: true, clearStack: true);
+      //新版本(欢迎页面)
+      //新版本每次都重走一次欢迎页
+      NavigatorUtils.push(context, Routes.welcome, replace: true, clearStack: true);
     }
   }
 

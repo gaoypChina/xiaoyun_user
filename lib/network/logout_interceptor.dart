@@ -20,10 +20,10 @@ class LogoutInterceptor extends InterceptorsWrapper {
         jPush.cleanTags().then((map) {});
         SpUtil.remove(Constant.loginState);
         UserEventBus().fire(UserStateChangedEvent(false));
-        Application.navigatorKey.currentState.popUntil(
+        Application.navigatorKey!.currentState?.popUntil(
           ModalRoute.withName(Routes.main),
         );
-        Application.navigatorKey.currentState.pushNamed(Routes.login);
+        Application.navigatorKey!.currentState?.pushNamed(Routes.login);
       }
     } catch (e) {
       print(e);

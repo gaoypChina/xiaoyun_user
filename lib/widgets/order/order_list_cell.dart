@@ -16,9 +16,9 @@ class OrderListCell extends StatelessWidget {
   final OrderModel orderModel;
 
   const OrderListCell({
-    Key key,
-    @required this.orderModel,
-  }) : super(key: key);
+    super.key,
+    required this.orderModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class OrderListCell extends StatelessWidget {
                       child: Text(
                         "期望时间：" +
                             (this.orderModel.isReserve
-                                ? this.orderModel.reserveStartTime
+                                ? this.orderModel.reserveStartTime!
                                 : "立即洗车"),
                       ),
                     ),

@@ -1,8 +1,8 @@
 class EvaluateModel {
-  int evaluateStar;
-  String evaluateTags;
-  String evaluationContent;
-  String evaluationTime;
+  int evaluateStar = 0;
+  String evaluateTags = '';
+  String evaluationContent = '';
+  String evaluationTime = '';
 
   EvaluateModel.fromJson(Map<String, dynamic> json) {
     evaluateStar = json["evaluateStar"];

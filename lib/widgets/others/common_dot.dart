@@ -5,8 +5,7 @@ class CommonDot extends StatelessWidget {
   final Color color;
   final double size;
 
-  const CommonDot({Key key, this.color = DYColors.primary, this.size = 8})
-      : super(key: key);
+  const CommonDot({super.key, this.color = DYColors.primary, this.size = 8});
 
   @override
   Widget build(BuildContext context) {

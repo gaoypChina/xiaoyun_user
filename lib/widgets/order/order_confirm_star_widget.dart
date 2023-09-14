@@ -6,11 +6,9 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 class OrderConfirmStarWidget extends StatelessWidget {
   final bool isStarServe;
   final String price;
-  final Function(bool) onChanged;
+  final Function(bool)? onChanged;
 
-  const OrderConfirmStarWidget(
-      {Key key, this.isStarServe, this.onChanged, this.price})
-      : super(key: key);
+  const OrderConfirmStarWidget({super.key, this.isStarServe = false, this.onChanged, required this.price});
   @override
   Widget build(BuildContext context) {
     return CommonCard(

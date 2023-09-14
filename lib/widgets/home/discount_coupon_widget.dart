@@ -7,10 +7,9 @@ import 'package:xiaoyun_user/widgets/mine/discount_coupon_cell.dart';
 
 class DiscountCouponWidget extends StatelessWidget {
   final List<CouponModel> couponList;
-  final Function(CouponModel couponModel) onConfirmed;
+  final Function(CouponModel? couponModel)? onConfirmed;
 
-  const DiscountCouponWidget({Key key, this.couponList, this.onConfirmed})
-      : super(key: key);
+  const DiscountCouponWidget({super.key, required this.couponList, this.onConfirmed});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,9 +24,7 @@ class DiscountCouponWidget extends StatelessWidget {
                   couponModel: couponModel,
                 ),
                 onTap: () {
-                  if (this.onConfirmed != null) {
-                    this.onConfirmed(couponModel);
-                  }
+                  this.onConfirmed?.call(couponModel);
                   NavigatorUtils.goBack(context);
                 },
               );
@@ -40,9 +37,7 @@ class DiscountCouponWidget extends StatelessWidget {
         CommonActionButton(
           title: "不使用优惠券",
           onPressed: () {
-            if (this.onConfirmed != null) {
-              this.onConfirmed(null);
-            }
+            this.onConfirmed?.call(null);
             NavigatorUtils.goBack(context);
           },
         ),

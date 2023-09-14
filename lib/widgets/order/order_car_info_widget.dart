@@ -7,21 +7,19 @@ import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 class OrderCarInfoWidget extends StatelessWidget {
   final String address;
   final bool isSelectMode;
-  final Function onPressed;
+  final GestureTapCallback? onPressed;
   final CarModel carModel;
 
   const OrderCarInfoWidget(
-      {Key key,
-      this.address,
+      {super.key,
+      this.address = '',
       this.isSelectMode = false,
       this.onPressed,
-      @required this.carModel})
-      : super(key: key);
+      required this.carModel});
 
   @override
   Widget build(BuildContext context) {
-    String carInfo =
-        "${this.carModel.carColourTitle} · ${this.carModel.carTypeTitle}";
+    String carInfo = "${this.carModel.carColourTitle} · ${this.carModel.carTypeTitle}";
     if (this.carModel.isJersey) {
       carInfo += " · 有车衣";
     }

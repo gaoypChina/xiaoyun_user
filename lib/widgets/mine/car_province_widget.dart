@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 
 class CarProvinceWidget extends StatelessWidget {
-  final Function(String value) onClicked;
+  final Function(String value)? onClicked;
 
-  const CarProvinceWidget({Key key, this.onClicked}) : super(key: key);
+  const CarProvinceWidget({super.key, this.onClicked});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class CarProvinceWidget extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                this.onClicked(e);
+                this.onClicked?.call(e);
                 Navigator.pop(context);
               },
             ),

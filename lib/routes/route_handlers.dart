@@ -18,10 +18,10 @@ var myCarHandler = Handler(handlerFunc: (context, params) => MyCarPage());
 var addCarHandler = Handler(handlerFunc: (context, params) => CarAddPage());
 
 var webviewHandler = Handler(handlerFunc: (context, params) {
-  String urlStr = params['urlStr']?.first;
-  String title = params['title']?.first;
+  String? urlStr = params['urlStr']?.first;
+  String? title = params['title']?.first;
   return CommonWebPage(
-    title: title,
-    urlStr: urlStr,
+    title: title??'',
+    urlStr: urlStr??'',
   );
 });

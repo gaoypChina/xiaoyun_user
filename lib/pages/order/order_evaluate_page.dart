@@ -17,7 +17,7 @@ import 'package:xiaoyun_user/widgets/order/order_evaluate_tag.dart';
 class OrderEvaluatePage extends StatefulWidget {
   final int orderId;
 
-  const OrderEvaluatePage({Key key, @required this.orderId}) : super(key: key);
+  const OrderEvaluatePage({super.key,required this.orderId});
   @override
   _OrderEvaluatePageState createState() => _OrderEvaluatePageState();
 }
@@ -25,8 +25,8 @@ class OrderEvaluatePage extends StatefulWidget {
 class _OrderEvaluatePageState extends State<OrderEvaluatePage> {
   List<OrderTagItem> _tagList = [];
   int _evaluateStar = 5;
-  StaffModel _staff;
-  String _completeTime = "";
+  StaffModel? _staff;
+  String _completeTime = '';
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -54,13 +54,13 @@ class _OrderEvaluatePageState extends State<OrderEvaluatePage> {
                 Row(
                   children: [
                     ClipOval(
-                      child: _staff == null || _staff.avatarImgUrl.isEmpty
+                      child: _staff == null || _staff!.avatarImgUrl.isEmpty
                           ? DYLocalImage(
                               imageName: "common_staff_header",
                               size: 48,
                             )
                           : DYNetworkImage(
-                              imageUrl: _staff.avatarImgUrl,
+                              imageUrl: _staff!.avatarImgUrl,
                               size: 48,
                             ),
                     ),
@@ -70,7 +70,7 @@ class _OrderEvaluatePageState extends State<OrderEvaluatePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _staff == null ? "" : _staff.uname,
+                            _staff == null ? "" : _staff!.uname,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 4),
@@ -202,5 +202,5 @@ class _OrderEvaluatePageState extends State<OrderEvaluatePage> {
 class OrderTagItem {
   String title;
   bool isChecked;
-  OrderTagItem({this.title, this.isChecked = false});
+  OrderTagItem({this.title = '', this.isChecked = false});
 }

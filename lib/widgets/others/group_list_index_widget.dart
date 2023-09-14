@@ -4,8 +4,7 @@ class GroupListIndexWidget extends StatelessWidget {
   final String tag;
   final double susHeight;
 
-  const GroupListIndexWidget({Key key, this.tag, this.susHeight = 40})
-      : super(key: key);
+  const GroupListIndexWidget({super.key, this.tag = '', this.susHeight = 40});
   @override
   Widget build(BuildContext context) {
     String tagStr = this.tag;

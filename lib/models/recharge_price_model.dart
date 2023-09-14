@@ -1,9 +1,9 @@
 class RechargePriceModel {
-  int id;
-  String presentedPrice;
-  String price;
-  int type;
-  String content;
+  int? id;
+  String presentedPrice = '0.0';
+  String price = '0.0';
+  int? type;
+  String content = '';
 
   RechargePriceModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];

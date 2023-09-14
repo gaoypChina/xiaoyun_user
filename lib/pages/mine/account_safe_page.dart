@@ -18,7 +18,7 @@ import 'modify_password_page.dart';
 
 class AccountSafePage extends StatefulWidget {
   final bool hasPwd;
-  const AccountSafePage({Key key, @required this.hasPwd}) : super(key: key);
+  const AccountSafePage({super.key, required this.hasPwd});
 
   @override
   _AccountSafePageState createState() => _AccountSafePageState();
@@ -106,7 +106,7 @@ class _AccountSafePageState extends State<AccountSafePage> {
             Navigator.popUntil(context, ModalRoute.withName(Routes.main));
           });
         } else {
-          ToastUtils.showInfo(resultData.msg ?? "注销失败");
+          ToastUtils.showInfo(resultData.msg??'未知错误');
         }
       },
     );

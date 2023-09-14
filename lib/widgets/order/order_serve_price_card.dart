@@ -13,24 +13,21 @@ import 'order_serve_cell.dart';
 class OrderServePriceCard extends StatelessWidget {
   final OrderDetailModel detailModel;
 
-  const OrderServePriceCard({Key key, @required this.detailModel})
-      : super(key: key);
+  const OrderServePriceCard({super.key, required this.detailModel});
 
   @override
   Widget build(BuildContext context) {
     double totalFee = double.tryParse(this.detailModel.payFeeMoney) ?? 0.0;
     double otherFee = double.tryParse(this.detailModel.otherFeePay) ?? 0.0;
-    double otherFeeTotal =
-        double.tryParse(this.detailModel.otherFeeTotal) ?? 0.0;
+    double otherFeeTotal = double.tryParse(this.detailModel.otherFeeTotal??'0.0') ?? 0.0;
     totalFee += otherFeeTotal;
 
-    List<Widget> serveList =
-        List.generate(this.detailModel.orderPriceList.length, (index) {
+    List<Widget> serveList = List.generate(this.detailModel.orderPriceList.length, (index) {
       ProjectModel projectModel = this.detailModel.orderPriceList[index];
       return OrderServeCell(
-        photoImgUrl: projectModel.avatarImgUrl,
-        title: projectModel.projectTitle,
-        price: projectModel.priceMoney,
+        photoImgUrl: projectModel.avatarImgUrl??'',
+        title: projectModel.projectTitle??'',
+        price: projectModel.priceMoney??'',
         originPrice: "${projectModel.originalPriceMoney}",
       );
     });
@@ -39,7 +36,7 @@ class OrderServePriceCard extends StatelessWidget {
     //     isRed: false, top: 16));
 
     if (this.detailModel.isStarServe) {
-      serveList.add(_buildPriceItem("星级服务", this.detailModel.starFeeMoney));
+      serveList.add(_buildPriceItem("星级服务", this.detailModel.starFeeMoney??''));
     }
 
     if (this.detailModel.couponReduceFee > 0) {
@@ -103,7 +100,7 @@ class OrderServePriceCard extends StatelessWidget {
           style: TextStyle(color: DYColors.text_gray, fontSize: 14),
         ),
         Text(
-          "￥${this.detailModel.discountPrice}",
+          "￥${this.detailModel.discountPrice??'0'}",
           style: TextStyle(
             color: DYColors.text_red,
             fontWeight: FontWeight.bold,

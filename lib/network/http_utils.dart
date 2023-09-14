@@ -19,9 +19,9 @@ class HttpUtils {
   static const String UPLOAD = 'upload';
 
   static Future<ResultData> get(String path,
-      {Map<String, dynamic> params,
-      Function(ResultData resultData) onSuccess,
-      Function(String msg) onError,
+      {Map<String, dynamic>? params,
+      Function(ResultData resultData)? onSuccess,
+      Function(String msg)? onError,
       bool showError = true}) async {
     return await request(path,
         params: params,
@@ -32,9 +32,9 @@ class HttpUtils {
   }
 
   static Future<ResultData> post(String path,
-      {Map<String, dynamic> params,
-      Function(ResultData resultData) onSuccess,
-      Function(String msg) onError,
+      {Map<String, dynamic>? params,
+      Function(ResultData resultData)? onSuccess,
+      Function(String msg)? onError,
       bool showError = true}) async {
     return await request(path,
         params: params,
@@ -45,10 +45,10 @@ class HttpUtils {
   }
 
   static Future<ResultData> request(String path,
-      {String method,
+      {String? method,
       dynamic params,
-      Function(ResultData) onSuccess,
-      Function(String msg) onError,
+      Function(ResultData)? onSuccess,
+      Function(String msg)? onError,
       bool showError = true}) async {
     BaseOptions options = BaseOptions(
       method: GET,
@@ -100,7 +100,7 @@ class HttpUtils {
         ToastUtils.showError(resultData.msg ?? "未知错误");
       }
       if (onError != null) {
-        onError(resultData.msg);
+        onError(resultData.msg ?? '未知错误');
       }
     }
     return resultData;

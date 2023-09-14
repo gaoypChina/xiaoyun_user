@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 
 class DYNetworkImage extends StatelessWidget {
   final String imageUrl;
-  final Widget placeholder;
-  final double size;
-  final double width;
-  final double height;
+  final Widget? placeholder;
+  final double? size;
+  final double? width;
+  final double? height;
   final BoxFit fit;
 
   const DYNetworkImage({
-    Key key,
-    @required this.imageUrl,
+    super.key,
+    required this.imageUrl,
     this.placeholder,
     this.width,
     this.height,
     this.size,
     this.fit = BoxFit.cover,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

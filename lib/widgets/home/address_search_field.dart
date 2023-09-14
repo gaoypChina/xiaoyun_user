@@ -6,22 +6,22 @@ import 'package:xiaoyun_user/widgets/common/common_text_field.dart';
 import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 
 class AddressSearchField extends StatelessWidget {
-  final TextEditingController cityController;
-  final TextEditingController addressController;
-  final FocusNode cityNode;
-  final FocusNode addressNode;
+  final TextEditingController? cityController;
+  final TextEditingController? addressController;
+  final FocusNode? cityNode;
+  final FocusNode? addressNode;
 
-  final Function cityOnTap;
-  final ValueChanged<String> cityOnSubmit;
-  final ValueChanged<String> cityOnChanged;
+  final GestureTapCallback? cityOnTap;
+  final ValueChanged<String>? cityOnSubmit;
+  final ValueChanged<String>? cityOnChanged;
 
-  final Function addressOnTap;
-  final ValueChanged<String> addressOnSubmitted;
+  final GestureTapCallback? addressOnTap;
+  final ValueChanged<String>? addressOnSubmitted;
 
   final bool cityEditing;
 
   const AddressSearchField({
-    Key key,
+    super.key,
     this.cityController,
     this.addressController,
     this.cityOnTap,
@@ -32,7 +32,7 @@ class AddressSearchField extends StatelessWidget {
     this.cityOnSubmit,
     this.cityNode,
     this.addressNode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

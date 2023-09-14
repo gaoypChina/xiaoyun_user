@@ -7,11 +7,10 @@ import 'package:xiaoyun_user/widgets/home/service_card.dart';
 
 class ServiceSelectionWidget extends StatefulWidget {
   final List<ServiceProjectModel> projectList;
-  final Function(List<ServiceProjectModel> selectedProjectList) onConfirmed;
+  final Function(List<ServiceProjectModel> selectedProjectList)? onConfirmed;
 
   const ServiceSelectionWidget(
-      {Key key, @required this.projectList, this.onConfirmed})
-      : super(key: key);
+      {super.key, required this.projectList, this.onConfirmed});
   @override
   _ServiceSelectionWidgetState createState() => _ServiceSelectionWidgetState();
 }
@@ -62,9 +61,7 @@ class _ServiceSelectionWidgetState extends State<ServiceSelectionWidget> {
                   selectedList.add(project);
                 }
               });
-              if (widget.onConfirmed != null) {
-                widget.onConfirmed(selectedList);
-              }
+              widget.onConfirmed?.call(selectedList);
               NavigatorUtils.goBack(context);
             },
           )

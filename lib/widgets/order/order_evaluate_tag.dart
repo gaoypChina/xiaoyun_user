@@ -4,11 +4,10 @@ import 'package:xiaoyun_user/constant/constant.dart';
 class OrderEvaluateTag extends StatelessWidget {
   final String title;
   final bool isChecked;
-  final Function onClicked;
+  final GestureTapCallback? onClicked;
 
   const OrderEvaluateTag(
-      {Key key, this.title, this.isChecked = false, this.onClicked})
-      : super(key: key);
+      {super.key, this.title = '', this.isChecked = false, this.onClicked});
 
   @override
   Widget build(BuildContext context) {

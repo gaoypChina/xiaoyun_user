@@ -15,9 +15,9 @@ class OrderDetailToolBar extends StatelessWidget {
   final OrderDetailModel detailModel;
 
   const OrderDetailToolBar({
-    Key key,
-    this.detailModel,
-  }) : super(key: key);
+    super.key,
+    required this.detailModel,
+  });
 
   @override
   Widget build(BuildContext context) {

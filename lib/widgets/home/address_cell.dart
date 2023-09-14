@@ -6,7 +6,7 @@ class AddressCell extends StatelessWidget {
   final String name;
   final String address;
 
-  const AddressCell({Key key, this.name, this.address}) : super(key: key);
+  const AddressCell({super.key, required this.name, required this.address});
 
   @override
   Widget build(BuildContext context) {

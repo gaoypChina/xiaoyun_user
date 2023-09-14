@@ -5,9 +5,9 @@ import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 class ServiceDetailPage extends StatefulWidget {
   final String content;
   const ServiceDetailPage({
-    Key key,
+    super.key,
     this.content = "",
-  }) : super(key: key);
+  });
 
   @override
   _ServiceDetailPageState createState() => _ServiceDetailPageState();
@@ -23,10 +23,10 @@ class _ServiceDetailPageState extends State<ServiceDetailPage> {
           data: widget.content,
           style: {
             "img": Style(
-              width: MediaQuery.of(context).size.width,
+              width: Width(MediaQuery.of(context).size.width),
             )
           },
-          onImageTap: (url, context, attributes, element) {},
+          // onImageTap: (url, context, attributes, element) {},
         ),
       ),
     );

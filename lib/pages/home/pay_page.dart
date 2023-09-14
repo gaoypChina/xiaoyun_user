@@ -14,25 +14,25 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 import 'package:xiaoyun_user/widgets/others/bottom_button_bar.dart';
 import 'package:tobias/tobias.dart' as tobias;
-import 'package:fluwx/fluwx.dart' as fluwx;
+import 'package:fluwx/fluwx.dart';
 
 enum PayType { balance, wechat, alipay }
 
 class PayPage extends StatefulWidget {
   final String orderNo;
   final String money;
-  final int orderId;
+  final int? orderId;
   final bool isOtherFee;
   final bool isRecharge;
 
   const PayPage({
-    Key key,
-    @required this.orderNo,
-    @required this.money,
+    super.key,
+    required this.orderNo,
+    required this.money,
     this.orderId,
     this.isOtherFee = false,
     this.isRecharge = false,
-  }) : super(key: key);
+  });
   @override
   _PayPageState createState() => _PayPageState();
 }
@@ -57,13 +57,14 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
   }
 
   void _initFluwx() async {
+    Fluwx fluwx = Fluwx();
     _isWeChatInstalled = await fluwx.isWeChatInstalled;
-    fluwx.weChatResponseEventHandler.listen((res) {
-      print("res------ ${res.errCode}");
-      if (res.errCode != 0) {
-        ToastUtils.showError('支付取消');
-      }
-    });
+    // fluwx.weChatResponseEventHandler.listen((res) {
+    //   print("res------ ${res.errCode}");
+    //   if (res.errCode != 0) {
+    //     ToastUtils.showError('支付取消');
+    //   }
+    // });
   }
 
   @override
@@ -125,7 +126,7 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
     NavigatorUtils.showPage(
       context,
       PaySuccessPage(
-        orderId: widget.orderId,
+        orderId: widget.orderId??0,
         isRecharge: widget.isRecharge,
       ),
       replace: true,
@@ -192,8 +193,8 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
   }
 
   Widget _buildPayTypeWidget({
-    String icon,
-    String title,
+    String? icon,
+    required String title,
     PayType payType = PayType.wechat,
     bool hiddenDivider = false,
     bool disable = false,
@@ -295,17 +296,16 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
   }
 
   void _payWithWechat(WechatPayModel payModel) {
-    fluwx
-        .payWithWeChat(
+    Fluwx fluwx = Fluwx();
+    fluwx.pay(which: Payment(
       appId: payModel.appid,
       partnerId: payModel.partnerid,
       prepayId: payModel.prepayid,
       packageValue: payModel.package,
       nonceStr: payModel.noncestr,
-      timeStamp: payModel.timestamp,
       sign: payModel.sign,
-    )
-        .then((data) {
+      timestamp: payModel.timestamp,
+    )).then((data) {
       debugPrint('data --- $data');
     });
   }

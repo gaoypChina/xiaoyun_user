@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluwx/fluwx.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/models/coupon_model.dart';
 import 'package:xiaoyun_user/models/page_model.dart';
@@ -21,7 +22,7 @@ import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
 import 'package:xiaoyun_user/widgets/mine/discount_coupon_cell.dart';
 
-import 'package:fluwx/fluwx.dart' as fluwx;
+import 'package:fluwx/fluwx.dart';
 
 import '../../event/user_event_bus.dart';
 
@@ -36,7 +37,7 @@ class _DiscountCouponPageState extends State<DiscountCouponPage> {
   List<CouponModel> _couponList = [];
   TextEditingController _couponController = TextEditingController();
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  String _deviceId;
+  late String _deviceId;
 
   @override
   void initState() {
@@ -48,10 +49,10 @@ class _DiscountCouponPageState extends State<DiscountCouponPage> {
   void _getDeviceId() async {
     if (Platform.isIOS) {
       IosDeviceInfo iosDeviceInfo = await _deviceInfo.iosInfo;
-      _deviceId = iosDeviceInfo.identifierForVendor;
+      _deviceId = iosDeviceInfo.identifierForVendor??'';
     } else {
       AndroidDeviceInfo androidDeviceInfo = await _deviceInfo.androidInfo;
-      _deviceId = androidDeviceInfo.id;
+      _deviceId = androidDeviceInfo.id??'';
     }
   }
 
@@ -238,12 +239,11 @@ class _DiscountCouponPageState extends State<DiscountCouponPage> {
         String description = "让洗车更方便，赶快加入我们吧~";
         switch (type) {
           case ShareType.wechat:
-            _weChatShare(fluwx.WeChatScene.SESSION, link, title, description);
+            _weChatShare(WeChatScene.session, link, title, description);
             break;
           case ShareType.timeline:
-            _weChatShare(fluwx.WeChatScene.TIMELINE, link, title, description);
+            _weChatShare(WeChatScene.timeline, link, title, description);
             break;
-
           case ShareType.copy:
             Clipboard.setData(
               ClipboardData(text: link),
@@ -292,22 +292,22 @@ class _DiscountCouponPageState extends State<DiscountCouponPage> {
     );
   }
 
-  void _weChatShare(fluwx.WeChatScene scene, String link, String title,
+  void _weChatShare(WeChatScene scene, String link, String title,
       String description) async {
-    if (!(await fluwx.isWeChatInstalled)) {
+    if (!(await Fluwx().isWeChatInstalled)) {
       ToastUtils.showInfo("您未安装微信");
       return;
     }
-    bool result = await fluwx.shareToWeChat(
-      fluwx.WeChatShareWebPageModel(
-        link,
-        scene: scene,
-        title: title,
-        description: description,
-        thumbnail: fluwx.WeChatImage.asset(
-          CommonUtils.getImagePath("common_share_logo", "common"),
-        ),
-      ),
+    bool result = await Fluwx().share(
+        WeChatShareWebPageModel(
+          link,
+          scene: scene,
+          title: title,
+          description: description,
+          thumbnail: WeChatImage.asset(
+            CommonUtils.getImagePath("common_share_logo", "common"),
+          )
+        )
     );
     if (result) {
       ToastUtils.showSuccess("分享成功");

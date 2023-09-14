@@ -7,15 +7,15 @@ class AppointmentTimeWidget extends StatefulWidget {
   final String startTime;
   final String endTime;
   final int earliestTime;
-  final Function(String dateTimeStr, DateTime startDate) confirmTimeCallback;
+  final Function(String dateTimeStr, DateTime startDate)? confirmTimeCallback;
 
   const AppointmentTimeWidget(
-      {Key key,
+      {super.key,
       this.confirmTimeCallback,
-      this.startTime,
-      this.endTime,
-      this.earliestTime})
-      : super(key: key);
+      required this.startTime,
+      required this.endTime,
+      required this.earliestTime});
+
   @override
   _AppointmentTimeWidgetState createState() => _AppointmentTimeWidgetState();
 }
@@ -27,7 +27,7 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
   FixedExtentScrollController _dateController = FixedExtentScrollController();
   FixedExtentScrollController _timeController = FixedExtentScrollController();
   DateTime _dateNow = DateTime.now();
-  bool _startToday;
+  late bool _startToday;
 
   int _dateSelectedIndex = 0;
   int _timeSeletectedIndex = 0;
@@ -39,8 +39,7 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
     int endTimeHour = int.tryParse(widget.endTime.split(":").first) ?? 18;
     int endTimeMinute = int.tryParse(widget.endTime.split(":").last) ?? 0;
 
-    DateTime earliestDate =
-        _dateNow.add(Duration(minutes: widget.earliestTime));
+    DateTime earliestDate = _dateNow.add(Duration(minutes: widget.earliestTime));
     DateTime endDate = DateTime(_dateNow.year, _dateNow.month, _dateNow.day,
         endTimeHour, endTimeMinute);
     Duration difference = endDate.difference(earliestDate);
@@ -174,7 +173,7 @@ class _AppointmentTimeWidgetState extends State<AppointmentTimeWidget> {
                         hour,
                         minute,
                       );
-                      widget.confirmTimeCallback(dateTimeStr, startDate);
+                      widget.confirmTimeCallback?.call(dateTimeStr, startDate);
                     }
                   },
                 ),

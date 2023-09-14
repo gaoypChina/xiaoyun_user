@@ -7,13 +7,12 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/others/divider_input_widget.dart';
 
 class PasswordLoginWidget extends StatelessWidget {
-  final Function onExchanged;
-  final TextEditingController accountController;
-  final TextEditingController pwdController;
+  final VoidCallback? onExchanged;
+  final TextEditingController? accountController;
+  final TextEditingController? pwdController;
 
   const PasswordLoginWidget(
-      {Key key, this.onExchanged, this.accountController, this.pwdController})
-      : super(key: key);
+      {super.key, this.onExchanged, this.accountController, this.pwdController});
   @override
   Widget build(BuildContext context) {
     return Padding(

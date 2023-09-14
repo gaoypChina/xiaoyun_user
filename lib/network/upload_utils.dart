@@ -13,7 +13,7 @@ import 'result_data.dart';
 class UploadUtils {
   static const String UPLOAD = 'upload';
 
-  static Future<PhotoModel> uploadPhoto(File imageFile) async {
+  static Future<PhotoModel?> uploadPhoto(File imageFile) async {
     print(imageFile.path);
     Map<String, dynamic> fileMap = {
       'imgFile': await MultipartFile.fromFile(
@@ -29,7 +29,7 @@ class UploadUtils {
       PhotoModel photo = PhotoModel.fromJson(resultData.data);
       return photo;
     } else {
-      ToastUtils.showError(resultData.msg);
+      ToastUtils.showError(resultData.msg??'未知错误');
     }
     return null;
   }
@@ -42,10 +42,10 @@ class UploadUtils {
     bool hasError = false;
     for (Asset asset in imageAssets) {
       Map<String, dynamic> imageDatas = Map();
-      int assetWidth = asset.originalWidth;
+      int assetWidth = asset.originalWidth??0;
       double assetHeight = 0;
       if (assetWidth > 750) assetWidth = 750;
-      assetHeight = assetWidth * asset.originalHeight / asset.originalWidth;
+      assetHeight = assetWidth * (asset.originalHeight??0) / (asset.originalWidth??1);
       ByteData byteData =
           await asset.getThumbByteData(assetWidth, assetHeight.toInt());
       List<int> imageData = byteData.buffer.asUint8List();
@@ -64,12 +64,10 @@ class UploadUtils {
         PhotoModel photo = PhotoModel.fromJson(resultData.data);
         photoList.add(photo);
       } else {
-        ToastUtils.showError(resultData.msg);
+        ToastUtils.showError(resultData.msg??'未知错误');
         hasError = true;
-        if (onError != null) {
-          onError(resultData.msg);
-          break;
-        }
+        onError(resultData.msg??'未知错误');
+        break;
       }
     }
     if (!hasError) {
@@ -81,10 +79,10 @@ class UploadUtils {
     Map<String, dynamic> imageDatas = Map();
     for (int i = 0; i < imageAssets.length; i++) {
       Asset asset = imageAssets[i];
-      int assetWidth = asset.originalWidth;
+      int assetWidth = asset.originalWidth??0;
       double assetHeight = 0;
       if (assetWidth > 750) assetWidth = 750;
-      assetHeight = assetWidth * asset.originalHeight / asset.originalWidth;
+      assetHeight = assetWidth * (asset.originalHeight??0) / (asset.originalWidth??1);
       ByteData byteData =
           await asset.getThumbByteData(assetWidth, assetHeight.toInt());
       List<int> imageData = byteData.buffer.asUint8List();

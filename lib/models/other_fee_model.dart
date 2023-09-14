@@ -1,13 +1,13 @@
 class OtherFeeModel {
-  String otherComment;
-  String staffUpdateTime;
-  String otherFeePayPrice;
+  String otherComment = '';
+  String staffUpdateTime = '0';
+  String otherFeePayPrice = '0';
 
-  double payFeePrice;
-  String staffUpdateCarType;
-  String carType;
-  double staffUpdateOrderMoneyPrice;
-  bool isAdd;
+  double payFeePrice = 0.00;
+  String? staffUpdateCarType;
+  String? carType;
+  double staffUpdateOrderMoneyPrice = 0.00;
+  bool isAdd = false;
 
   OtherFeeModel.fromJson(Map<String, dynamic> json) {
     otherComment = json["otherComment"] ?? "未填写";

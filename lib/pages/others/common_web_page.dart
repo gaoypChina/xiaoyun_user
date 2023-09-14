@@ -7,8 +7,7 @@ class CommonWebPage extends StatefulWidget {
   final String title;
   final String urlStr;
 
-  const CommonWebPage({Key key, this.title = "", this.urlStr})
-      : super(key: key);
+  const CommonWebPage({super.key, this.title = "", required this.urlStr});
 
   @override
   _WebviewPageState createState() => _WebviewPageState();

@@ -5,10 +5,14 @@ import 'package:shimmer/shimmer.dart';
 class SliderBar extends StatefulWidget {
   final double width;
   final double height;
-  final Function() onSuccess;
-  const SliderBar({Key key, this.width = 300, this.onSuccess, this.height = 45})
-      : assert(width != 0 && width != double.infinity),
-        super(key: key);
+  final Function()? onSuccess;
+  const SliderBar({
+    super.key,
+    this.width = 300,
+    this.onSuccess,
+    this.height = 45
+  })
+      : assert(width != 0 && width != double.infinity);
 
   @override
   SliderBarState createState() => SliderBarState();
@@ -31,7 +35,7 @@ class SliderBarState extends State<SliderBar> {
         children: [
           Shimmer.fromColors(
             baseColor: Color(0xff00A2FF),
-            highlightColor: Colors.grey[100],
+            highlightColor: Colors.white,
             enabled: !_success,
             child: Center(
               child: Text(
@@ -83,9 +87,7 @@ class SliderBarState extends State<SliderBar> {
                   setState(() {
                     _left = widget.width - widget.height;
                     _success = true;
-                    if (widget.onSuccess != null) {
-                      widget.onSuccess();
-                    }
+                    widget.onSuccess?.call();
                   });
                 } else {
                   setState(() {

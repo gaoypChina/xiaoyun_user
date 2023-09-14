@@ -21,13 +21,13 @@ class Constant {
   static const String jpushIOSKey = "678f20dff94f6e228c61f3d8";
 
   //正式环境
-  // static const String host = 'http://api.user.jingjiaowow.com/washer-user/';
-  // static const String rongAppKey = "4z3hlwrv42x2t";
-  // static const String jpushAliasPre = "user_";
+  static const String host = 'http://api.user.jingjiaowow.com/washer-user/';
+  static const String rongAppKey = "4z3hlwrv42x2t";
+  static const String jpushAliasPre = "user_";
   //测试环境
-  static const String host = 'http://java.b.dyuit.cn/xiaoyun-api/washer-user/';
-  static const String rongAppKey = "pwe86ga5pst96";
-  static const String jpushAliasPre = "test_user_";
+  // static const String host = 'http://java.b.dyuit.cn/xiaoyun-api/washer-user/';
+  // static const String rongAppKey = "pwe86ga5pst96";
+  // static const String jpushAliasPre = "test_user_";
 
   static const String baseUrl = host + 'api/';
   static const String webUrl = host + 'html/';

@@ -8,16 +8,15 @@ import 'package:xiaoyun_user/widgets/others/group_list_index_widget.dart';
 class CityContentPage extends StatelessWidget {
   final List<CityModel> cityList;
   final String locationCity;
-  final Function(CityModel city) onSelected;
+  final Function(CityModel city)? onSelected;
   final String searchKeywords;
 
   const CityContentPage(
-      {Key key,
-      this.cityList,
-      this.locationCity,
+      {super.key,
+      required this.cityList,
+      required this.locationCity,
       this.onSelected,
-      this.searchKeywords})
-      : super(key: key);
+      required this.searchKeywords});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +49,7 @@ class CityContentPage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onTap: () {
-                          if (this.onSelected != null) {
-                            this.onSelected(model);
-                          }
+                          this.onSelected?.call(model);
                         },
                       );
                     },
@@ -95,9 +92,7 @@ class CityContentPage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              if (this.onSelected != null) {
-                this.onSelected(model);
-              }
+              this.onSelected?.call(model);
             },
           ),
         )

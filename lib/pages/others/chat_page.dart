@@ -20,8 +20,7 @@ class ChatPage extends StatefulWidget {
   final String targetId;
   final String name;
 
-  const ChatPage({Key key, @required this.targetId, this.name = "洗车工"})
-      : super(key: key);
+  const ChatPage({super.key, required this.targetId, this.name = "洗车工"});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -33,9 +32,9 @@ class _ChatPageState extends State<ChatPage> {
   RefreshController _refreshController = RefreshController();
   FocusNode _focusNode = FocusNode();
   List _messageDataSource = []; //消息数组
-  String _senderPhotoUrl;
-  String _targetPhotoUrl;
-  String _userName;
+  late String _senderPhotoUrl;
+  late String _targetPhotoUrl;
+  late String _userName;
   bool _chatDisable = true;
 
   @override
@@ -159,7 +158,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       onPressed: () async {
                         FocusScope.of(context).requestFocus(FocusNode());
-                        File photo = await PhotoPickerUtils.pickPhoto(context);
+                        File? photo = await PhotoPickerUtils.pickPhoto(context);
                         if (photo != null) {
                           // _onSendImageMessage(photo);
                         }
@@ -182,7 +181,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _getUserInfo() {
-    XYUserInfo userInfo = UserInfoDataSource.cachedUserMap[widget.targetId];
+    XYUserInfo? userInfo = UserInfoDataSource.cachedUserMap[widget.targetId];
     if (userInfo == null) {
       UserInfoDataSource.getUserInfo(widget.targetId).then((user) {
         setState(() {
@@ -198,7 +197,7 @@ class _ChatPageState extends State<ChatPage> {
     }
 
     String senderId = SpUtil.getString(Constant.imUserId);
-    XYUserInfo senderInfo = UserInfoDataSource.cachedUserMap[senderId];
+    XYUserInfo? senderInfo = UserInfoDataSource.cachedUserMap[senderId];
     if (senderInfo == null) {
       UserInfoDataSource.getUserInfo(widget.targetId).then((userInfo) {
         setState(() {

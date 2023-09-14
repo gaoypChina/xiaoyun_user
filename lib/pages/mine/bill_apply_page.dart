@@ -23,11 +23,10 @@ class BillApplyPage extends StatefulWidget {
   _BillApplyPageState createState() => _BillApplyPageState();
 }
 
-class _BillApplyPageState extends State<BillApplyPage>
-    with AutomaticKeepAliveClientMixin {
+class _BillApplyPageState extends State<BillApplyPage> with AutomaticKeepAliveClientMixin {
   RefreshController _refreshController = RefreshController();
-  DateTime _startTime;
-  DateTime _endTime;
+  late DateTime _startTime;
+  late DateTime _endTime;
   int _currentPage = 1;
   final int _pageSize = 15;
   bool _enableLoad = false;
@@ -42,6 +41,8 @@ class _BillApplyPageState extends State<BillApplyPage>
   @override
   void initState() {
     super.initState();
+    _startTime = DateTime.now();
+    _endTime = DateTime.now();
     _loadDataList();
     _getMiniMoney();
   }
@@ -213,7 +214,7 @@ class _BillApplyPageState extends State<BillApplyPage>
   }
 
   Widget _buildTimeBtn(String placeholder,
-      {DateTime dateTime, bool isStart = true}) {
+      {DateTime? dateTime, bool isStart = true}) {
     return CupertinoButton(
       color: DYColors.background,
       minSize: 32,
@@ -253,7 +254,7 @@ class _BillApplyPageState extends State<BillApplyPage>
         billType: _billType,
       ),
     );
-    if (needRefresh != null && needRefresh) {
+    if (needRefresh) {
       _loadNewDataList();
     }
   }
@@ -298,13 +299,13 @@ class _BillApplyPageState extends State<BillApplyPage>
       context,
       maxTime: DateTime.now(),
       onConfirm: (time) {
-        if (isStart && _endTime != null) {
+        if (isStart) {
           if (time.isAfter(_endTime)) {
             ToastUtils.showInfo("开始时间不可晚于结束时间");
             return;
           }
         }
-        if (!isStart && _startTime != null) {
+        if (!isStart) {
           if (time.isBefore(_startTime)) {
             ToastUtils.showInfo("结束时间不可早于开始时间");
             return;
@@ -327,13 +328,9 @@ class _BillApplyPageState extends State<BillApplyPage>
       "size": _pageSize,
       "billType": _billType,
     };
-    if (_startTime != null) {
-      params["staDate"] = formatDate(_startTime, [yyyy, '-', mm, '-', dd]);
-    }
-    if (_endTime != null) {
-      params["endDate"] = formatDate(_endTime, [yyyy, '-', mm, '-', dd]);
-    }
-    HttpUtils.get(
+    params["staDate"] = formatDate(_startTime, [yyyy, '-', mm, '-', dd]);
+    params["endDate"] = formatDate(_endTime, [yyyy, '-', mm, '-', dd]);
+      HttpUtils.get(
       "userBill/selectOrderList.do",
       params: params,
       onSuccess: (resultData) {

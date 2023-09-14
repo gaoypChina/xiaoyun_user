@@ -4,16 +4,14 @@ import 'package:xiaoyun_user/widgets/common/common_action_button.dart';
 
 class BottomButtonBar extends StatelessWidget {
   final String title;
-  final Function onPressed;
+  final VoidCallback? onPressed;
 
-  const BottomButtonBar({Key key, this.title, this.onPressed})
-      : super(key: key);
+  const BottomButtonBar({super.key, this.title = '', this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 4),
       child: SafeArea(
         child: CommonActionButton(
           title: this.title,

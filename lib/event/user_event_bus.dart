@@ -4,7 +4,7 @@ class UserEventBus extends EventBus {
   factory UserEventBus() => _getInstance();
   static UserEventBus get instance => _getInstance();
 
-  static UserEventBus _instance;
+  static UserEventBus? _instance;
   UserEventBus._internal() {
     //初始化
   }
@@ -13,7 +13,7 @@ class UserEventBus extends EventBus {
     if (_instance == null) {
       _instance = UserEventBus._internal();
     }
-    return _instance;
+    return _instance!;
   }
 }
 

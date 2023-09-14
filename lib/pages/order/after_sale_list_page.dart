@@ -13,7 +13,7 @@ import 'package:xiaoyun_user/widgets/order/after_sale_cell.dart';
 class AfterSaleListPage extends StatefulWidget {
   final int status;
 
-  const AfterSaleListPage({Key key, this.status = 0}) : super(key: key);
+  const AfterSaleListPage({super.key, this.status = 0});
 
   @override
   _AfterSaleListPageState createState() => _AfterSaleListPageState();

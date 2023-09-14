@@ -10,7 +10,7 @@ import 'package:xiaoyun_user/widgets/order/order_other_fee_card.dart';
 class OrderOtherFeePage extends StatefulWidget {
   final int orderId;
 
-  const OrderOtherFeePage({Key key, this.orderId}) : super(key: key);
+  const OrderOtherFeePage({super.key, required this.orderId});
   @override
   _OrderOtherFeePageState createState() => _OrderOtherFeePageState();
 }

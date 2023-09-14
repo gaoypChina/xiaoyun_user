@@ -10,12 +10,12 @@ class OrderServeCell extends StatelessWidget {
   final String price;
 
   const OrderServeCell({
-    Key key,
-    this.photoImgUrl,
-    this.title,
+    super.key,
+    required this.photoImgUrl,
+    this.title = '',
     this.originPrice = "",
     this.price = "",
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     double originPrice = double.tryParse(this.originPrice) ?? 0;

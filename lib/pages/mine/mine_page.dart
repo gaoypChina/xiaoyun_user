@@ -34,11 +34,10 @@ class MinePage extends StatefulWidget {
   _MinePageState createState() => _MinePageState();
 }
 
-class _MinePageState extends State<MinePage>
-    with AutomaticKeepAliveClientMixin {
+class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin {
   RefreshController _refreshController = RefreshController();
-  UserModel _userInfo;
-  StreamSubscription _subscription;
+  UserModel? _userInfo;
+  late StreamSubscription _subscription;
   List<ServicePhoneModel> _servicePhoneList = [];
   String _balance = "0.00";
   int _couponCount = 0;
@@ -131,12 +130,12 @@ class _MinePageState extends State<MinePage>
     );
   }
 
-  Widget _buildNavigationItem({String icon, Function onPressed}) {
+  Widget _buildNavigationItem({String? icon, VoidCallback? onPressed}) {
     return CupertinoButton(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       minSize: 36,
       child: DYLocalImage(
-        imageName: icon,
+        imageName: icon??'',
         size: 24,
       ),
       onPressed: onPressed,
@@ -186,16 +185,16 @@ class _MinePageState extends State<MinePage>
     );
   }
 
-  Widget _buildServiceItem({String icon, String title, Function onPressed}) {
+  Widget _buildServiceItem({String? icon, String? title, VoidCallback? onPressed}) {
     return CupertinoButton(
       child: Column(
         children: [
           DYLocalImage(
-            imageName: icon,
+            imageName: icon??'',
             size: 32,
           ),
           Text(
-            title,
+            title??'',
             style: TextStyle(
               fontSize: 12,
               color: DYColors.text_normal,
@@ -252,7 +251,7 @@ class _MinePageState extends State<MinePage>
     );
   }
 
-  Widget _buildCellItem(String icon, String title, {Function onPressed}) {
+  Widget _buildCellItem(String icon, String title, {GestureTapCallback? onPressed}) {
     return CommonCellWidget(
       padding: const EdgeInsets.symmetric(vertical: 10),
       icon: icon,
@@ -347,7 +346,7 @@ class _MinePageState extends State<MinePage>
   }
 
   Widget _buildHeaderBtn(
-      {String title, String value, String icon, Function onPressed}) {
+      {String? title, String? value, String? icon, VoidCallback? onPressed}) {
     return CupertinoButton(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Row(
@@ -359,7 +358,7 @@ class _MinePageState extends State<MinePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  value,
+                  value??'',
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 18,
@@ -369,7 +368,7 @@ class _MinePageState extends State<MinePage>
                 ),
                 SizedBox(height: 5),
                 Text(
-                  title,
+                  title??'',
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.white,
@@ -378,7 +377,7 @@ class _MinePageState extends State<MinePage>
               ],
             ),
           ),
-          DYLocalImage(imageName: icon, size: 36),
+          DYLocalImage(imageName: icon??'', size: 36),
         ],
       ),
       onPressed: onPressed,
@@ -390,12 +389,10 @@ class _MinePageState extends State<MinePage>
       imageName: "common_user_header",
       size: 60,
     );
-    if (_userInfo != null &&
-        _userInfo.avatarImgUrl != null &&
-        _userInfo.avatarImgUrl.isNotEmpty) {
+    if (_userInfo != null && (_userInfo!.avatarImgUrl != null && _userInfo!.avatarImgUrl!.isNotEmpty)) {
       return ClipOval(
         child: DYNetworkImage(
-          imageUrl: _userInfo.avatarImgUrl,
+          imageUrl: _userInfo!.avatarImgUrl!,
           placeholder: userDefault,
           size: 60,
         ),

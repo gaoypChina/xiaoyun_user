@@ -13,7 +13,7 @@ class ScanPage extends StatefulWidget {
 
 class _ScanPageState extends State<ScanPage> {
   bool _flashOn = false;
-  QRViewController _controller;
+  late QRViewController _controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   @override

@@ -10,20 +10,20 @@ class OrderActionBtn extends StatelessWidget {
   final String title;
   final double fontSize;
   final double marginLeft;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   final ActionBtnType btnType;
 
   const OrderActionBtn({
-    Key key,
-    @required this.title,
-    @required this.onPressed,
+    super.key,
+    required this.title,
+    required this.onPressed,
     this.width = 80,
     this.height = 28,
     this.fontSize = 12,
     this.btnType = ActionBtnType.outline,
     this.marginLeft = 10,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

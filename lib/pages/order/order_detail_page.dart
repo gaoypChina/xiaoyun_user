@@ -22,27 +22,26 @@ class OrderDetailPage extends StatefulWidget {
   final int orderId;
 
   const OrderDetailPage({
-    Key key,
-    @required this.orderId,
-  }) : super(key: key);
+    super.key,
+    required this.orderId,
+  });
   @override
   _OrderDetailPageState createState() => _OrderDetailPageState();
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
-  OrderDetailModel _detailModel;
-  AmapController _controller;
-  StreamSubscription _subscription;
-  Marker _staffMarker;
-  String _virtualPhone;
+  OrderDetailModel? _detailModel;
+  AmapController? _controller;
+  late StreamSubscription _subscription;
+  Marker? _staffMarker;
+  String? _virtualPhone;
 
   @override
   void initState() {
     super.initState();
     _loadOrderDetail();
     _getVirtualPhone();
-    _subscription =
-        OrderStatusEventBus().on<OrderStateChangedEvent>().listen((event) {
+    _subscription = OrderStatusEventBus().on<OrderStateChangedEvent>().listen((event) {
       _loadOrderDetail();
     });
   }
@@ -51,7 +50,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   void dispose() {
     _subscription.cancel();
     if (_controller != null) {
-      _controller.dispose();
+      _controller!.dispose();
     }
 
     super.dispose();
@@ -61,30 +60,28 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget build(BuildContext context) {
     bool showMap = _detailModel == null
         ? false
-        : (_detailModel.orderSta == 2 || _detailModel.orderSta == 3) &&
-            !_detailModel.isCancel;
-
+        : (_detailModel!.orderSta == 2 || _detailModel!.orderSta == 3) && !_detailModel!.isCancel;
     double otherFee = _detailModel == null
         ? 0.0
-        : double.tryParse(_detailModel.otherFeePay) ?? 0.0;
+        : double.tryParse(_detailModel!.otherFeePay) ?? 0.0;
     bool isOtherFee = _detailModel == null
         ? false
-        : _detailModel.isOtherFeePay == 3 &&
+        : _detailModel!.isOtherFeePay == 3 &&
             otherFee > 0 &&
-            !_detailModel.isCancel;
+            !_detailModel!.isCancel;
     bool showToolBar = _detailModel == null
         ? false
-        : ((_detailModel.orderSta < 3 ||
-                    (_detailModel.orderSta == 3 &&
-                        _detailModel.isOtherFeePay == 3)) &&
-                _detailModel.cancelable &&
-                !_detailModel.isCancel) ||
-            (_detailModel.orderSta == 4 &&
-                (_detailModel.afterSalesable ||
-                    (!_detailModel.isEvaluate && _detailModel.isEvaluable))) ||
-            _detailModel.orderSta == 5 ||
+        : ((_detailModel!.orderSta < 3 ||
+                    (_detailModel!.orderSta == 3 &&
+                        _detailModel!.isOtherFeePay == 3)) &&
+                _detailModel!.cancelable &&
+                !_detailModel!.isCancel) ||
+            (_detailModel!.orderSta == 4 &&
+                (_detailModel!.afterSalesable ||
+                    (!_detailModel!.isEvaluate && _detailModel!.isEvaluable))) ||
+            _detailModel!.orderSta == 5 ||
             isOtherFee ||
-            _detailModel.isEvaluate;
+            _detailModel!.isEvaluate;
     return Scaffold(
       body: _detailModel == null
           ? Container()
@@ -98,7 +95,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ],
                   ),
                 ),
-                if (showToolBar) OrderDetailToolBar(detailModel: _detailModel),
+                if (showToolBar) OrderDetailToolBar(detailModel: _detailModel!),
               ],
             ),
     );
@@ -106,32 +103,30 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   Widget _buildSliverList() {
     return SliverPadding(
-      padding:
-          const EdgeInsets.fromLTRB(Constant.padding, 0, Constant.padding, 20),
+      padding: const EdgeInsets.fromLTRB(Constant.padding, 0, Constant.padding, 20),
       sliver: SliverList(
         delegate: SliverChildListDelegate(
           <Widget>[
-            OrderServePriceCard(detailModel: _detailModel),
+            OrderServePriceCard(detailModel: _detailModel!),
             SizedBox(height: 12),
-            if (_detailModel.orderSta > 1 && _detailModel.staff != null)
+            if (_detailModel!.orderSta > 1 && _detailModel!.staff != null)
               OrderStaffInfoCard(
-                orderId: _detailModel.id,
-                staffModel: _detailModel.staff,
+                orderId: _detailModel!.id,
+                staffModel: _detailModel!.staff!,
                 virtualPhone: _virtualPhone,
-                isRefundStatus: _detailModel.isRefundStatus,
-                isCanceled: _detailModel.isCancel,
-                isFinished:
-                    _detailModel.orderSta == 4 || _detailModel.orderSta == 5,
-                beforePhotoList: _detailModel.beforePhotoList,
-                afterPhotoList: _detailModel.afterPhotoList,
+                isRefundStatus: _detailModel!.isRefundStatus,
+                isCanceled: _detailModel!.isCancel,
+                isFinished: _detailModel!.orderSta == 4 || _detailModel!.orderSta == 5,
+                beforePhotoList: _detailModel!.beforePhotoList,
+                afterPhotoList: _detailModel!.afterPhotoList,
               ),
-            if (_detailModel.orderSta > 1) SizedBox(height: 12),
+            if (_detailModel!.orderSta > 1) SizedBox(height: 12),
             OrderCarInfoCard(
-              detailModel: _detailModel,
+              detailModel: _detailModel!,
             ),
             SizedBox(height: 12),
             OrderBaseInfoCard(
-              detailModel: _detailModel,
+              detailModel: _detailModel!,
             ),
           ],
         ),
@@ -165,7 +160,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             children: [
               Align(
                 alignment: Alignment.bottomRight,
-                child: _detailModel.orderSta == 4
+                child: _detailModel!.orderSta == 4
                     ? Padding(
                         padding: const EdgeInsets.only(right: 50, bottom: 25),
                         child: DYLocalImage(
@@ -188,7 +183,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     padding: const EdgeInsets.only(
                         left: Constant.padding, bottom: 20),
                     child: Text(
-                      _detailModel.status,
+                      _detailModel!.status,
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
@@ -238,20 +233,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           },
         ),
       ],
-      expandedHeight:
-          MediaQuery.of(context).size.width - ScreenUtil().statusBarHeight,
+      expandedHeight: MediaQuery.of(context).size.width - ScreenUtil().statusBarHeight,
       pinned: true,
       flexibleSpace: _buildFlexibleSpaceBar(),
     );
   }
 
   FlexibleSpaceBar _buildFlexibleSpaceBar() {
-    List latLngList = _detailModel.gps.split(",").toList();
-    LatLng latLng;
+    List? latLngList = _detailModel!.gps.split(",").toList();
+    LatLng? latLng;
     if (latLngList != null && latLngList.isNotEmpty) {
       latLng = LatLng(
-        double.tryParse(latLngList[0]),
-        double.tryParse(latLngList[1]),
+        double.tryParse(latLngList[0])??0.0,
+        double.tryParse(latLngList[1])??0.0,
       );
     }
     return FlexibleSpaceBar(
@@ -269,17 +263,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               maskDelay: Duration(milliseconds: 500),
               onMapCreated: (controller) async {
                 _controller = controller;
-                _controller.showCompass(false);
-                await _controller.setZoomLevel(15);
-                await _controller.showMyLocation(
+                _controller!.showCompass(false);
+                await _controller!.setZoomLevel(15);
+                await _controller!.showMyLocation(
                   MyLocationOption(
                     show: true,
                     myLocationType: MyLocationType.Locate,
                   ),
                 );
-                _controller.addMarker(
+                _controller!.addMarker(
                   MarkerOption(
-                    coordinate: latLng,
+                    coordinate: latLng!,
                     infoWindowEnabled: false,
                     iconProvider:
                         AssetImage('assets/images/home/home_center_marker.png'),
@@ -302,14 +296,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               child: Row(
                 children: [
                   Text(
-                    _detailModel.status,
+                    _detailModel!.status,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (_detailModel.orderSta == 2 && _detailModel.waitNumber > 0)
-                    Text("（当前有${_detailModel.waitNumber}人排队)")
+                  if (_detailModel!.orderSta == 2 && _detailModel!.waitNumber > 0)
+                    Text("（当前有${_detailModel!.waitNumber}人排队)")
                 ],
               ),
             )
@@ -350,33 +344,36 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   void _getStaffLocation() {
     HttpUtils.post(
       "order/staffgps.do",
-      params: {"staffId": _detailModel.staff.id},
+      params: {"staffId": _detailModel!.staff?.id},
       onSuccess: (resultData) async {
         double lat = resultData.data["lat"];
         double lng = resultData.data["lng"];
         LatLng coordinate = LatLng(lat, lng);
-        _controller.setCenterCoordinate(coordinate);
+        _controller?.setCenterCoordinate(coordinate);
 
-        List gpsList = _detailModel.gps.split(",").toList();
+        List gpsList = _detailModel!.gps.split(",").toList();
         LatLng destination = LatLng(
-          double.tryParse(gpsList.first),
-          double.tryParse(gpsList.last),
+          double.tryParse(gpsList.first)??0.0,
+          double.tryParse(gpsList.last)??0.0,
         );
         double distance = await AmapService.instance
             .calculateDistance(coordinate, destination);
 
         if (_staffMarker != null) {
-          _staffMarker.setCoordinate(coordinate);
-          _staffMarker.remove();
+          _staffMarker!.setCoordinate(coordinate);
+          _staffMarker!.remove();
         }
-        _staffMarker = await _controller.addMarker(
-          MarkerOption(
-            coordinate: coordinate,
-            widget: _buildStaffMarker(distance),
-            infoWindowEnabled: false,
-            anchorV: 0.5,
-          ),
-        );
+
+        if (_controller != null) {
+          _staffMarker = await _controller!.addMarker(
+            MarkerOption(
+              coordinate: coordinate,
+              widget: _buildStaffMarker(distance),
+              infoWindowEnabled: false,
+              anchorV: 0.5,
+            ),
+          ) as Marker;
+        }
       },
     );
   }
@@ -392,7 +389,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          child: _detailModel.orderSta == 3
+          child: _detailModel!.orderSta == 3
               ? Text(
                   "正在为您服务中",
                   style: TextStyle(

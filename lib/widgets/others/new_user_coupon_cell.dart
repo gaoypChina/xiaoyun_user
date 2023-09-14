@@ -7,7 +7,7 @@ import 'package:xiaoyun_user/widgets/others/dash_line.dart';
 class NewUserCouponCell extends StatelessWidget {
   final CouponModel couponModel;
 
-  const NewUserCouponCell({Key key, this.couponModel}) : super(key: key);
+  const NewUserCouponCell({super.key, required this.couponModel});
 
   @override
   Widget build(BuildContext context) {

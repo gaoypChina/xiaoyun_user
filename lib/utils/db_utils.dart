@@ -4,11 +4,11 @@ import 'package:xiaoyun_user/models/user_info.dart';
 
 class DbUtils {
   factory DbUtils() => _getInstance();
+  static DbUtils _instance = DbUtils._internal();
   static DbUtils get instance => _getInstance();
-  static DbUtils _instance;
-  static Database database;
   static String dbName = 'UserInfoCache.db';
   static String userTableName = 'users';
+  late Database database;
 
   DbUtils._internal() {
     // 初始化
@@ -37,22 +37,21 @@ class DbUtils {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<XYUserInfo>> getUserInfo({String userId}) async {
-    List<Map<String, dynamic>> maps = [];
+  Future<List<XYUserInfo>> getUserInfo({String? userId}) async {
+    List<Map<String, dynamic>>? maps = [];
     if (database == null) {
       await openDb();
     }
     if (userId == null || userId.isEmpty) {
-      maps = await database?.query(userTableName);
+      maps = await database.query(userTableName);
     } else {
-      maps = await database
-          ?.query(userTableName, where: 'userId = ?', whereArgs: [userId]);
+      maps = await database.query(userTableName, where: 'userId = ?', whereArgs: [userId]);
     }
     List<XYUserInfo> infoList = [];
     if (maps.length > 0) {
       infoList = List.generate(maps.length, (i) {
         XYUserInfo info = XYUserInfo();
-        info.id = maps[i]['userId'];
+        info.id = maps![i]['userId'];
         info.name = maps[i]['name'];
         info.portraitUrl = maps[i]['portraitUrl'];
         return info;

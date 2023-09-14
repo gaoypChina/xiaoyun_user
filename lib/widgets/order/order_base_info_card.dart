@@ -6,8 +6,7 @@ import 'package:xiaoyun_user/widgets/common/common_card.dart';
 class OrderBaseInfoCard extends StatelessWidget {
   final OrderDetailModel detailModel;
 
-  const OrderBaseInfoCard({Key key, @required this.detailModel})
-      : super(key: key);
+  const OrderBaseInfoCard({super.key, required this.detailModel});
   @override
   Widget build(BuildContext context) {
     return CommonCard(
@@ -43,17 +42,17 @@ class OrderBaseInfoCard extends StatelessWidget {
     // }
     if (this.detailModel.orderSta >= 2) {
       timeList.add(
-        _buildInfoItem("接单时间", this.detailModel.receiveTime),
+        _buildInfoItem("接单时间", this.detailModel.receiveTime??''),
       );
     }
     if (this.detailModel.orderSta >= 3) {
       timeList.add(
-        _buildInfoItem("服务时间", this.detailModel.startTime),
+        _buildInfoItem("服务时间", this.detailModel.startTime??''),
       );
     }
     if (this.detailModel.orderSta >= 4) {
       timeList.add(
-        _buildInfoItem("完成时间", this.detailModel.completeTime),
+        _buildInfoItem("完成时间", this.detailModel.completeTime??''),
       );
     }
     return timeList;

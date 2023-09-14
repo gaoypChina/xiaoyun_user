@@ -7,7 +7,7 @@ import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 class BillHistoryCell extends StatelessWidget {
   final BillHistoryModel historyModel;
 
-  const BillHistoryCell({Key key, this.historyModel}) : super(key: key);
+  const BillHistoryCell({super.key, required this.historyModel});
 
   @override
   Widget build(BuildContext context) {

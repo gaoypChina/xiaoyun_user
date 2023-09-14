@@ -3,9 +3,9 @@ import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/utils/db_utils.dart';
 
 class XYUserInfo {
-  String id;
-  String name;
-  String portraitUrl;
+  String id = '0';
+  String name = '';
+  String portraitUrl = '';
 
   Map<String, dynamic> toMap() {
     return {'userId': id, 'name': name, 'portraitUrl': portraitUrl};
@@ -14,6 +14,7 @@ class XYUserInfo {
   XYUserInfo();
 
   XYUserInfo.fromJson(Map<String, dynamic> json) {
+    id = json['userId'];
     name = json["userName"];
     portraitUrl = json["userAvatarImgUrl"];
   }
@@ -21,7 +22,7 @@ class XYUserInfo {
 
 class UserInfoDataSource {
   static Map<String, XYUserInfo> cachedUserMap = new Map(); //保证同一 userId
-  static UserInfoCacheListener cacheListener;
+  static UserInfoCacheListener cacheListener = new UserInfoCacheListener();
 
   // 用来刷新用户信息，当有用户信息更新的时候
   static void setUserInfo(XYUserInfo info) {
@@ -34,27 +35,18 @@ class UserInfoDataSource {
 
   // 获取用户信息
   static Future<XYUserInfo> getUserInfo(String userId) async {
-    XYUserInfo cachedUserInfo = cachedUserMap[userId];
+    XYUserInfo? cachedUserInfo = cachedUserMap[userId];
     if (cachedUserInfo != null) {
       return cachedUserInfo;
     } else {
       XYUserInfo info;
-      List<XYUserInfo> infoList =
-          await DbUtils.instance.getUserInfo(userId: userId);
-      if (infoList != null && infoList.isNotEmpty) {
+      List<XYUserInfo> infoList = await DbUtils.instance.getUserInfo(userId: userId);
+      if (infoList.isNotEmpty) {
         info = infoList[0];
       }
-      if (info == null) {
-        if (cacheListener != null) {
-          info = await cacheListener.getUserInfo(userId);
-        }
-        if (info != null) {
-          DbUtils.instance.setUserInfo(info);
-        }
-      }
-      if (info != null) {
-        cachedUserMap[info.id] = info;
-      }
+      info = await cacheListener.getUserInfo(userId);
+      DbUtils.instance.setUserInfo(info);
+      cachedUserMap[info.id] = info;
 
       if (info == null) {
         info = XYUserInfo();
@@ -81,6 +73,6 @@ class UserInfoDataSource {
 }
 
 class UserInfoCacheListener {
-  Future<XYUserInfo> Function(String userId) getUserInfo;
-  void Function(XYUserInfo info) onUserInfoUpdated;
+  late Future<XYUserInfo> Function(String userId) getUserInfo;
+  late void Function(XYUserInfo info) onUserInfoUpdated;
 }

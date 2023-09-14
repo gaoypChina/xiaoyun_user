@@ -8,23 +8,23 @@ class CommonRefresher extends StatelessWidget {
   final bool showEmpty;
   final RefreshController controller;
   final Widget scrollView;
-  final VoidCallback onRefresh;
-  final VoidCallback onLoad;
+  final VoidCallback? onRefresh;
+  final VoidCallback? onLoad;
   final String emptyTips;
   final bool isWaterDrop;
   final bool enablePullDown;
 
   const CommonRefresher({
-    Key key,
+    super.key,
     this.showEmpty = false,
-    this.controller,
-    @required this.scrollView,
+    required this.controller,
+    required this.scrollView,
     this.onRefresh,
     this.onLoad,
     this.emptyTips = '暂无数据',
     this.isWaterDrop = false,
     this.enablePullDown = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

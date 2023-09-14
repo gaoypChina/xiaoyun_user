@@ -8,10 +8,10 @@ class HomeMenuBtn extends StatelessWidget {
   final Function(HomeMenuType menuType) menuBtnClicked;
 
   const HomeMenuBtn({
-    Key key,
-    this.menuBtnClicked,
+    super.key,
+    required this.menuBtnClicked,
     this.menuType = HomeMenuType.now,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,10 @@ class HomeMenuBtn extends StatelessWidget {
 class MenuBtnItem extends StatelessWidget {
   final String title;
   final bool isChecked;
-  final Function onPressed;
+  final VoidCallback? onPressed;
 
   const MenuBtnItem(
-      {Key key, this.title, this.isChecked = true, this.onPressed})
-      : super(key: key);
+      {super.key, this.title = '', this.isChecked = true, this.onPressed});
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(

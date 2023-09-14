@@ -6,16 +6,16 @@ const double _kTabHeight = 46.0;
 class TopTabBar extends StatelessWidget implements PreferredSizeWidget {
   final TabController controller;
   final List<String> tabs;
-  final Function(int index) onTap;
+  final Function(int index)? onTap;
   final bool isScrollable;
 
   const TopTabBar({
-    Key key,
-    @required this.controller,
-    @required this.tabs,
+    super.key,
+    required this.controller,
+    required this.tabs,
     this.onTap,
     this.isScrollable = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class CustomIndicator extends Decoration {
   });
 
   @override
-  BoxPainter createBoxPainter([onChanged]) {
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
     return _CustomPainter(this);
   }
 }
@@ -80,12 +80,7 @@ class _CustomPainter extends BoxPainter {
     assert(configuration.size != null);
     Rect rect;
 
-    rect = Offset(
-            offset.dx +
-                configuration.size.width / 2 -
-                decoration.indicatorWidth * 0.5,
-            (configuration.size.height - decoration.indicatorHeight)) &
-        Size(decoration.indicatorWidth, decoration.indicatorHeight);
+    rect = Offset(offset.dx + (configuration.size?.width ??0)/ 2 - decoration.indicatorWidth * 0.5, (configuration.size?.height??0 - decoration.indicatorHeight)) & Size(decoration.indicatorWidth, decoration.indicatorHeight);
 
     final Paint paint = Paint();
     paint.color = decoration.indicatorColor;

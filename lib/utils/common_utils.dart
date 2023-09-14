@@ -3,14 +3,14 @@ import 'toast_utils.dart';
 // import 'package:keyboard_actions/keyboard_actions.dart';
 
 class CommonUtils {
-  static String getImagePath(String name, String path, {String format: 'png'}) {
+  static String getImagePath(String name, String path, {String format = 'png'}) {
     return 'assets/images/$path/$name.$format';
   }
 
   static void launchTelUrl(String phone) async {
     String urlStr = 'tel:' + phone;
-    Uri url = Uri.tryParse(urlStr);
-    if (await canLaunchUrl(url)) {
+    Uri? url = Uri.tryParse(urlStr);
+    if (await canLaunchUrl(url!)) {
       await launchUrl(url);
     } else {
       ToastUtils.showError('拨号失败！');
@@ -23,8 +23,8 @@ class CommonUtils {
   }
 
   static void launchWebUrl(String urlStr) async {
-    Uri url = Uri.tryParse(urlStr);
-    if (await canLaunchUrl(url)) {
+    Uri? url = Uri.tryParse(urlStr);
+    if (await canLaunchUrl(url!)) {
       await launchUrl(url);
     } else {
       ToastUtils.showError('链接无效，打开失败');

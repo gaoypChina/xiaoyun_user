@@ -97,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     _verifySuccess = false;
                                   });
                                   resetTimer();
-                                  _sliderBarKey.currentState.resetWidget();
+                                  _sliderBarKey.currentState?.resetWidget();
                                 },
                               );
                             },

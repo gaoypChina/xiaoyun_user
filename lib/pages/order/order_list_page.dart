@@ -16,7 +16,7 @@ import 'package:xiaoyun_user/widgets/order/order_list_cell.dart';
 class OrderListPage extends StatefulWidget {
   final int status;
 
-  const OrderListPage({Key key, this.status = 0}) : super(key: key);
+  const OrderListPage({super.key, this.status = 0});
 
   @override
   _OrderListPageState createState() => _OrderListPageState();
@@ -29,8 +29,8 @@ class _OrderListPageState extends State<OrderListPage>
   final int _pageSize = 10;
   bool _enableLoad = false;
   List<OrderModel> _orderList = [];
-  StreamSubscription _subscription;
-  StreamSubscription _loginSubscription;
+  late StreamSubscription _subscription;
+  late StreamSubscription _loginSubscription;
 
   @override
   void initState() {

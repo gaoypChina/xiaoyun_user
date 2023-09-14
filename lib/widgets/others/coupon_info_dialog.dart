@@ -8,9 +8,8 @@ import '../common/common_local_image.dart';
 
 class CouponInfoDialog extends StatelessWidget {
   final CouponModel coupon;
-  final Function() onAction;
-  const CouponInfoDialog({Key key, @required this.coupon, this.onAction})
-      : super(key: key);
+  final Function()? onAction;
+  const CouponInfoDialog({super.key, required this.coupon, this.onAction});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +118,7 @@ class CouponInfoDialog extends StatelessWidget {
                           ),
                           onPressed: () {
                             NavigatorUtils.goBack(context);
-                            this.onAction();
+                            this.onAction?.call();
                           },
                         )
                       : Padding(

@@ -33,21 +33,20 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  AmapController _controller;
+  AmapController? _controller;
   double _menuCardHeight = 264;
   String _address = "请选择具体位置";
   String _cityName = "定位中";
   String _locationCity = "";
   bool _isMapMoveEnd = false;
   bool _isChangeMode = false;
-  Poi _currentPoi;
-  String _staffCode;
-  String _deviceId;
+  Poi? _currentPoi;
+  String? _staffCode;
+  String? _deviceId;
 
-  StreamSubscription _subscription;
+  late StreamSubscription _subscription;
   List<ServicePhoneModel> _servicePhoneList = [];
 
   @override
@@ -66,10 +65,10 @@ class _HomePageState extends State<HomePage>
   void _getDeviceId() async {
     if (Platform.isIOS) {
       IosDeviceInfo iosDeviceInfo = await _deviceInfo.iosInfo;
-      _deviceId = iosDeviceInfo.identifierForVendor;
+      _deviceId = iosDeviceInfo.identifierForVendor??'';
     } else {
       AndroidDeviceInfo androidDeviceInfo = await _deviceInfo.androidInfo;
-      _deviceId = androidDeviceInfo.id;
+      _deviceId = androidDeviceInfo.id??'';
     }
   }
 
@@ -80,19 +79,15 @@ class _HomePageState extends State<HomePage>
   }
 
   void _requestPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.location,
-    ].request();
+    Map<Permission, PermissionStatus> statuses = await [Permission.location,].request();
     bool serviceStatus = await Permission.location.serviceStatus.isEnabled;
-    if (statuses[Permission.location] == PermissionStatus.granted &&
-        serviceStatus) {
-      Location location =
-          await AmapLocation.instance.fetchLocation(needAddress: true);
+    if (statuses[Permission.location] == PermissionStatus.granted && serviceStatus) {
+      Location location = await AmapLocation.instance.fetchLocation(needAddress: true);
       SpUtil.putStringList(Constant.latLng, [
-        location.latLng.latitude.toString(),
-        location.latLng.longitude.toString(),
+        location.latLng!.latitude.toString(),
+        location.latLng!.longitude.toString(),
       ]);
-      _cityName = location.city;
+      _cityName = location.city??'';
       _locationCity = _cityName;
       _controller?.showMyLocation(
         MyLocationOption(show: true),
@@ -165,19 +160,12 @@ class _HomePageState extends State<HomePage>
       city: _cityName,
       onScanAction: _scanAction,
       onCityPressed: () async {
-        String selectedCity = await NavigatorUtils.showPage(
-          context,
-          CityPage(locationCity: _locationCity),
-        );
-        if (selectedCity != null) {
-          if (selectedCity == _cityName) return;
-          _cityName = selectedCity;
-          List poiList = await AmapSearch.instance
-              .searchKeyword(_cityName, city: _cityName, pageSize: 1);
-          _currentPoi = poiList.first;
-          _controller.setCenterCoordinate(_currentPoi.latLng);
-        }
-      },
+        String? selectedCity = await NavigatorUtils.showPage(context, CityPage(locationCity: _locationCity));
+        if (selectedCity == null || selectedCity == _cityName) return;
+        _cityName = selectedCity;
+        List poiList = await AmapSearch.instance.searchKeyword(_cityName, city: _cityName, pageSize: 1);
+        _currentPoi = poiList.first;
+        _controller?.setCenterCoordinate(_currentPoi!.latLng!);},
     );
   }
 
@@ -185,7 +173,7 @@ class _HomePageState extends State<HomePage>
     return HomeMenuCard(
       address: _address,
       height: _menuCardHeight,
-      poi: _currentPoi,
+      poi: _currentPoi??Poi(),
       locationCity: _locationCity,
       staffCode: _staffCode,
       menuChanged: (menuType) {
@@ -194,10 +182,10 @@ class _HomePageState extends State<HomePage>
       },
       onAddressChanged: (poi) {
         _currentPoi = poi;
-        _address = poi.title;
-        _cityName = poi.cityName;
+        _address = poi.title??'';
+        _cityName = poi.cityName??'';
         setState(() {});
-        _controller.setCenterCoordinate(poi.latLng, animated: false);
+        _controller?.setCenterCoordinate(poi.latLng!, animated: false);
         _isChangeMode = true;
         Future.delayed(Duration(milliseconds: 2000), () {
           _isChangeMode = false;
@@ -205,7 +193,7 @@ class _HomePageState extends State<HomePage>
       },
       showNextPageEnd: () {
         setState(() {
-          _staffCode = null;
+          _staffCode = '';
         });
       },
     );
@@ -236,11 +224,11 @@ class _HomePageState extends State<HomePage>
 
   AmapView _buildAmapView() {
     List<String> latLngList = SpUtil.getStringList(Constant.latLng);
-    LatLng latLng;
-    if (latLngList != null && latLngList.isNotEmpty) {
+    LatLng? latLng;
+    if (latLngList.length >= 2) {
       latLng = LatLng(
-        double.tryParse(latLngList[0]),
-        double.tryParse(latLngList[1]),
+        double.tryParse(latLngList[0])??0,
+        double.tryParse(latLngList[1])??0,
       );
     }
     return AmapView(
@@ -253,9 +241,9 @@ class _HomePageState extends State<HomePage>
       maskDelay: Duration(milliseconds: 500),
       onMapCreated: (controller) async {
         _controller = controller;
-        _controller.showCompass(false);
-        _controller.setZoomLevel(15);
-        await _controller.showMyLocation(
+        _controller!.showCompass(false);
+        _controller!.setZoomLevel(15);
+        await _controller!.showMyLocation(
           MyLocationOption(
             show: true,
             myLocationType: MyLocationType.Locate,
@@ -288,7 +276,7 @@ class _HomePageState extends State<HomePage>
         // ReGeocode reGeocode =
         //     await AmapSearch.instance.searchAround(move.coordinate);
         //  List<Poi> poiList = reGeocode.poiList;
-        _getCurrentAddress(move.coordinate);
+        _getCurrentAddress(move.coordinate!);
       },
     );
   }
@@ -299,14 +287,14 @@ class _HomePageState extends State<HomePage>
     if (poiList.isEmpty) {
       setState(() {
         _address = "获取位置信息失败";
-        _currentPoi = null;
+        _currentPoi = Poi();
       });
       return;
     }
 
     setState(() {
       Poi currentPoi = poiList.first;
-      _address = currentPoi.title;
+      _address = currentPoi.title??'';
       _currentPoi = currentPoi;
     });
   }
@@ -318,7 +306,7 @@ class _HomePageState extends State<HomePage>
       return;
     }
     String code = await NavigatorUtils.showPage(context, ScannerPage());
-    if (code != null && code.isNotEmpty) {
+    if (code.isNotEmpty) {
       _verifyCode(code);
     }
   }
@@ -378,7 +366,7 @@ class _HomePageState extends State<HomePage>
   void _getCustomerPhoneList() {
     ToastUtils.showLoading("加载中...");
     HttpUtils.get(
-      "user/getCustomerServiceTelephone.do",
+      'user/getCustomerServiceTelephone.do',
       onSuccess: (resultData) {
         ToastUtils.dismiss();
         List phoneList = resultData.data;

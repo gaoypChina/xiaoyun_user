@@ -10,7 +10,7 @@ class AfterSalePage extends StatefulWidget {
 
 class _AfterSalePageState extends State<AfterSalePage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  late TabController _tabController;
   List<String> _tabTitles = ["全部", "待审核", "退款中", "已退款", "已拒绝"];
   @override
   void initState() {

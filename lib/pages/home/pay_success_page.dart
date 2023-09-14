@@ -9,8 +9,7 @@ import '../order/order_detail_page.dart';
 class PaySuccessPage extends StatefulWidget {
   final int orderId;
   final bool isRecharge;
-  const PaySuccessPage({Key key, this.orderId, this.isRecharge = false})
-      : super(key: key);
+  const PaySuccessPage({super.key, required this.orderId, this.isRecharge = false});
 
   @override
   State<PaySuccessPage> createState() => _PaySuccessPageState();

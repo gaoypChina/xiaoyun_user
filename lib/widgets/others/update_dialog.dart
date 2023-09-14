@@ -9,7 +9,7 @@ import '../../utils/navigator_utils.dart';
 
 class UpdateDialog extends StatelessWidget {
   final UpdateModel updateModel;
-  const UpdateDialog({Key key, this.updateModel}) : super(key: key);
+  const UpdateDialog({super.key, required this.updateModel});
 
   @override
   Widget build(BuildContext context) {

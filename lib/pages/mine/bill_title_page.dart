@@ -15,7 +15,7 @@ import 'package:xiaoyun_user/widgets/others/bottom_button_bar.dart';
 class BillTitlePage extends StatefulWidget {
   final bool isCheckMode;
 
-  const BillTitlePage({Key key, this.isCheckMode = false}) : super(key: key);
+  const BillTitlePage({super.key, this.isCheckMode = false});
   @override
   _BillTitlePageState createState() => _BillTitlePageState();
 }
@@ -49,9 +49,8 @@ class _BillTitlePageState extends State<BillTitlePage> {
           BottomButtonBar(
             title: "添加发票抬头",
             onPressed: () async {
-              bool needRefresh =
-                  await NavigatorUtils.showPage(context, BillTitleAddPage());
-              if (needRefresh != null && needRefresh) {
+              bool needRefresh = await NavigatorUtils.showPage(context, BillTitleAddPage());
+              if (needRefresh) {
                 _loadBillTitleList();
               }
             },
@@ -68,7 +67,7 @@ class _BillTitlePageState extends State<BillTitlePage> {
         BillTitleModel titleModel = _titleList[index];
         return GestureDetector(
           child: BillTitleCell(
-            title: titleModel.title,
+            title: titleModel.title??'',
             isDefault: titleModel.isDefault,
             onDeleteAction: () {
               _deleteAction(index);

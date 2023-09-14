@@ -11,11 +11,11 @@ class DiscountCouponCell extends StatefulWidget {
   final bool isInvalid;
 
   const DiscountCouponCell({
-    Key key,
+    super.key,
     this.bgColor = Colors.white,
-    this.couponModel,
+    required this.couponModel,
     this.isInvalid = false,
-  }) : super(key: key);
+  });
 
   @override
   State<DiscountCouponCell> createState() => _DiscountCouponCellState();

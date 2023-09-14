@@ -6,10 +6,9 @@ import '../../models/contact_info_model.dart';
 
 class ContactInfoCell extends StatelessWidget {
   final ContactInfo contactInfo;
-  final Function() onEdit;
+  final Function()? onEdit;
 
-  const ContactInfoCell({Key key, @required this.contactInfo, this.onEdit})
-      : super(key: key);
+  const ContactInfoCell({super.key, required this.contactInfo, this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +38,7 @@ class ContactInfoCell extends StatelessWidget {
                         ),
                       ),
                     Text(
-                      this.contactInfo.contactName +
-                          "    " +
-                          this.contactInfo.contactPhone,
+                      this.contactInfo.contactName + "    " + this.contactInfo.contactPhone,
                     ),
                   ],
                 ),

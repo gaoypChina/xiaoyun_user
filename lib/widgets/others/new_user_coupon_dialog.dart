@@ -9,7 +9,7 @@ import 'new_user_coupon_cell.dart';
 class NewUserCouponDialog extends StatelessWidget {
   final List<CouponModel> couponList;
 
-  const NewUserCouponDialog({Key key, this.couponList}) : super(key: key);
+  const NewUserCouponDialog({super.key, required this.couponList});
   @override
   Widget build(BuildContext context) {
     return Container(

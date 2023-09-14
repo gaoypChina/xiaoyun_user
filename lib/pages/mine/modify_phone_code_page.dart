@@ -11,8 +11,7 @@ import 'package:xiaoyun_user/widgets/others/get_code_btn.dart';
 class ModifyPhoneCodePage extends StatefulWidget {
   final String phoneNo;
 
-  const ModifyPhoneCodePage({Key key, @required this.phoneNo})
-      : super(key: key);
+  const ModifyPhoneCodePage({super.key, required this.phoneNo});
 
   @override
   _ModifyPhoneCodePageState createState() => _ModifyPhoneCodePageState();
@@ -21,7 +20,7 @@ class ModifyPhoneCodePage extends StatefulWidget {
 class _ModifyPhoneCodePageState extends State<ModifyPhoneCodePage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _codeController = TextEditingController();
-  Function _resetTimerAction;
+  Function? _resetTimerAction;
 
   @override
   void initState() {
@@ -93,7 +92,7 @@ class _ModifyPhoneCodePageState extends State<ModifyPhoneCodePage> {
       params: {"cellphone": widget.phoneNo, "type": 3},
       onSuccess: (resultData) {},
       onError: (msg) {
-        _resetTimerAction();
+        _resetTimerAction?.call();
       },
     );
   }

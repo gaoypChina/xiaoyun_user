@@ -15,13 +15,13 @@ import 'package:xiaoyun_user/widgets/others/bottom_button_bar.dart';
 class MyCarPage extends StatefulWidget {
   final bool isSelectModel;
 
-  const MyCarPage({Key key, this.isSelectModel = false}) : super(key: key);
+  const MyCarPage({super.key, this.isSelectModel = false});
   @override
   _MyCarPageState createState() => _MyCarPageState();
 }
 
 class _MyCarPageState extends State<MyCarPage> {
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
 
   List<CarModel> _carList = [];
   @override
@@ -50,9 +50,8 @@ class _MyCarPageState extends State<MyCarPage> {
           BottomButtonBar(
             title: "添加车辆",
             onPressed: () async {
-              bool needRefresh =
-                  await NavigatorUtils.push(context, Routes.addCar);
-              if (needRefresh != null && needRefresh) {
+              bool needRefresh = await NavigatorUtils.push(context, Routes.addCar);
+              if (needRefresh) {
                 _loadCarList();
               }
             },
@@ -81,7 +80,7 @@ class _MyCarPageState extends State<MyCarPage> {
                 carModel: carModel,
               ),
             );
-            if (needRefresh != null && needRefresh) {
+            if (needRefresh) {
               _loadCarList();
             }
           },

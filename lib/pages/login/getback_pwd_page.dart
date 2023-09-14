@@ -87,7 +87,7 @@ class _GetBackPwdPageState extends State<GetBackPwdPage> {
                                     _verifySuccess = false;
                                   });
                                   resetTimer();
-                                  _sliderBarKey.currentState.resetWidget();
+                                  _sliderBarKey.currentState?.resetWidget();
                                 },
                               );
                             },

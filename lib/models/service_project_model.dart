@@ -1,14 +1,14 @@
 class ServiceProjectModel {
-  int id;
-  String title;
-  String photoImgUrl;
-  String priceMoney;
-  double originalPriceMoney;
-  String content;
-  String intro;
-  String tag;
-  bool isHot;
-  String recommendText;
+  int id = 0;
+  String title = '';
+  String photoImgUrl = '';
+  String priceMoney = '';
+  double originalPriceMoney = 0.0;
+  String content = '';
+  String intro = '';
+  String tag = '';
+  bool isHot = false;
+  String recommendText = '';
 
   bool isChecked = false;
 

@@ -14,7 +14,7 @@ import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 class OrderCancelPage extends StatefulWidget {
   final String orderNo;
 
-  const OrderCancelPage({Key key, @required this.orderNo}) : super(key: key);
+  const OrderCancelPage({super.key, required this.orderNo});
 
   @override
   _OrderCancelPageState createState() => _OrderCancelPageState();

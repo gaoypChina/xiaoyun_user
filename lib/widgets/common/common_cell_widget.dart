@@ -3,26 +3,25 @@ import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 
 class CommonCellWidget extends StatelessWidget {
-  final String icon;
+  final String? icon;
   final double iconSize;
   final String title;
   final String mark;
   final String subtitle;
-  final Widget subtitleWidget;
+  final Widget? subtitleWidget;
   final bool showArrow;
   final bool hiddenDivider;
-  final Function onClicked;
+  final GestureTapCallback? onClicked;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
   final EdgeInsets padding;
-  final Widget endSolt;
+  final Widget? endSolt;
   final double titleWidth;
 
   const CommonCellWidget({
-    Key key,
     this.icon,
     this.iconSize = 20,
-    this.title,
+    required this.title,
     this.subtitle = "",
     this.showArrow = true,
     this.hiddenDivider = false,
@@ -40,7 +39,7 @@ class CommonCellWidget extends StatelessWidget {
     this.mark = "",
     this.subtitleWidget,
     this.titleWidth = 90,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class CommonCellWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: DYLocalImage(
-                        imageName: this.icon,
+                        imageName: this.icon??'',
                         size: this.iconSize,
                       ),
                     ),
@@ -80,15 +79,13 @@ class CommonCellWidget extends StatelessWidget {
                     ),
                   SizedBox(width: 20),
                   Expanded(
-                    child: this.subtitleWidget != null
-                        ? this.subtitleWidget
-                        : Text(
+                    child: this.subtitleWidget?? Text(
                             subtitle,
                             textAlign: TextAlign.end,
                             style: this.subtitleStyle,
                           ),
                   ),
-                  if (endSolt != null) endSolt,
+                  endSolt??Container(),
                   Offstage(
                     offstage: !showArrow,
                     child: Padding(

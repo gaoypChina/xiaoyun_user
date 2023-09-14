@@ -34,10 +34,9 @@ enum CarType { normal, newEnergy }
 
 class CarAddPage extends StatefulWidget {
   final bool isEdit;
-  final CarModel carModel;
+  final CarModel? carModel;
 
-  const CarAddPage({Key key, this.isEdit = false, this.carModel})
-      : super(key: key);
+  const CarAddPage({super.key, this.isEdit = false, this.carModel});
 
   @override
   _CarAddPageState createState() => _CarAddPageState();
@@ -48,18 +47,18 @@ class _CarAddPageState extends State<CarAddPage> {
   TextEditingController _otherNoController = TextEditingController();
 
   List<CarPropertyModel> _colorList = [];
-  CarPropertyModel _selectedColor;
+  CarPropertyModel? _selectedColor;
   List<CarPropertyModel> _typeList = [];
-  CarPropertyModel _selectedType;
-  CarBrandModel _selectedBrand;
+  CarPropertyModel? _selectedType;
+  CarBrandModel? _selectedBrand;
 
   String _province = "浙";
   bool _isDefault = true;
   bool _isJersey = false;
   bool _isMainlandCar = true;
 
-  File _carPhoto;
-  String _carPhotoUrl;
+  File? _carPhoto;
+  String? _carPhotoUrl;
   int _photoId = 0;
   bool _isNewEnergy = false;
   int _codeType = 1;
@@ -76,26 +75,24 @@ class _CarAddPageState extends State<CarAddPage> {
   }
 
   void _configureDatas() {
-    _codeType = widget.carModel.codeType;
+    _codeType = widget.carModel!.codeType;
 
     _selectedBrand = CarBrandModel(
-        brandId: widget.carModel.carBrandId,
-        title: widget.carModel.carBrandTitle);
-    _selectedColor = CarPropertyModel(
-        id: widget.carModel.carColourId, title: widget.carModel.carColourTitle);
-    _selectedType = CarPropertyModel(
-        id: widget.carModel.carTypeId, title: widget.carModel.carTypeTitle);
-    _carPhotoUrl = widget.carModel.photoImgUrl;
-    _photoId = widget.carModel.photo;
-    _isDefault = widget.carModel.isDefault;
-    _isJersey = widget.carModel.isJersey;
+        brandId: widget.carModel!.carBrandId??0,
+        title: widget.carModel!.carBrandTitle);
+    _selectedColor = CarPropertyModel(id: widget.carModel!.carColourId??0, title: widget.carModel!.carColourTitle);
+    _selectedType = CarPropertyModel(id: widget.carModel!.carTypeId, title: widget.carModel!.carTypeTitle);
+    _carPhotoUrl = widget.carModel!.photoImgUrl;
+    _photoId = widget.carModel!.photo??0;
+    _isDefault = widget.carModel!.isDefault;
+    _isJersey = widget.carModel!.isJersey;
     _isMainlandCar = _codeType != 3;
     if (_isMainlandCar) {
-      _province = widget.carModel.code.substring(0, 1);
-      _numberController.text = widget.carModel.code.substring(1);
+      _province = widget.carModel!.code.substring(0, 1);
+      _numberController.text = widget.carModel!.code.substring(1);
       _isNewEnergy = _numberController.text.length >= 7;
     } else {
-      _otherNoController.text = widget.carModel.code;
+      _otherNoController.text = widget.carModel!.code;
     }
   }
 
@@ -203,15 +200,14 @@ class _CarAddPageState extends State<CarAddPage> {
         children: [
           CommonCellWidget(
             title: "车辆品牌",
-            subtitle: _selectedBrand == null ? "请选择" : _selectedBrand.title,
+            subtitle: _selectedBrand == null ? "请选择" : _selectedBrand?.title??'',
             subtitleStyle: TextStyle(
               color: _selectedBrand == null
                   ? DYColors.text_gray
                   : DYColors.text_normal,
             ),
             onClicked: () async {
-              CarBrandModel selectedBrand =
-                  await NavigatorUtils.showPage(context, CarBrandListPage());
+              CarBrandModel selectedBrand = await NavigatorUtils.showPage(context, CarBrandListPage());
               if (selectedBrand != null) {
                 setState(() {
                   _selectedBrand = selectedBrand;
@@ -221,7 +217,7 @@ class _CarAddPageState extends State<CarAddPage> {
           ),
           CommonCellWidget(
             title: "车辆颜色",
-            subtitle: _selectedColor == null ? "请选择" : _selectedColor.title,
+            subtitle: _selectedColor == null ? "请选择" : _selectedColor?.title??'',
             subtitleStyle: TextStyle(
               color: _selectedColor == null
                   ? DYColors.text_gray
@@ -240,7 +236,7 @@ class _CarAddPageState extends State<CarAddPage> {
           ),
           CommonCellWidget(
             title: "车辆类型",
-            subtitle: _selectedType == null ? "请选择" : _selectedType.title,
+            subtitle: _selectedType == null ? "请选择" : _selectedType?.title??'',
             subtitleStyle: TextStyle(
               color: _selectedType == null
                   ? DYColors.text_gray
@@ -298,8 +294,7 @@ class _CarAddPageState extends State<CarAddPage> {
           GestureDetector(
             child: _buildPhotoWidget(),
             onTap: () async {
-              File photoFile =
-                  await PhotoPickerUtils.pickPhoto(context, maxWidth: 1280);
+              File? photoFile = await PhotoPickerUtils.pickPhoto(context, maxWidth: 1280);
               if (photoFile != null) {
                 setState(() {
                   _carPhoto = photoFile;
@@ -316,12 +311,12 @@ class _CarAddPageState extends State<CarAddPage> {
 
   Widget _buildPhotoWidget() {
     if (_carPhoto != null) {
-      return Image.file(_carPhoto);
+      return Image.file(_carPhoto!);
     }
-    if (_carPhotoUrl != null && _carPhotoUrl.isNotEmpty) {
+    if (_carPhotoUrl != null && _carPhotoUrl!.isNotEmpty) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(6),
-        child: DYNetworkImage(imageUrl: _carPhotoUrl),
+        child: DYNetworkImage(imageUrl: _carPhotoUrl!),
       );
     }
     return DYLocalImage(
@@ -504,7 +499,7 @@ class _CarAddPageState extends State<CarAddPage> {
 
   void _uploadCarPhoto() async {
     ToastUtils.showLoading("上传中...");
-    PhotoModel photoModel = await UploadUtils.uploadPhoto(_carPhoto);
+    PhotoModel? photoModel = await UploadUtils.uploadPhoto(_carPhoto!);
     ToastUtils.dismiss();
     if (photoModel != null) {
       _photoId = photoModel.id;
@@ -541,7 +536,7 @@ class _CarAddPageState extends State<CarAddPage> {
     ToastUtils.showLoading("删除中...");
     HttpUtils.get(
       "car/delete.do",
-      params: {"id": widget.carModel.id},
+      params: {"id": widget.carModel?.id},
       onSuccess: (resultData) {
         ToastUtils.showSuccess("删除成功");
         Future.delayed(Duration(seconds: 1), () {
@@ -588,20 +583,18 @@ class _CarAddPageState extends State<CarAddPage> {
 
     Map<String, dynamic> params = {
       "codeType": _codeType,
-      "carBrandId": _selectedBrand.brandId,
-      "carColourId": _selectedColor.id,
-      "carTypeId": _selectedType.id,
+      "carBrandId": _selectedBrand?.brandId,
+      "carColourId": _selectedColor?.id,
+      "carTypeId": _selectedType?.id,
       "code": carNo,
       "isDefault": _isDefault ? 1 : 0,
       "isJersey": _isJersey ? 1 : 0,
     };
     if (widget.isEdit) {
-      params["id"] = widget.carModel.id;
+      params["id"] = widget.carModel!.id;
     }
-    if (_photoId != null) {
-      params["photo"] = _photoId;
-    }
-    HttpUtils.post(
+    params["photo"] = _photoId;
+      HttpUtils.post(
       "car/addOrUpdate.do",
       params: params,
       onSuccess: (resultData) {

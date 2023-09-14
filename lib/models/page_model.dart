@@ -1,9 +1,9 @@
 class PageModel {
-  int current;
-  int pages;
-  int total;
-  int size;
-  List records;
+  int? current;
+  int pages = 0;
+  int? total;
+  int? size;
+  List records = [];
 
   PageModel.fromJson(Map<String, dynamic> json) {
     current = json["current"];

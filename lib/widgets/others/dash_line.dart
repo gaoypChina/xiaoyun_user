@@ -7,12 +7,12 @@ class DashedLine extends StatelessWidget {
   final Axis direction;
 
   const DashedLine({
-    Key key,
+    super.key,
     this.dashHeight = 0.5,
     this.dashWidth = 5,
     this.color = Colors.grey,
     this.direction = Axis.horizontal,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

@@ -7,8 +7,7 @@ import '../../utils/navigator_utils.dart';
 
 class BalanceHeaderCard extends StatelessWidget {
   final String balanceValue;
-  const BalanceHeaderCard({Key key, this.balanceValue = "0.00"})
-      : super(key: key);
+  const BalanceHeaderCard({super.key, this.balanceValue = "0.00"});
 
   @override
   Widget build(BuildContext context) {

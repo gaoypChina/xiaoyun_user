@@ -15,7 +15,7 @@ class ChatListCell extends StatefulWidget {
 }
 
 class _ChatListCellState extends State<ChatListCell> {
-  XYUserInfo _targetUserInfo;
+  late XYUserInfo _targetUserInfo;
 
   int _unReadCount = 0;
 

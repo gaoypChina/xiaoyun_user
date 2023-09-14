@@ -9,14 +9,14 @@ class CommonCard extends StatelessWidget {
   final double radius;
 
   const CommonCard({
-    Key key,
-    @required this.child,
+    super.key,
+    required this.child,
     this.padding = const EdgeInsets.all(0),
     this.margin = const EdgeInsets.all(0),
     this.clipChild = false,
     this.backgroundColor = Colors.white,
     this.radius = 16,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

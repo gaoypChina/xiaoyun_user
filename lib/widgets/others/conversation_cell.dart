@@ -11,12 +11,12 @@ class ConversationCell extends StatelessWidget {
   final String targetPhotoUrl;
 
   const ConversationCell({
-    Key key,
+    super.key,
     // this.message,
     this.showDate = true,
-    this.senderPhotoUrl,
-    this.targetPhotoUrl,
-  }) : super(key: key);
+    this.senderPhotoUrl = '',
+    this.targetPhotoUrl = '',
+  });
 
   @override
   Widget build(BuildContext context) {

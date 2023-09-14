@@ -1,9 +1,9 @@
 class ProjectModel {
-  int id;
-  String projectTitle;
-  String priceMoney;
-  String avatarImgUrl;
-  double originalPriceMoney;
+  int id = 0;
+  String? projectTitle;
+  String? priceMoney;
+  String? avatarImgUrl;
+  double? originalPriceMoney;
 
   ProjectModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];

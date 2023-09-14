@@ -14,7 +14,7 @@ import 'package:xiaoyun_user/widgets/others/multi_photo_widget.dart';
 
 class ReportPage extends StatefulWidget {
   final String userId;
-  const ReportPage({Key key, @required this.userId}) : super(key: key);
+  const ReportPage({super.key, required this.userId});
 
   @override
   _ReportPageState createState() => _ReportPageState();

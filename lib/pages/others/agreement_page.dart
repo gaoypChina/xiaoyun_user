@@ -7,8 +7,7 @@ class AgreementPage extends StatefulWidget {
   final String title;
   final int type;
 
-  const AgreementPage({Key key, this.title = "用户协议", this.type = 1})
-      : super(key: key);
+  const AgreementPage({super.key, this.title = "用户协议", this.type = 1});
 
   @override
   _AgreementPageState createState() => _AgreementPageState();

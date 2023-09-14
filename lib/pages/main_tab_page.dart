@@ -31,7 +31,7 @@ class MainTabPage extends StatefulWidget {
 class _MainTabPageState extends State<MainTabPage> {
   int _currentIndex = 0;
   int _exitTime = 0;
-  StreamSubscription _subscription;
+  late StreamSubscription _subscription;
 
   final PageController _pageController = PageController();
   List<Widget> _bodyList = [HomePage(), OrderPage(), MinePage()];
@@ -61,23 +61,23 @@ class _MainTabPageState extends State<MainTabPage> {
     if (isLogin) {
       // _connectRongIM();
     }
-    _initJpushState();
+    _initJPushState();
 
     Future.delayed(Duration(seconds: 3), () {
       _getVersion();
     });
   }
 
-  Future<void> _initJpushState() async {
-    JPush jpush = JPush();
+  Future<void> _initJPushState() async {
+    JPush jPush = JPush();
 
-    jpush.setup(
+    jPush.setup(
       appKey: Constant.jpushIOSKey,
       channel: "App Store",
       production: true,
       debug: true,
     );
-    jpush.addEventHandler(
+    jPush.addEventHandler(
       // 接收通知回调方法。
       onReceiveNotification: (Map<String, dynamic> message) async {
         debugPrint("flutter onReceiveNotification: $message");
@@ -85,7 +85,7 @@ class _MainTabPageState extends State<MainTabPage> {
       // 点击通知回调方法。
       onOpenNotification: (Map<String, dynamic> message) async {
         debugPrint("flutter onOpenNotification: $message");
-        jpush.setBadge(0).then((map) {});
+        jPush.setBadge(0).then((map) {});
         handleNotificationMessage(message);
       },
 
@@ -94,22 +94,22 @@ class _MainTabPageState extends State<MainTabPage> {
         debugPrint("flutter onReceiveMessage: $message");
       },
     );
-    jpush.applyPushAuthority(
+    jPush.applyPushAuthority(
       NotificationSettingsIOS(sound: true, alert: true, badge: true),
     );
     if (Platform.isIOS) {
-      jpush.setBadge(0).then((map) {});
-      jpush.getLaunchAppNotification().then((message) {
+      jPush.setBadge(0).then((map) {});
+      jPush.getLaunchAppNotification().then((message) {
         print('getLaunchAppNotification message : $message');
-        jpush.setBadge(0).then((map) {});
-        if (message.isNotEmpty) {
+        jPush.setBadge(0).then((map) {});
+        if (message.runtimeType is Map && message.isNotEmpty) {
           handleNotificationMessage(message);
         }
       });
     }
   }
 
-  void handleNotificationMessage(Map<String, dynamic> message) {
+  void handleNotificationMessage(Map<dynamic, dynamic> message) {
     Map extraData = message['extras'];
     int actionType = extraData['actionType'];
 

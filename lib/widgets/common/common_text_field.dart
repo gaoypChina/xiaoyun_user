@@ -5,24 +5,24 @@ import 'package:xiaoyun_user/constant/constant.dart';
 class DYTextField extends StatelessWidget {
   final bool autoFocus;
   final TextInputType keyboardType;
-  final String placeholder;
-  final FocusNode focusNode;
+  final String? placeholder;
+  final FocusNode? focusNode;
   final TextAlign textAlign;
   final bool obscureText;
   final double fontSize;
   final Color color;
-  final int maxLength;
-  final TextEditingController controller;
+  final int? maxLength;
+  final TextEditingController? controller;
   final TextInputAction textInputAction;
   final OverlayVisibilityMode clearButtonMode;
-  final ValueChanged<String> onSubmitted;
-  final ValueChanged<String> onChanged;
-  final Function onTap;
+  final ValueChanged<String>? onSubmitted;
+  final ValueChanged<String>? onChanged;
+  final GestureTapCallback? onTap;
   final bool readOnly;
-  final List<TextInputFormatter> inputFormatter;
+  final List<TextInputFormatter>? inputFormatter;
 
   const DYTextField({
-    Key key,
+    super.key,
     this.autoFocus = false,
     this.keyboardType = TextInputType.text,
     this.placeholder,
@@ -40,7 +40,7 @@ class DYTextField extends StatelessWidget {
     this.onTap,
     this.onChanged,
     this.inputFormatter,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class DYTextField extends StatelessWidget {
     );
   }
 
-  List<TextInputFormatter> _getInputFormatters() {
+  List<TextInputFormatter>? _getInputFormatters() {
     if (this.keyboardType == TextInputType.number ||
         this.keyboardType == TextInputType.phone) {
       return [FilteringTextInputFormatter.digitsOnly];

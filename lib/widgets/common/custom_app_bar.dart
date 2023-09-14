@@ -4,18 +4,18 @@ import 'package:xiaoyun_user/constant/constant.dart';
 
 class DYAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final Widget titleWidget;
-  final Widget leading;
-  final List<Widget> actions;
+  final Widget? titleWidget;
+  final Widget? leading;
+  final List<Widget>? actions;
   final String backImage;
   final bool automaticallyImplyLeading;
   final double titleSpacing;
   final Color backgroundColor;
-  final Gradient gradient;
+  final Gradient? gradient;
   final bool showBack;
   final bool centerTitle;
-  final PreferredSizeWidget bottom;
-  final SystemUiOverlayStyle systemOverlayStyle;
+  final PreferredSizeWidget? bottom;
+  final SystemUiOverlayStyle? systemOverlayStyle;
 
   DYAppBar({
     this.title = "",
@@ -34,7 +34,7 @@ class DYAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   Widget build(BuildContext context) {
-    Widget _leading = this.leading;
+    Widget? _leading = this.leading;
     if (this.showBack && this.leading == null) {
       _leading = IconButton(
         icon: Image.asset(

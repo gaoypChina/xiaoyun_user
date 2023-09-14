@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         dividerColor: DYColors.divider,
         indicatorColor: DYColors.primary,
         textTheme: TextTheme(
-          bodyText2: TextStyle(
+          bodyMedium: TextStyle(
             color: DYColors.text_normal,
             fontSize: 14,
           ),
@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         const Locale('en', 'US'), // 美国英语
         const Locale('zh', 'CN'), // 中文简体
       ],
-      onGenerateRoute: Application.router.generator,
+      onGenerateRoute: Application.router!.generator,
       navigatorKey: Application.navigatorKey,
       builder: (context, child) {
         return GestureDetector(
@@ -85,9 +85,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           ),
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus &&
-                currentFocus.focusedChild != null) {
-              FocusManager.instance.primaryFocus.unfocus();
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
             }
           },
         );

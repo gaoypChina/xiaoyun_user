@@ -6,15 +6,12 @@ import '../../models/recharge_price_model.dart';
 class RechargeCard extends StatelessWidget {
   final RechargePriceModel priceItem;
   final bool isChecked;
-  final Function() onTap;
-  const RechargeCard(
-      {Key key, this.priceItem, this.isChecked = false, this.onTap})
-      : super(key: key);
+  final Function()? onTap;
+  const RechargeCard({super.key, required this.priceItem, this.isChecked = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    double presentedPriceValue =
-        double.tryParse(this.priceItem.presentedPrice) ?? 0.0;
+    double presentedPriceValue = double.tryParse(this.priceItem.presentedPrice) ?? 0.0;
     return GestureDetector(
       child: Container(
         height: 80,

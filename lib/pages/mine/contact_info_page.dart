@@ -13,7 +13,7 @@ import '../../widgets/mine/contact_info_cell.dart';
 
 class ContactInfoPage extends StatefulWidget {
   final bool isSelectMode;
-  const ContactInfoPage({Key key, this.isSelectMode = false}) : super(key: key);
+  const ContactInfoPage({super.key, this.isSelectMode = false});
 
   @override
   State<ContactInfoPage> createState() => _ContactInfoPageState();

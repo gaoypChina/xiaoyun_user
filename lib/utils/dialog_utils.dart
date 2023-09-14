@@ -7,17 +7,17 @@ export 'package:awesome_dialog/awesome_dialog.dart';
 
 class DialogUtils {
   static showAlertDialog(
-    BuildContext context, {
-    DialogType dialogType = DialogType.NO_HEADER,
-    String title = "温馨提示",
-    String message = "",
-    Widget body,
-    String btnCancelText = "取消",
-    String btnOkText = "确定",
-    Function cancelAction,
-    Function confirmAction,
-    bool autoDismiss = true,
-    Function(DismissType type) onDissmissCallback,
+      BuildContext context, {
+        DialogType dialogType = DialogType.NO_HEADER,
+        String title = "温馨提示",
+        String message = "",
+        Widget? body,
+        String btnCancelText = "取消",
+        String btnOkText = "确定",
+        void Function()? cancelAction,
+        void Function()? confirmAction,
+        bool autoDismiss = true,
+        Function(DismissType type)? onDissmissCallback,
   }) {
     AwesomeDialog(
       context: context,
@@ -27,7 +27,7 @@ class DialogUtils {
       title: title,
       desc: message,
       autoDismiss: autoDismiss,
-      onDissmissCallback: onDissmissCallback,
+      onDismissCallback: onDissmissCallback,
       btnCancel: cancelAction != null
           ? CupertinoButton(
               padding: const EdgeInsets.all(8),
@@ -57,8 +57,8 @@ class DialogUtils {
 
   static showActionSheetDialog(
     BuildContext context, {
-    String message,
-    @required List<ActionSheetDialogItem> dialogItems,
+    String? message,
+    required List<ActionSheetDialogItem> dialogItems,
   }) async {
     var result = await showCupertinoModalPopup<int>(
       context: context,
@@ -82,8 +82,7 @@ class DialogUtils {
               child: Text(
                 dialogItem.title,
                 style: TextStyle(
-                  color:
-                      dialogItem.isDestructiveAction ? Colors.red : Colors.blue,
+                  color: dialogItem.isDestructiveAction ? Colors.red : Colors.blue,
                   fontSize: 16,
                 ),
               ),
@@ -91,7 +90,7 @@ class DialogUtils {
               onPressed: () {
                 Navigator.pop(cxt, dialogItem.result);
                 if (dialogItem.onPressed != null) {
-                  dialogItem.onPressed();
+                  dialogItem.onPressed?.call();
                 }
               },
             );
@@ -103,8 +102,8 @@ class DialogUtils {
   }
 
   static Future showCustomDialog({
-    @required BuildContext context,
-    @required Widget child,
+    required BuildContext context,
+    required Widget child,
     Color backgroundColor = Colors.white,
     barrierDismissible = false,
     insetPadding = const EdgeInsets.all(0),
@@ -158,12 +157,12 @@ class ActionSheetDialogItem {
   String title;
   bool isDestructiveAction;
   int result;
-  Function onPressed;
+  Function? onPressed;
 
   ActionSheetDialogItem({
-    this.title,
+    this.title = '',
     this.isDestructiveAction = false,
-    this.result,
+    this.result = 0,
     this.onPressed,
   });
 }

@@ -9,22 +9,22 @@ import '../order/order_car_info_widget.dart';
 
 class ConfirmBaseInfoCard extends StatelessWidget {
   final CarModel currentCar;
-  final Poi poi;
+  final Poi? poi;
   final bool isAppointment;
   final String appointmentDate;
   final int expectTime;
-  final Function() showTimeView;
-  final Function() onCarClicked;
+  final Function()? showTimeView;
+  final Function()? onCarClicked;
   const ConfirmBaseInfoCard({
-    Key key,
-    this.currentCar,
+    super.key,
+    required this.currentCar,
     this.poi,
     this.isAppointment = false,
-    this.appointmentDate,
+    required this.appointmentDate,
     this.showTimeView,
     this.onCarClicked,
-    this.expectTime,
-  }) : super(key: key);
+    required this.expectTime,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +37,7 @@ class ConfirmBaseInfoCard extends StatelessWidget {
           OrderCarInfoWidget(
             isSelectMode: true,
             carModel: this.currentCar,
-            address: this.poi.provinceName +
-                this.poi.cityName +
-                this.poi.adName +
-                this.poi.title,
+            address: '${this.poi?.provinceName}' + '${this.poi?.cityName}' + '${this.poi?.adName}' + '${this.poi?.title}',
             onPressed: this.onCarClicked,
           ),
           this.isAppointment
@@ -56,8 +53,7 @@ class ConfirmBaseInfoCard extends StatelessWidget {
                   ],
                 )
               : Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   margin: const EdgeInsets.only(bottom: 20),
                   child: Text(
                     "预计接单时间：大约${this.expectTime}分钟接单",

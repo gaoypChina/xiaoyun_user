@@ -33,7 +33,7 @@ class NavigatorUtils {
   static Future push(BuildContext context, String path,
       {bool replace = false, bool clearStack = false}) {
     FocusScope.of(context).requestFocus(FocusNode());
-    return Application.router.navigateTo(context, path,
+    return Application.router!.navigateTo(context, path,
         replace: replace,
         clearStack: clearStack,
         transition: TransitionType.native);
@@ -43,8 +43,7 @@ class NavigatorUtils {
       BuildContext context, String path, Function(Object) function,
       {bool replace = false, bool clearStack = false}) {
     FocusScope.of(context).requestFocus(new FocusNode());
-    Application.router
-        .navigateTo(context, path,
+    Application.router!.navigateTo(context, path,
             replace: replace,
             clearStack: clearStack,
             transition: TransitionType.native)

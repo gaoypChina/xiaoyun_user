@@ -3,24 +3,24 @@ import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/widgets/common/common_text_field.dart';
 
 class DividerInputView extends StatelessWidget {
-  final Widget slot;
-  final String placeholder;
-  final TextEditingController controller;
+  final Widget? slot;
+  final String? placeholder;
+  final TextEditingController? controller;
   final bool obscureText;
-  final int maxLength;
+  final int? maxLength;
   final TextInputType keyboardType;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   const DividerInputView({
-    Key key,
+    super.key,
     this.slot,
     this.placeholder,
     this.controller,
     this.obscureText = false,
-    this.keyboardType,
+    this.keyboardType = TextInputType.text,
     this.maxLength,
     this.focusNode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class DividerInputView extends StatelessWidget {
               maxLength: this.maxLength,
             ),
           ),
-          if (this.slot != null) this.slot,
+          this.slot??Container(),
         ],
       ),
       decoration: BoxDecoration(

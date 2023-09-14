@@ -1,18 +1,18 @@
 class CouponModel {
-  int id;
-  String expireTime;
-  int couponId;
-  String title;
-  String full;
-  String money;
-  String fullMoney;
-  String moneyMoney;
-  int status;
-  String remark;
-  int type; //优惠券类型，1：全场通用满减券,2:首单免费券,3:普通免费券
-  String couponCode;
-  int activityStatus; //活动状态:0:不存在,1:活动进行中,2:活动已结束, 3: 活动未开始
-  int getStatus; //是否领取:0:未领取,1:已领取
+  int id = 0;
+  String expireTime = '';
+  int? couponId;
+  String title = '';
+  String? full;
+  String? money;
+  String? fullMoney;
+  String? moneyMoney;
+  int? status;
+  String remark = '';
+  int? type; //优惠券类型，1：全场通用满减券,2:首单免费券,3:普通免费券
+  String couponCode = '';
+  int? activityStatus; //活动状态:0:不存在,1:活动进行中,2:活动已结束, 3: 活动未开始
+  int? getStatus; //是否领取:0:未领取,1:已领取
 
   CouponModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -31,8 +31,14 @@ class CouponModel {
     status = json["status"];
     remark = json["remark"] ?? "";
     type = json["type"];
-    couponCode = json["couponCode"];
-    activityStatus = json["activityStatus"];
-    getStatus = json["getStatus"];
+    if (json.containsKey('couponCode')) {
+      couponCode = json['couponCode'];
+    }
+    if (json.containsKey('activityStatus')) {
+      activityStatus = json['activityStatus'];
+    }
+    if (json.containsKey('getStatus')) {
+      getStatus = json['getStatus'];
+    }
   }
 }
