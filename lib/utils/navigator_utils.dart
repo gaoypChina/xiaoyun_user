@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import '../routes/route_export.dart';
 
 class NavigatorUtils {
-  static Future showPage(BuildContext context, Widget page,
-      {bool replace = false, bool clearStack = false}) {
+  static Future showPage(
+      BuildContext context,
+      Widget page,
+      {
+        bool replace = false,
+        bool clearStack = false
+      }) {
     FocusScope.of(context).requestFocus(FocusNode());
     if (clearStack) {
       return Navigator.pushAndRemoveUntil(

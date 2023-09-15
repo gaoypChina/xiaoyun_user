@@ -10,7 +10,7 @@ import 'dialog_utils.dart';
 class PhotoPickerUtils {
   static double maxWidth = 0;
   static int imageQuality = 0;
-  static Future<File>? pickPhoto(
+  static Future<File?> pickPhoto(
     BuildContext context, {
     double maxWidth = 0,
     int imageQuality = 0,
@@ -46,7 +46,7 @@ class PhotoPickerUtils {
     );
   }
 
-  static Future<File> _pickImageActionSheet(BuildContext context) async {
+  static Future<File?> _pickImageActionSheet(BuildContext context) async {
     var result = await DialogUtils.showActionSheetDialog(
       context,
       dialogItems: [
@@ -61,9 +61,9 @@ class PhotoPickerUtils {
     }
   }
 
-  static Future<File> _pickImageAction(
+  static Future<File?> _pickImageAction(
       BuildContext context, ImageSource source) async {
-    late File fileImage;
+    File? fileImage;
     final picker = ImagePicker();
     try {
       final pickedFile = await picker.pickImage(
@@ -71,7 +71,7 @@ class PhotoPickerUtils {
         maxWidth: maxWidth,
         imageQuality: imageQuality,
       );
-      fileImage = File(pickedFile!.path);
+      fileImage = File(pickedFile?.path??'');
     } catch (error) {
       print(error);
     }

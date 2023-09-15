@@ -81,7 +81,7 @@ class PickerUtils {
         );
       },
     );
-    if (selectedIndex != null && selectedIndex != -1) {
+    if (selectedIndex != -1) {
       confirmCallback?.call(selectedIndex);
     }
   }
