@@ -1,8 +1,9 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 // import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
-import 'package:xiaoyun_user/models/user_info.dart';
+import 'package:xiaoyun_user/models/user_info_entity.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/common/common_network_image.dart';
 
@@ -15,7 +16,7 @@ class ChatListCell extends StatefulWidget {
 }
 
 class _ChatListCellState extends State<ChatListCell> {
-  late XYUserInfo _targetUserInfo;
+  UserInfoEntity? _targetUserInfo;
 
   int _unReadCount = 0;
 
@@ -40,7 +41,7 @@ class _ChatListCellState extends State<ChatListCell> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _targetUserInfo == null ? "" : _targetUserInfo.name,
+                  _targetUserInfo == null ? '' : _targetUserInfo!.name??'',
                   style: TextStyle(
                     fontSize: 16,
                     color: DYColors.text_normal,
@@ -128,11 +129,11 @@ class _ChatListCellState extends State<ChatListCell> {
       imageName: "common_staff_header",
       size: 60,
     );
-    if (_targetUserInfo == null || _targetUserInfo.portraitUrl == null) {
+    if (_targetUserInfo == null || ObjectUtil.isEmptyString(_targetUserInfo!.portraitUrl)) {
       protraitWidget = placeholder;
     } else {
       protraitWidget = DYNetworkImage(
-        imageUrl: _targetUserInfo.portraitUrl,
+        imageUrl: _targetUserInfo!.portraitUrl!,
         placeholder: placeholder,
         size: 60,
       );

@@ -8,7 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/event/user_event_bus.dart';
 import 'package:xiaoyun_user/models/update_model.dart';
-import 'package:xiaoyun_user/models/user_info.dart';
+import 'package:xiaoyun_user/models/user_info_entity.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 // import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/order/order_page.dart';

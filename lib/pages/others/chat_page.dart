@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:xiaoyun_user/models/user_info_entity.dart';
 // import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/others/report_page.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
 import '../../utils/sp_utils.dart';
-import '../../models/user_info.dart';
 import '../../constant/constant.dart';
 import '../../utils/photo_picker_utils.dart';
 import '../../widgets/common/common_local_image.dart';
@@ -181,32 +181,32 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _getUserInfo() {
-    XYUserInfo? userInfo = UserInfoDataSource.cachedUserMap[widget.targetId];
+    UserInfoEntity? userInfo = UserInfoDataSource.cachedUserMap[widget.targetId];
     if (userInfo == null) {
       UserInfoDataSource.getUserInfo(widget.targetId).then((user) {
         setState(() {
-          _targetPhotoUrl = user.portraitUrl;
+          _targetPhotoUrl = user.portraitUrl??'';
           _userName = user.name ?? "洗车工";
         });
       });
     } else {
       setState(() {
-        _targetPhotoUrl = userInfo.portraitUrl;
+        _targetPhotoUrl = userInfo.portraitUrl??'';
         _userName = userInfo.name ?? "洗车工";
       });
     }
 
     String senderId = SpUtil.getString(Constant.imUserId);
-    XYUserInfo? senderInfo = UserInfoDataSource.cachedUserMap[senderId];
+    UserInfoEntity? senderInfo = UserInfoDataSource.cachedUserMap[senderId];
     if (senderInfo == null) {
       UserInfoDataSource.getUserInfo(widget.targetId).then((userInfo) {
         setState(() {
-          _senderPhotoUrl = userInfo.portraitUrl;
+          _senderPhotoUrl = userInfo.portraitUrl??'';
         });
       });
     } else {
       setState(() {
-        _senderPhotoUrl = senderInfo.portraitUrl;
+        _senderPhotoUrl = senderInfo.portraitUrl??'';
       });
     }
   }

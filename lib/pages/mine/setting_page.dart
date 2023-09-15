@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/event/user_event_bus.dart';
-import 'package:xiaoyun_user/models/user_model.dart';
+import 'package:xiaoyun_user/models/user_model_entity.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/network/upload_utils.dart';
 import 'package:xiaoyun_user/pages/mine/about_page.dart';
@@ -32,7 +33,8 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   File? _photoFile;
-  UserModel? _userInfo;
+  UserModelEntity? _userInfo;
+  String _sexDesc = '保密';
   bool _hasPwd = true;
 
   @override
@@ -67,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 CommonCellWidget(
                   title: "昵称",
-                  subtitle: _userInfo!.nickname.isEmpty ? "未设置" : _userInfo!.nickname,
+                  subtitle: _userInfo!.nickname??"未设置",
                   onClicked: () async {
                     String? nickName = await NavigatorUtils.showPage(context, ModifyNicknamePage());
                     if (nickName != null) {
@@ -78,7 +80,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 CommonCellWidget(
                   title: "性别",
-                  subtitle: _userInfo!.sexDesc,
+                  subtitle: _sexDesc,
                   onClicked: () {
                     DialogUtils.showActionSheetDialog(
                       context,
@@ -87,14 +89,14 @@ class _SettingPageState extends State<SettingPage> {
                         ActionSheetDialogItem(
                           title: "男",
                           onPressed: () {
-                            _userInfo!.sexDesc = "男";
+                            _sexDesc = '男';
                             _updateUserInfo({"sex": 1, "type": 2});
                           },
                         ),
                         ActionSheetDialogItem(
                           title: "女",
                           onPressed: () {
-                            _userInfo!.sexDesc = "女";
+                            _sexDesc = '女';
                             _updateUserInfo({"sex": 2, "type": 2});
                           },
                         )
@@ -111,7 +113,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 CommonCellWidget(
                   title: "手机号码",
-                  subtitle: _userInfo!.phone,
+                  subtitle: _userInfo!.phone??'未设置',
                   hiddenDivider: true,
                   onClicked: () {
                     NavigatorUtils.showPage(context, ModifyPhonePwdPage());
@@ -208,8 +210,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showDatePicker() {
-    DateTime birthday =
-        DateTime.tryParse(_userInfo!.birthday ?? "") ?? DateTime(1985, 6, 15);
+    DateTime birthday = DateTime.tryParse(_userInfo!.birthday ?? "") ?? DateTime(1985, 6, 15);
 
     DatePickerUtils.showDatePicker(
       context,
@@ -236,8 +237,20 @@ class _SettingPageState extends State<SettingPage> {
       "user/userDetail.do",
       onSuccess: (resultData) {
         ToastUtils.dismiss();
-        _userInfo = UserModel.fromJson(resultData.data);
-        _hasPwd = _userInfo!.password.isNotEmpty;
+        _userInfo = UserModelEntity.fromJson(resultData.data);
+        if (_userInfo!.sex == null) {
+          _sexDesc = '保密';
+        } else {
+          if (_userInfo!.sex == 0) {
+            _sexDesc = "保密";
+          } else if (_userInfo!.sex == 1) {
+            _sexDesc = "男";
+          } else {
+            _sexDesc = "女";
+          }
+        }
+
+        _hasPwd = ObjectUtil.isNotEmpty(_userInfo!.password);
         setState(() {});
       },
     );

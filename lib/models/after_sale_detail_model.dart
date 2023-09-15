@@ -25,8 +25,7 @@ class AfterSaleDetailModel {
     refundFeeMoney = json["refundFeeMoney"];
 
     List photoJsonList = json["photoList"] ?? [];
-    photoList =
-        photoJsonList.map<String>((e) => e["photo"].toString()).toList();
+    photoList = photoJsonList.map<String>((e) => e["photo"].toString()).toList();
 
     //1：待审核，2：审核通过，3：审核拒绝，4：已打款
     statusTitle = ["", "退款待处理", "退款中", "已拒绝", "已打款"][status];

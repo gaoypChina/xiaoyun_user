@@ -7,7 +7,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/event/user_event_bus.dart';
 import 'package:xiaoyun_user/models/service_phone_model.dart';
-import 'package:xiaoyun_user/models/user_model.dart';
+import 'package:xiaoyun_user/models/user_model_entity.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/mine/contact_info_page.dart';
 import 'package:xiaoyun_user/pages/mine/discount_coupon_page.dart';
@@ -36,7 +36,7 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin {
   RefreshController _refreshController = RefreshController();
-  UserModel? _userInfo;
+  UserModelEntity? _userInfo;
   late StreamSubscription _subscription;
   List<ServicePhoneModel> _servicePhoneList = [];
   String _balance = "0.00";
@@ -413,7 +413,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
     return await HttpUtils.get(
       "user/userDetail.do",
       onSuccess: (resultData) {
-        _userInfo = UserModel.fromJson(resultData.data);
+        _userInfo = UserModelEntity.fromJson(resultData.data);
         setState(() {});
       },
     );

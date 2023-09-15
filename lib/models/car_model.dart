@@ -27,7 +27,9 @@ class CarModel {
     carTypeTitle = json["carTypeTitle"];
     photo = json["photo"]??0;
     photoImgUrl = json["photoImgUrl"];
-    // isDefault = json["isDefault"] == 1;
+    if(json.containsKey('isDefault')) {
+      isDefault = json['isDefault'] == 1;
+    }
     isJersey = json["isJersey"] == 1;
   }
 }

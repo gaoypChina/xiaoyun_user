@@ -71,6 +71,7 @@ dependencies:
   amap_map_fluttify: ^2.0.0
   # rongcloud_im_plugin: ^5.1.8+6
   device_info_plus: ^4.1.3
+  common_utils: ^2.1.0
 
 dev_dependencies:
   flutter_test:

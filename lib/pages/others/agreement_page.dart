@@ -37,8 +37,9 @@ class _AgreementPageState extends State<AgreementPage> {
       "approve/registeredAgreement.do",
       params: {"cid": widget.type},
       onSuccess: (resultData) {
-        _content = resultData.data["content"];
-        setState(() {});
+        setState(() {
+          _content = resultData.data["content"];
+        });
       },
     );
   }
