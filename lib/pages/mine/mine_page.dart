@@ -70,7 +70,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
         backgroundColor: Colors.transparent,
         systemOverlayStyle: SystemUiOverlayStyle.light,
         actions: [
-          _buidTopActions(),
+          _buildTopActions(),
         ],
       ),
       body: CommonRefresher(
@@ -95,7 +95,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Widget _buidTopActions() {
+  Widget _buildTopActions() {
     return Container(
       height: 36,
       decoration: BoxDecoration(
@@ -208,8 +208,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 
   Widget _buildMoreServeWidget() {
     return CommonCard(
-      padding:
-          const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 8),
       margin: Constant.horizontalPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,8 +344,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Widget _buildHeaderBtn(
-      {String? title, String? value, String? icon, VoidCallback? onPressed}) {
+  Widget _buildHeaderBtn({String? title, String? value, String? icon, VoidCallback? onPressed}) {
     return CupertinoButton(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Row(
