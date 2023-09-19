@@ -56,8 +56,10 @@ class PhotoPickerUtils {
     );
     if (result == 1) {
       return _pickImageAction(context, ImageSource.camera);
-    } else {
+    } else if (result == 2){
       return _pickImageAction(context, ImageSource.gallery);
+    } else {
+      return null;
     }
   }
 

@@ -12,6 +12,7 @@ import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/mine/contact_info_page.dart';
 import 'package:xiaoyun_user/pages/mine/discount_coupon_page.dart';
 import 'package:xiaoyun_user/pages/mine/my_balance_page.dart';
+import 'package:xiaoyun_user/pages/mine/unite/unite_center_page.dart';
 import 'package:xiaoyun_user/pages/order/after_sale_page.dart';
 import 'package:xiaoyun_user/pages/mine/bill_page.dart';
 import 'package:xiaoyun_user/pages/mine/setting_page.dart';
@@ -237,6 +238,14 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
                 _showPhoneDialog();
               }
             },
+          ),
+          _buildCellItem(
+              'mine_cell_unite',
+              '合作中心',
+              onPressed: () {
+                if(_userInfo == null) return;
+                NavigatorUtils.showPage(context, UniteCenterPage(userModelEntity: _userInfo!));
+              }
           ),
           _buildCellItem(
             "mine_cell_feedback",

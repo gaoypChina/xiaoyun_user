@@ -202,7 +202,7 @@ class _SettingPageState extends State<SettingPage> {
 
   void _choosePhoto() async {
     File? photoFile = await PhotoPickerUtils.pickPhoto(context, maxWidth: 500);
-    if (photoFile == null) return;
+    if (ObjectUtil.isEmpty(photoFile) || ObjectUtil.isEmpty(photoFile?.path)) return;
 
     _photoFile = photoFile;
     setState(() {});
