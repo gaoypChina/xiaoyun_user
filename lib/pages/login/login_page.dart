@@ -63,10 +63,10 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
     };
-    _initConfirgure();
+    _initConfigure();
   }
 
-  void _initConfirgure() async {
+  void _initConfigure() async {
     _isWeChatInstalled = await Fluwx().isWeChatInstalled;
     _isSignInAppleAvailable = await SignInWithApple.isAvailable();
     setState(() {});

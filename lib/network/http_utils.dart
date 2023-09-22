@@ -8,8 +8,8 @@ import 'result_data.dart';
 import 'token_interceptor.dart';
 
 class HttpUtils {
-  static const int connectTimeout = 20000;
-  static const int receiveTimeout = 30000;
+  static const Duration connectTimeout = Duration(milliseconds: 2000);
+  static const Duration receiveTimeout = Duration(milliseconds: 2000);
 
   static const String GET = 'get';
   static const String POST = 'post';
@@ -74,7 +74,7 @@ class HttpUtils {
     _dio.interceptors.add(LogoutInterceptor());
     // _dio.interceptors.add(LogInterceptor(responseBody: true));
 
-    ResultData resultData;
+    late ResultData resultData;
     try {
       Response response;
       if (method == GET) {
@@ -83,13 +83,15 @@ class HttpUtils {
         response = await _dio.post(path, data: params);
       }
       resultData = ResultData.fromJson(response.data);
-    } on DioError catch (error) {
+    } catch (error) {
       String message = '网络连接错误';
-      if (error.type == DioErrorType.connectTimeout ||
-          error.type == DioErrorType.receiveTimeout) {
-        message = '网络请求超时';
+      if (error is DioException) {
+        if (error.type == DioExceptionType.connectionTimeout ||
+            error.type == DioExceptionType.receiveTimeout) {
+          message = '网络请求超时';
+        }
+        resultData = ResultData(null, message, 102);
       }
-      resultData = ResultData(null, message, 102);
     }
     if (resultData.isSuccessful) {
       if (onSuccess != null) {

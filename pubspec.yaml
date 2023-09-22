@@ -17,6 +17,9 @@ fluwx:
   ios:
     universal_link: https://www.jingjiaowow.com/
 
+tobias:
+  url_scheme: https://www.jingjiaowow.com/
+
 dependencies:
   flutter:
     sdk: flutter
@@ -26,53 +29,94 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
-
-  dio: ^4.0.0
-  image_picker: ^0.8.4+3
-  multi_image_picker: ^4.8.0
-  wechat_assets_picker: ^8.0.0
+  cupertino_icons: ^1.0.6
+  #网络请求 https://pub.dev/packages/dio
+  dio: ^5.3.3
+  # 拍照，从相册中选择 https://pub.flutter-io.cn/packages/image_picker
+  image_picker: ^1.0.4
+  # 多图片选择 https://pub.flutter-io.cn/packages/multi_image_picker
+  multi_image_picker: ^4.8.01
+  # 仿微信图片选择器 https://pub.flutter-io.cn/packages/wechat_assets_picker
+  wechat_assets_picker: ^8.7.1
+  #下拉刷新 https://pub.dev/packages/pull_to_refresh
   pull_to_refresh: ^2.0.0
-  cached_network_image: ^3.1.0
-  shared_preferences: ^2.0.6
-  permission_handler: ^10.0.0
+  # 网络图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
+  cached_network_image: ^3.2.3
+  # 数据持久化 https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.2.1
+  # 用户权限申请 https://pub.dev/packages/permission_handler
+  permission_handler: ^11.0.0
+  # App信息 https://pub.dev/packages/package_info
   package_info: ^2.0.2
-  flutter_screenutil: ^5.0.0+2
+  # App信息 https://pub.dev/packages/package_info_plus
+#  package_info_plus: ^4.0.2
+  #字体/尺寸适配  https://pub.dev/packages/flutter_screenutil
+  flutter_screenutil: ^5.9.0
+  #路由  https://pub.dev/packages/fluro
   fluro: ^2.0.5
-  flutter_easyloading: ^3.0.0
-  logger: ^1.0.0
-  url_launcher: ^6.1.2
-  flutter_rating_bar: ^4.0.0
-  smooth_page_indicator: ^1.0.0+2  
-  webview_flutter: ^2.1.1
+  # 显示网络等待插件 https://pub.flutter-io.cn/packages/flutter_easyloading
+  flutter_easyloading: ^3.0.5
+  # 输出日志 https://pub.dev/packages/logger
+  logger: ^2.0.2
+  # url跳转 https://pub.dev/packages/url_launcher
+  url_launcher: ^6.1.14
+  flutter_rating_bar: ^4.0.1
+  # 轮播指示器 https://pub.dev/packages/smooth_page_indicator
+  smooth_page_indicator: ^1.1.0
+  # 网页加载 https://pub.dev/packages/webview_flutter
+  webview_flutter: ^4.2.4
+  # 城市列表、联系人列表，索引&悬停 https://pub.dev/packages/azlistview
   azlistview: ^2.0.0
-  flutter_slidable: ^2.0.0
-  image_gallery_saver: ^1.6.1
+  # 列表编辑 https://pub.dev/packages/flutter_slidable
+  flutter_slidable: ^3.0.0
+  # 保存图片到系统相册 https://pub.dev/packages/image_gallery_saver
+  image_gallery_saver: ^2.0.3
+  # 弹窗 https://pub.dev/packages/awesome_dialog
   awesome_dialog: ^3.1.0
+  # 底部弹窗 https://pub.dev/packages/modal_bottom_sheet
   modal_bottom_sheet: ^3.0.0-pre
-  wakelock: ^0.6.1+2
-  lottie: ^1.1.0
+  # 屏幕常量插件 https://pub.dev/packages/wakelock
+  wakelock: ^0.6.2
+  # json动画库 https://pub.dev/packages/lottie
+  lottie: ^2.6.0
+  # 时间格式转换 https://pub.dev/packages/date_format
   date_format: ^2.0.2
+  # 汉字转拼音 https://pub.dev/packages/lpinyin
   lpinyin: ^2.0.3
+  # 事件传递 https://pub.dev/packages/event_bus
   event_bus: ^2.0.0
-  mobile_scanner: ^3.2.0
+  # 扫码  https://pub.dev/packages/mobile_scanner
+  mobile_scanner: ^3.4.1
+  # 二维码扫描 https://pub.dev/packages/qr_code_scanner
   qr_code_scanner: ^1.0.1
+  # 图片缩放 https://pub.dev/packages/photo_view
   photo_view: ^0.14.0
+  # html网页 https://pub.dev/packages/flutter_html
   flutter_html: ^3.0.0-beta.2
-  pin_code_fields: ^7.3.0
-  shimmer: ^2.0.0
+  pin_code_fields: ^8.0.1
+  # 闪烁效果 https://pub.dev/packages/shimmer
+  shimmer: ^3.0.0
+  # 自适应字体 https://pub.dev/packages/auto_size_text
   auto_size_text: ^3.0.0
-
+  # 苹果登陆 https://pub.dev/packages/sign_in_with_apple
   sign_in_with_apple: ^4.0.0
-  jpush_flutter: ^2.4.7
-  tobias: ^2.1.2+1
-  fluwx: ^4.0.1+1
+  # 推送 https://pub.dev/packages/jpush_flutter
+  jpush_flutter: ^2.4.9
+  # 淘宝SDK https://pub.dev/packages/tobias
+  tobias: ^3.2.0
+  # 微信SDK https://pub.dev/packages/fluwx
+  fluwx: ^4.3.1
+  # 高德定位组件 https://pub.dev/packages/amap_location_fluttify
   amap_location_fluttify: ^0.22.0
-  amap_map_fluttify: ^2.0.0
+  # 高德地图 https://pub.dev/packages/amap_map_fluttify
+  amap_map_fluttify: ^2.0.2
   # rongcloud_im_plugin: ^5.1.8+6
+  # 设备信息 https://pub.dev/packages/device_info_plus
   device_info_plus: ^4.1.3
+  # 常用工具类(时间轴，倒计时等) https://pub.flutter-io.cn/packages/common_utils
   common_utils: ^2.1.0
-  echart_flutter: ^0.1.0+2
+  # 图形图表 https://pub.flutter-io.cn/packages/flutter_echarts
+  flutter_echarts: ^2.5.0
 
 dev_dependencies:
   flutter_test:

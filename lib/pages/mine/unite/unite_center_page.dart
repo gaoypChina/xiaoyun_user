@@ -6,6 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/models/user_model_entity.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_accoun_setting_page.dart';
+import 'package:xiaoyun_user/pages/mine/unite/unite_analyze_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_client_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_fund_manager_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_group_page.dart';
@@ -32,18 +33,32 @@ class UniteCenterPage extends StatefulWidget {
 }
 
 class UniteCenterPageState extends State<UniteCenterPage> {
-  late RefreshController _refreshController;
   late UserModelEntity _userInfo;
+  late RefreshController _refreshController;
+  late List<Map<String,String>> _itemDataList;
+  late double _screenWidth;
 
   @override
   void initState() {
     super.initState();
     _userInfo = widget.userModelEntity;
     _refreshController = RefreshController();
+    _itemDataList = [
+      {'iconStr':'mine_unite_records','title':'订单记录'},
+      {'iconStr':'mine_unite_fund','title':'资金管理'},
+      {'iconStr':'mine_unite_manage','title':'经营分析'},
+      {'iconStr':'mine_unite_group','title':'团队管理'},
+      {'iconStr':'mine_unite_message','title':'消息中心'},
+      {'iconStr':'mine_unite_share','title':'推荐分享'},
+      {'iconStr':'mine_unite_client','title':'我的客户'},
+      {'iconStr':'mine_unite_equity','title':'我的权益'},
+      {'iconStr':'mine_unite_set','title':'账号设置'},
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
+    _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: DYAppBar(
         titleWidget: Text(
@@ -273,7 +288,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
                 NavigatorUtils.showPage(context, UniteFundManagerPage());
               }),
               _buildActionItemWidget('mine_unite_manage','经营分析',onPressed: (){
-
+                NavigatorUtils.showPage(context, UniteAnalyzePage());
               })
             ],
           ),
@@ -315,6 +330,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
       ),
     );
   }
+
 
   Widget _buildActionItemWidget(String icon, String title, {GestureTapCallback? onPressed}) {
     return InkWell(

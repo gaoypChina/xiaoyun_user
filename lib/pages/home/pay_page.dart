@@ -13,7 +13,7 @@ import 'package:xiaoyun_user/widgets/common/common_cell_widget.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 import 'package:xiaoyun_user/widgets/others/bottom_button_bar.dart';
-import 'package:tobias/tobias.dart' as tobias;
+import 'package:tobias/tobias.dart';
 import 'package:fluwx/fluwx.dart';
 
 enum PayType { balance, wechat, alipay }
@@ -44,10 +44,17 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
   double _balanceValue = 0.00;
   double _moneyValue = 0.0;
   bool _isBalancePay = false;
+  late WeChatResponseSubscriber _listener;
 
   @override
   void initState() {
     super.initState();
+    _listener = (response) {
+      if(response.errCode == null || response.errCode != 0) {
+        ToastUtils.showError('支付取消');
+      }
+    };
+
     WidgetsBinding.instance.addObserver(this);
     _moneyValue = double.tryParse(widget.money) ?? 0.00;
     _initFluwx();
@@ -59,17 +66,17 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
   void _initFluwx() async {
     Fluwx fluwx = Fluwx();
     _isWeChatInstalled = await fluwx.isWeChatInstalled;
-    // fluwx.weChatResponseEventHandler.listen((res) {
-    //   print("res------ ${res.errCode}");
-    //   if (res.errCode != 0) {
-    //     ToastUtils.showError('支付取消');
-    //   }
-    // });
+    if (_isWeChatInstalled) {
+      Fluwx().addSubscriber(_listener);
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    if (_isWeChatInstalled) {
+      Fluwx().removeSubscriber(_listener);
+    }
     super.dispose();
   }
 
@@ -276,7 +283,7 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
   void _payWithAliPay(String orderString) async {
     Map payResult;
     try {
-      payResult = await tobias.aliPay(orderString);
+      payResult = await Tobias().pay(orderString);
     } on Exception catch (err) {
       print(err);
       payResult = {};
@@ -286,7 +293,7 @@ class _PayPageState extends State<PayPage> with WidgetsBindingObserver {
     var resultStatus = payResult['resultStatus'];
     debugPrint('resultStatus ' + resultStatus.toString());
     if (resultStatus == '9000') {
-      bool isAliInstalled = await tobias.isAliPayInstalled();
+      bool isAliInstalled = await  Tobias().isAliPayInstalled;
       if (!isAliInstalled) {
         _checkPaymentStatus();
       }
