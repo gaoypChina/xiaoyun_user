@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../utils/sp_utils.dart';
 import '../constant/constant.dart';
 
-class TokenIntercxeptor extends InterceptorsWrapper {
+class TokenInterceptor extends InterceptorsWrapper {
   String? _token;
 
   @override
@@ -47,11 +47,7 @@ class TokenIntercxeptor extends InterceptorsWrapper {
   ///获取授权token
   getAuthorization() {
     String token = SpUtil.getString(Constant.token);
-    if (token == null) {
-      return '';
-    } else {
-      this._token = token;
-      return token;
-    }
+    this._token = token;
+    return token;
   }
 }

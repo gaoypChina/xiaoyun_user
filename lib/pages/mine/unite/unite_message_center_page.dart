@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
+import 'package:xiaoyun_user/pages/mine/unite/unite_message_detail_page.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
+import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_card.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
@@ -174,7 +176,7 @@ class UniteMessageCenterPageState extends State<UniteMessageCenterPage> {
                       ),
                     ),
                     onTap: (){
-
+                      NavigatorUtils.showPage(context, UniteMessageCenterDetailPage());
                     },
                   ),
                 )

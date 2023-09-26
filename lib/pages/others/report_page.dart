@@ -114,7 +114,7 @@ class _ReportPageState extends State<ReportPage> {
       maxImages: 3,
       selectedAssets: _photoList,
     );
-    if (photoList != null) {
+    if (_photoList.isNotEmpty) {
       _photoList = photoList;
       setState(() {});
     }
@@ -135,7 +135,7 @@ class _ReportPageState extends State<ReportPage> {
     };
     if (_photoList.isNotEmpty) {
       ToastUtils.showLoading("上传中...");
-      await UploadUtils.uploadMutiPhoto(_photoList, (photoModelList) {
+      await UploadUtils.uploadMultiPhoto(_photoList, (photoModelList) {
         ToastUtils.dismiss();
         params["imgs"] = photoModelList.map((e) => e.id).toList().join(",");
       }, (msg) {

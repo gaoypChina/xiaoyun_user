@@ -12,6 +12,7 @@ import 'package:xiaoyun_user/pages/mine/unite/unite_fund_manager_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_group_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_message_center_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_order_records_list.dart';
+import 'package:xiaoyun_user/pages/others/common_web_page.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
@@ -35,30 +36,30 @@ class UniteCenterPage extends StatefulWidget {
 class UniteCenterPageState extends State<UniteCenterPage> {
   late UserModelEntity _userInfo;
   late RefreshController _refreshController;
-  late List<Map<String,String>> _itemDataList;
-  late double _screenWidth;
+  // late List<Map<String,String>> _itemDataList;
+  // late double _screenWidth;
 
   @override
   void initState() {
     super.initState();
     _userInfo = widget.userModelEntity;
     _refreshController = RefreshController();
-    _itemDataList = [
-      {'iconStr':'mine_unite_records','title':'订单记录'},
-      {'iconStr':'mine_unite_fund','title':'资金管理'},
-      {'iconStr':'mine_unite_manage','title':'经营分析'},
-      {'iconStr':'mine_unite_group','title':'团队管理'},
-      {'iconStr':'mine_unite_message','title':'消息中心'},
-      {'iconStr':'mine_unite_share','title':'推荐分享'},
-      {'iconStr':'mine_unite_client','title':'我的客户'},
-      {'iconStr':'mine_unite_equity','title':'我的权益'},
-      {'iconStr':'mine_unite_set','title':'账号设置'},
-    ];
+    // _itemDataList = [
+    //   {'iconStr':'mine_unite_records','title':'订单记录'},
+    //   {'iconStr':'mine_unite_fund','title':'资金管理'},
+    //   {'iconStr':'mine_unite_manage','title':'经营分析'},
+    //   {'iconStr':'mine_unite_group','title':'团队管理'},
+    //   {'iconStr':'mine_unite_message','title':'消息中心'},
+    //   {'iconStr':'mine_unite_share','title':'推荐分享'},
+    //   {'iconStr':'mine_unite_client','title':'我的客户'},
+    //   {'iconStr':'mine_unite_equity','title':'我的权益'},
+    //   {'iconStr':'mine_unite_set','title':'账号设置'},
+    // ];
   }
 
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
+    // _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: DYAppBar(
         titleWidget: Text(
@@ -330,7 +331,6 @@ class UniteCenterPageState extends State<UniteCenterPage> {
       ),
     );
   }
-
 
   Widget _buildActionItemWidget(String icon, String title, {GestureTapCallback? onPressed}) {
     return InkWell(

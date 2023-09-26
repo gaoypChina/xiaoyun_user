@@ -34,14 +34,14 @@ class UploadUtils {
     return null;
   }
 
-  static Future uploadMutiPhoto(
+  static Future uploadMultiPhoto(
       List<Asset> imageAssets,
       Function(List<PhotoModel> photoList) onSuccess,
       Function(String msg) onError) async {
     List<PhotoModel> photoList = [];
     bool hasError = false;
     for (Asset asset in imageAssets) {
-      Map<String, dynamic> imageDatas = Map();
+      Map<String, dynamic> imageDataMap = Map();
       int assetWidth = asset.originalWidth??0;
       double assetHeight = 0;
       if (assetWidth > 750) assetWidth = 750;
@@ -50,13 +50,13 @@ class UploadUtils {
           await asset.getThumbByteData(assetWidth, assetHeight.toInt());
       List<int> imageData = byteData.buffer.asUint8List();
 
-      imageDatas['imgFile'] = MultipartFile.fromBytes(
+      imageDataMap['imgFile'] = MultipartFile.fromBytes(
         imageData,
         filename: "image.jpg",
         contentType: MediaType("image", 'jpeg'),
       );
 
-      FormData formData = FormData.fromMap(imageDatas);
+      FormData formData = FormData.fromMap(imageDataMap);
 
       ResultData resultData = await HttpUtils.request('upload.do',
           method: UPLOAD, params: formData);
@@ -76,7 +76,7 @@ class UploadUtils {
   }
 
   static Future<List<PhotoModel>> uploadPhotos(List<Asset> imageAssets) async {
-    Map<String, dynamic> imageDatas = Map();
+    Map<String, dynamic> imageDataMap = Map();
     for (int i = 0; i < imageAssets.length; i++) {
       Asset asset = imageAssets[i];
       int assetWidth = asset.originalWidth??0;
@@ -87,14 +87,14 @@ class UploadUtils {
           await asset.getThumbByteData(assetWidth, assetHeight.toInt());
       List<int> imageData = byteData.buffer.asUint8List();
 
-      imageDatas['upload_file[$i]'] = MultipartFile.fromBytes(
+      imageDataMap['upload_file[$i]'] = MultipartFile.fromBytes(
         imageData,
         filename: "image.jpg",
         contentType: MediaType("image", 'jpeg'),
       );
     }
 
-    FormData formData = FormData.fromMap(imageDatas);
+    FormData formData = FormData.fromMap(imageDataMap);
     ResultData resultData =
         await HttpUtils.request('upload.do', method: UPLOAD, params: formData);
     if (resultData.isSuccessful) {

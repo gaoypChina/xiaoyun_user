@@ -123,7 +123,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
       maxImages: 3,
       selectedAssets: _photoList,
     );
-    if (photoList != null) {
+    if (photoList.isNotEmpty) {
       _photoList = photoList;
       setState(() {});
     }
@@ -144,7 +144,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     };
     if (_photoList.isNotEmpty) {
       ToastUtils.showLoading("上传中...");
-      await UploadUtils.uploadMutiPhoto(_photoList, (photoModelList) {
+      await UploadUtils.uploadMultiPhoto(_photoList, (photoModelList) {
         ToastUtils.dismiss();
         params["credentialsImgIds"] =
             photoModelList.map((e) => e.id).toList().join(",");

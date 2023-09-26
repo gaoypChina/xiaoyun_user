@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ import 'package:fluwx/fluwx.dart';
 
 import '../../routes/routes.dart';
 
-enum LoginType { authcode, password }
+enum LoginType { authCode, password }
 
 class LoginPage extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginType _loginType = LoginType.authcode;
+  LoginType _loginType = LoginType.authCode;
 
   late TextEditingController _phoneController;
   TextEditingController _codeController = TextEditingController();
@@ -116,12 +117,12 @@ class _LoginPageState extends State<LoginPage> {
                   accountController: _phoneController,
                   pwdController: _pwdController,
                   onExchanged: () {
-                    _loginType = LoginType.authcode;
+                    _loginType = LoginType.authCode;
                     FocusScope.of(context).requestFocus(FocusNode());
                     setState(() {});
                   },
                 ),
-                crossFadeState: _loginType == LoginType.authcode
+                crossFadeState: _loginType == LoginType.authCode
                     ? CrossFadeState.showFirst
                     : CrossFadeState.showSecond,
                 duration: Duration(milliseconds: 250),
@@ -303,11 +304,11 @@ class _LoginPageState extends State<LoginPage> {
   void _loginAction() {
     String netPath;
     Map<String, dynamic> params;
-    if (_loginType == LoginType.authcode) {
-      if (_phoneController.text.length != 11) {
-        ToastUtils.showInfo("请输入11位有效的手机号");
-        return;
-      }
+    if (!RegexUtil.isMobileSimple(_phoneController.text)) {
+      ToastUtils.showInfo("请输入11位有效的手机号");
+      return;
+    }
+    if (_loginType == LoginType.authCode) {
       if (_codeController.text.isEmpty) {
         ToastUtils.showInfo("请输入验证码");
         return;
@@ -318,10 +319,6 @@ class _LoginPageState extends State<LoginPage> {
         "smsCode": _codeController.text
       };
     } else {
-      if (_phoneController.text.length != 11) {
-        ToastUtils.showInfo("请输入11位有效的手机号");
-        return;
-      }
       if (_pwdController.text.isEmpty) {
         ToastUtils.showInfo("请输入密码");
         return;

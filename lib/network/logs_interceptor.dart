@@ -40,14 +40,12 @@ class LogsInterceptors extends InterceptorsWrapper {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    if (response != null) {
-      logger.d('Response: ' + response.toString());
-    }
+    logger.d('Response: ' + response.toString());
     super.onResponse(response, handler);
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     logger.e('Error message: ' + err.toString());
     super.onError(err, handler);
   }

@@ -20,12 +20,14 @@ class HttpUtils {
 
   static Future<ResultData> get(String path,
       {Map<String, dynamic>? params,
-      Function(ResultData resultData)? onSuccess,
-      Function(String msg)? onError,
-      bool showError = true}) async {
-    return await request(path,
-        params: params,
+        Function(ResultData resultData)? onSuccess,
+        Function(String msg)? onError,
+        bool showError = true
+      }) async {
+    return await request(
+        path,
         method: GET,
+        queryParameters: params,
         onSuccess: onSuccess,
         onError: onError,
         showError: showError);
@@ -33,10 +35,11 @@ class HttpUtils {
 
   static Future<ResultData> post(String path,
       {Map<String, dynamic>? params,
-      Function(ResultData resultData)? onSuccess,
-      Function(String msg)? onError,
-      bool showError = true}) async {
-    return await request(path,
+        Function(ResultData resultData)? onSuccess,
+        Function(String msg)? onError,
+        bool showError = true}) async {
+    return await request(
+        path,
         params: params,
         method: POST,
         onSuccess: onSuccess,
@@ -46,10 +49,11 @@ class HttpUtils {
 
   static Future<ResultData> request(String path,
       {String? method,
-      dynamic params,
-      Function(ResultData)? onSuccess,
-      Function(String msg)? onError,
-      bool showError = true}) async {
+        dynamic params,
+        dynamic queryParameters,
+        Function(ResultData)? onSuccess,
+        Function(String msg)? onError,
+        bool showError = true}) async {
     BaseOptions options = BaseOptions(
       method: GET,
       baseUrl: Constant.baseUrl,
@@ -70,18 +74,14 @@ class HttpUtils {
     Dio _dio = Dio(options);
 
     _dio.interceptors.add(LogsInterceptors());
-    _dio.interceptors.add(TokenIntercxeptor());
+    _dio.interceptors.add(TokenInterceptor());
     _dio.interceptors.add(LogoutInterceptor());
     // _dio.interceptors.add(LogInterceptor(responseBody: true));
 
     late ResultData resultData;
     try {
       Response response;
-      if (method == GET) {
-        response = await _dio.get(path, queryParameters: params);
-      } else {
-        response = await _dio.post(path, data: params);
-      }
+      response = await _dio.request(path,queryParameters: queryParameters,data: params);
       resultData = ResultData.fromJson(response.data);
     } catch (error) {
       String message = '网络连接错误';
