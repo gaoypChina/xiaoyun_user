@@ -1,7 +1,12 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
+import 'package:xiaoyun_user/models/unite_order_list_entity.dart';
+import 'package:xiaoyun_user/network/apis.dart';
+import 'package:xiaoyun_user/network/http_utils.dart';
+import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/utils/date_picker_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
@@ -17,14 +22,72 @@ class UniteOrderRecordsListPage extends StatefulWidget {
 class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> with SingleTickerProviderStateMixin {
   late DateTime _startTime;
   late DateTime _endTime;
+  late int _page;
+  late int _dateType;
   late RefreshController _refreshController;
+
+  List<UniteOrderListList>? _dataList;
 
   @override
   void initState() {
     super.initState();
+    _page = 1;
+    _dateType = 1;
+    _dataList = [];
     _startTime = DateTime.now();
     _endTime = DateTime.now();
     _refreshController = RefreshController();
+    _onRefresh();
+  }
+
+  void _onRefresh() async {
+    _page = 1;
+    _loadData();
+  }
+
+  void _onLoadData() async {
+    _page++;
+    _loadData();
+  }
+
+  void _loadData() {
+    Map _params = {};
+    if (_dateType == - 1) {
+      _params = {
+        'page':_page,
+        'pageSize':'10',
+        'starTime':formatDate(_startTime, [yyyy, '-', mm, '-', dd]),
+        'endTime':formatDate(_endTime, [yyyy, '-', mm, '-', dd])
+      };
+    } else {
+      _params = {
+        'page':_page,
+        'pageSize':'10',
+        'dataType':_dateType,
+        'starTime':'',
+        'endTime':''
+      };
+    }
+    HttpUtils.post(
+        Apis.uniteOrderList,
+        params: _params as Map<String,dynamic>,
+        onSuccess: (ResultData resultData){
+          _refreshController.refreshCompleted();
+          UniteOrderListEntity uniteOrderListEntity = UniteOrderListEntity.fromJson(resultData.data);
+          if (ObjectUtil.isEmptyList(uniteOrderListEntity.list)) {
+            if (_page == 1) {
+              setState(() {
+                _dataList = uniteOrderListEntity.list;
+              });
+            } else {
+              setState(() {
+                _dataList?.addAll(uniteOrderListEntity.list  as Iterable<UniteOrderListList>);
+              });
+            }
+          }},
+        onError: (message){
+          _refreshController.refreshCompleted();
+        });
   }
 
   @override
@@ -52,8 +115,11 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
             ),
             Expanded(
               child: CommonRefresher(
-                  controller: _refreshController,
-                  scrollView: _buildListViewWidget()
+                controller: _refreshController,
+                scrollView: _buildListViewWidget(),
+                showEmpty: true,
+                onRefresh: _onRefresh,
+                onLoad: _onLoadData,
               ),
             )
           ],
@@ -93,8 +159,7 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
     );
   }
 
-  Widget _buildTimeBtn(String placeholder,
-      {DateTime? dateTime, bool isStart = true,VoidCallback? onTap}) {
+  Widget _buildTimeBtn(String placeholder, {DateTime? dateTime, bool isStart = true,VoidCallback? onTap}) {
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
@@ -124,9 +189,15 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
               ),
             ),
             SizedBox(width: 3),
-            Icon(
-              Icons.abc,
-              size: 8.0,
+            GestureDetector(
+              child: Icon(
+                Icons.search,
+                size: 8.0,
+              ),
+              onTap: (){
+                _dateType = -1;
+                _onRefresh();
+              },
             ),
           ],
         ),
@@ -139,14 +210,29 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildTypeItemWidget('今日',true,onPress: (){
-
+        _buildTypeItemWidget('今日',_dateType == 1,onPress: (){
+          if (_dateType != 1) {
+            setState(() {
+              _dateType = 1;
+            });
+          }
+          _onRefresh();
         }),
-        _buildTypeItemWidget('本周',false,onPress: (){
-
+        _buildTypeItemWidget('本周',_dateType == 2,onPress: (){
+          if (_dateType != 2) {
+            setState(() {
+              _dateType = 2;
+            });
+          }
+          _onRefresh();
         }),
-        _buildTypeItemWidget('本月',false,onPress: (){
-
+        _buildTypeItemWidget('本月',_dateType == 3,onPress: (){
+          if (_dateType != 3) {
+            setState(() {
+              _dateType = 3;
+            });
+          }
+          _onRefresh();
         }),
       ],
     );
@@ -182,13 +268,14 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
 
   Widget _buildListViewWidget() {
     return ListView.builder(
-        itemCount: 10,
+        itemCount: _dataList?.length,
         itemBuilder: (context,index){
-          return _buildCellItem();
+          UniteOrderListList listModel = _dataList![index];
+          return _buildCellItem(listModel);
         });
   }
 
-  Widget _buildCellItem({VoidCallback? onPressed}) {
+  Widget _buildCellItem(UniteOrderListList listModel,{VoidCallback? onPressed}) {
     return Column(
       children: [
         GestureDetector(
@@ -218,7 +305,7 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
                                 )
                             ),
                             TextSpan(
-                                text: '18.00',
+                                text: listModel.incomeMoney??'0',
                                 style: TextStyle(
                                     fontSize: 21,
                                     color: HexColor('#EB5426')
@@ -228,7 +315,7 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
                         ),
                       ),
                       Text(
-                          '本单收益',
+                          listModel.orderStatus==0?'本单收益':'退款',
                           style: TextStyle(
                               fontSize: 12,
                               color: HexColor('#999999')
@@ -242,13 +329,13 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDetailItem('订单编号','16934242477781231345'),
+                    _buildDetailItem('订单编号',listModel.orderNo.toString()),
                     SizedBox(height: 12),
-                    _buildDetailItem('完成时间','2023-08-27 21:11'),
+                    _buildDetailItem('完成时间',listModel.completeTime??''),
                     SizedBox(height: 12),
-                    _buildDetailItem('支付金额','¥98.00'),
+                    _buildDetailItem('支付金额',ObjectUtil.isEmptyString(listModel.payMoney)?'' : '¥${listModel.payMoney}'),
                     SizedBox(height: 12),
-                    _buildDetailItem('推广人员','徐大虾')
+                    _buildDetailItem('推广人员',listModel.partnerName??'')
                   ],
                 )
               ],

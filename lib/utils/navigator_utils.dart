@@ -78,7 +78,6 @@ class NavigatorUtils {
   /// 跳到WebView页
   static goWebViewPage(BuildContext context, String title, String urlStr) {
     //fluro 不支持传中文,需转换
-    push(context,
-        '${Routes.webview}?title=${Uri.encodeComponent(title)}&urlStr=${Uri.encodeComponent(urlStr)}');
+    push(context, '${Routes.webview}?title=${Uri.encodeComponent(title)}&urlStr=${Uri.encodeComponent(urlStr)}');
   }
 }

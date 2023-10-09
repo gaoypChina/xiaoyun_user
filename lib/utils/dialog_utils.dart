@@ -8,7 +8,7 @@ export 'package:awesome_dialog/awesome_dialog.dart';
 class DialogUtils {
   static showAlertDialog(
       BuildContext context, {
-        DialogType dialogType = DialogType.NO_HEADER,
+        DialogType dialogType = DialogType.noHeader,
         String title = "温馨提示",
         String message = "",
         Widget? body,
@@ -17,17 +17,17 @@ class DialogUtils {
         void Function()? cancelAction,
         void Function()? confirmAction,
         bool autoDismiss = true,
-        Function(DismissType type)? onDissmissCallback,
+        Function(DismissType type)? onDismissCallback,
   }) {
     AwesomeDialog(
       context: context,
       padding: const EdgeInsets.all(16),
       dialogType: dialogType,
-      animType: AnimType.SCALE,
+      animType: AnimType.scale,
       title: title,
       desc: message,
       autoDismiss: autoDismiss,
-      onDismissCallback: onDissmissCallback,
+      onDismissCallback: onDismissCallback,
       btnCancel: cancelAction != null
           ? CupertinoButton(
               padding: const EdgeInsets.all(8),

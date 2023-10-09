@@ -135,7 +135,7 @@ class _DiscountCouponPageState extends State<DiscountCouponPage> {
       context,
       title: "兑换优惠券",
       autoDismiss: false,
-      onDissmissCallback: (type) {},
+      onDismissCallback: (type) {},
       body: Column(
         children: [
           Text(

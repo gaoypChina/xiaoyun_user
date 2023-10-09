@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
+import 'package:xiaoyun_user/models/unite_money_manager_entity.dart';
+import 'package:xiaoyun_user/network/apis.dart';
+import 'package:xiaoyun_user/network/http_utils.dart';
+import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
@@ -13,28 +17,37 @@ class UniteFundManagerPage extends StatefulWidget {
 }
 
 class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
+
+  UniteMoneyManagerEntity? _moneyManagerEntity;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNewData();
+  }
+
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: DYAppBar(
-         titleWidget: Text(
-           '资金管理',
-           style: TextStyle(
-             fontSize: 18,
-             color: Colors.white,
-           ),
-         ),
-         leading: NavigationItem(
-           iconName: "navigation_back_white",
-           onPressed: () {
-             Navigator.maybePop(context);
-           },
-         ),
-       backgroundColor: DYColors.primary,
-         systemOverlayStyle: SystemUiOverlayStyle.light,
-       ),
-     body: _buildBodyView(),
-   );
+    return Scaffold(
+      appBar: DYAppBar(
+        titleWidget: Text(
+          '资金管理',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        leading: NavigationItem(
+          iconName: "navigation_back_white",
+          onPressed: () {
+            Navigator.maybePop(context);
+          },
+        ),
+        backgroundColor: DYColors.primary,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+      ),
+      body: _buildBodyView(),
+    );
   }
 
   Widget _buildBodyView() {
@@ -60,9 +73,9 @@ class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildTypeItem('0.00','当月账户余额（元）'),
-          _buildTypeItem('0.00','待入账金额'),
-          _buildTypeItem('0.00','已提现金额')
+          _buildTypeItem(_moneyManagerEntity?.balance.toString()??'0.00','当月账户余额（元）'),
+          _buildTypeItem(_moneyManagerEntity?.waitMoney.toString()??'0.00','待入账金额'),
+          _buildTypeItem(_moneyManagerEntity?.withdrawMoney.toString()??'0.00','已提现金额')
         ],
       ),
     );
@@ -127,9 +140,10 @@ class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
             ),
             Expanded(child:
             ListView.builder(
-                itemCount: 10,
+                itemCount: _moneyManagerEntity?.total??0,
                 itemBuilder: (context,index){
-                  return _buildItemCell();
+                  UniteMoneyManagerList listModel = _moneyManagerEntity!.list![index];
+                  return _buildItemCell(listModel);
                 }))
           ],
         ),
@@ -137,7 +151,7 @@ class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
     );
   }
 
-  Widget _buildItemCell() {
+  Widget _buildItemCell(UniteMoneyManagerList listModel) {
     return Container(
       height: 75,
       width: double.infinity,
@@ -156,21 +170,21 @@ class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '提现',
+                        listModel.title??'',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          fontSize: 16,
-                          color: HexColor('#25292C')
+                            fontSize: 16,
+                            color: HexColor('#25292C')
                         ),
                       ),
                       Text(
-                        '-129.0',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                            fontSize: 16,
-                          color: HexColor('#EB5426'),
-                            fontWeight: FontWeight.bold
-                        )
+                          listModel.title == '提现' ?'-${listModel.money}':'+${listModel.money}',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: HexColor('#EB5426'),
+                              fontWeight: FontWeight.bold
+                          )
                       )
                     ],
                   ),
@@ -178,7 +192,7 @@ class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '2023-08-27 21:11',
+                        listModel.createTime??'',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 12,
@@ -203,4 +217,13 @@ class UniteFundManagerPageState extends State<UniteFundManagerPage>  {
       ),
     );
   }
+
+  void _loadNewData() {
+    HttpUtils.get(Apis.uniteMoneyManger,onSuccess: (ResultData  resultData){
+      setState(() {
+        _moneyManagerEntity = UniteMoneyManagerEntity.fromJson(resultData.data);
+      });
+    });
+  }
+
 }

@@ -1,10 +1,12 @@
 import 'package:common_utils/common_utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
+import 'package:xiaoyun_user/models/unite_base_info_entity.dart';
 import 'package:xiaoyun_user/models/user_model_entity.dart';
+import 'package:xiaoyun_user/network/apis.dart';
+import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_accoun_setting_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_analyze_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_client_page.dart';
@@ -12,8 +14,9 @@ import 'package:xiaoyun_user/pages/mine/unite/unite_fund_manager_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_group_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_message_center_page.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_order_records_list.dart';
-import 'package:xiaoyun_user/pages/others/common_web_page.dart';
+import 'package:xiaoyun_user/pages/mine/unite/unite_share_page.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
+import 'package:xiaoyun_user/utils/dialog_utils.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/common/common_network_image.dart';
@@ -34,32 +37,30 @@ class UniteCenterPage extends StatefulWidget {
 }
 
 class UniteCenterPageState extends State<UniteCenterPage> {
-  late UserModelEntity _userInfo;
   late RefreshController _refreshController;
-  // late List<Map<String,String>> _itemDataList;
-  // late double _screenWidth;
+  UniteBaseInfoEntity? _baseInfoEntity;
 
   @override
   void initState() {
     super.initState();
-    _userInfo = widget.userModelEntity;
     _refreshController = RefreshController();
-    // _itemDataList = [
-    //   {'iconStr':'mine_unite_records','title':'订单记录'},
-    //   {'iconStr':'mine_unite_fund','title':'资金管理'},
-    //   {'iconStr':'mine_unite_manage','title':'经营分析'},
-    //   {'iconStr':'mine_unite_group','title':'团队管理'},
-    //   {'iconStr':'mine_unite_message','title':'消息中心'},
-    //   {'iconStr':'mine_unite_share','title':'推荐分享'},
-    //   {'iconStr':'mine_unite_client','title':'我的客户'},
-    //   {'iconStr':'mine_unite_equity','title':'我的权益'},
-    //   {'iconStr':'mine_unite_set','title':'账号设置'},
-    // ];
+    // _loadCenterData();
+  }
+
+
+  void _loadCenterData() {
+    HttpUtils.get(Apis.uniteBaseInfo,onSuccess: (resultData){
+      _refreshController.refreshCompleted();
+     setState(() {
+       _baseInfoEntity = UniteBaseInfoEntity.fromJson(resultData.data);
+     });
+    },onError: (String msg) {
+      _refreshController.refreshCompleted();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: DYAppBar(
         titleWidget: Text(
@@ -80,8 +81,9 @@ class UniteCenterPageState extends State<UniteCenterPage> {
       ),
       extendBodyBehindAppBar: true,
       body: CommonRefresher(
-          controller: _refreshController,
-          scrollView: _buildListView()
+        controller: _refreshController,
+        scrollView: _buildListView(),
+        onRefresh: _loadCenterData,
       ),
     );
   }
@@ -122,45 +124,48 @@ class UniteCenterPageState extends State<UniteCenterPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            _userInfo.nickname??'未设置',
+                            _baseInfoEntity?.realName??'未设置',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 11
-                            ),
-                            child: Text(
-                              'VIP',
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: HexColor('#44B9FD'),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15.0)
-                            ),
-                          )
+                          // SizedBox(
+                          //   width: 15,
+                          // ),
+                          // Container(
+                          //   alignment: Alignment.center,
+                          //   padding: EdgeInsets.symmetric(
+                          //     horizontal: 11
+                          //   ),
+                          //   child: Text(
+                          //     'VIP',
+                          //     style: TextStyle(
+                          //       fontSize: 12.0,
+                          //       color: HexColor('#44B9FD'),
+                          //     ),
+                          //   ),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(15.0)
+                          //   ),
+                          // )
                         ],
                       ),
-                       Container(
-                         width: double.infinity,
-                         child: Text(
-                           '精英合伙人',
-                           style: TextStyle(
-                             color: Colors.white,
-                             fontSize: 12,
-                           ),
-                         ),
-                       )
+                      Offstage(
+                        offstage: ObjectUtil.isEmpty(_baseInfoEntity?.levelName),
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            _baseInfoEntity?.levelName??'',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -184,10 +189,10 @@ class UniteCenterPageState extends State<UniteCenterPage> {
       imageName: "common_user_header",
       size: 60,
     );
-    if (ObjectUtil.isNotEmpty(_userInfo.avatarImgUrl)) {
+    if (ObjectUtil.isNotEmpty(_baseInfoEntity?.avatar)) {
       return ClipOval(
         child: DYNetworkImage(
-          imageUrl: _userInfo.avatarImgUrl!,
+          imageUrl: _baseInfoEntity!.avatar!,
           placeholder: userDefault,
           size: 60,
         ),
@@ -208,7 +213,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
           Expanded(
             child: _buildHeaderBtn(
               title: '当月流水',
-              value: '0.0',
+              value: _baseInfoEntity?.monthMoney??'0.0',
               icon: "mine_home_balance",
               onPressed: () {
 
@@ -219,7 +224,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
           Expanded(
             child: _buildHeaderBtn(
               title: '当月订单',
-              value: '0',
+              value: _baseInfoEntity?.monthCount.toString()??'0',
               icon: "mine_home_coupon",
               onPressed: () {
 
@@ -231,36 +236,38 @@ class UniteCenterPageState extends State<UniteCenterPage> {
     );
   }
 
-  Widget _buildHeaderBtn({String? title, String? value, String? icon, VoidCallback? onPressed}) {
-    return CupertinoButton(
+  Widget _buildHeaderBtn({String? title, String? value, String? icon, GestureTapCallback? onPressed}) {
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
-      child: SizedBox(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              value??'',
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                color: HexColor('#25292C'),
-                fontWeight: FontWeight.bold,
+      child: InkWell(
+        child: SizedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                value??'',
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: HexColor('#25292C'),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 5),
-            Text(
-              title??'',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                color: HexColor('#333333'),
-              ),
-            )
-          ],
+              SizedBox(height: 5),
+              Text(
+                title??'',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: HexColor('#333333'),
+                ),
+              )
+            ],
+          ),
         ),
+        onTap: onPressed,
       ),
-      onPressed: onPressed,
     );
   }
 
@@ -280,7 +287,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
       child: Column (
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _buildActionItemWidget('mine_unite_records','订单记录',onPressed: (){
                 NavigatorUtils.showPage(context, UniteOrderRecordsListPage());
@@ -297,30 +304,42 @@ class UniteCenterPageState extends State<UniteCenterPage> {
             height: 40,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildActionItemWidget('mine_unite_group','团队管理',onPressed: () {
-                NavigatorUtils.showPage(context, UniteGroupManagerPage());
-              }),
+              Offstage(
+                offstage: false,
+                child: _buildActionItemWidget('mine_unite_group','团队管理',onPressed: () {
+                  NavigatorUtils.showPage(context, UniteGroupManagerPage());
+                }),
+              ),
               _buildActionItemWidget('mine_unite_message','消息中心',onPressed: (){
                 NavigatorUtils.showPage(context, UniteMessageCenterPage());
               }),
               _buildActionItemWidget('mine_unite_share','推荐分享',onPressed: (){
-
-              })
+                NavigatorUtils.showPage(context, UniteSharePage());
+              }),
+              Offstage(
+                offstage: true,
+                child: _buildActionItemWidget('mine_unite_client','我的客户',onPressed: () {
+                  NavigatorUtils.showPage(context, UniteClientPage());
+                }),
+              )
             ],
           ),
           SizedBox(
             height: 40,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildActionItemWidget('mine_unite_client','我的客户',onPressed: () {
-                NavigatorUtils.showPage(context, UniteClientPage());
-              }),
+              Offstage(
+                offstage: false,
+                child: _buildActionItemWidget('mine_unite_client','我的客户',onPressed: () {
+                  NavigatorUtils.showPage(context, UniteClientPage());
+                }),
+              ),
               _buildActionItemWidget('mine_unite_equity','我的权益',onPressed: (){
-
+                NavigatorUtils.goWebViewPage(context, '我的权益', 'https://www.baidu.com');
               }),
               _buildActionItemWidget('mine_unite_set','账号设置',onPressed: (){
                 NavigatorUtils.showPage(context, UniteAccountSettingPage());
@@ -336,6 +355,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
     return InkWell(
       child: Container(
         alignment: Alignment.center,
+        width: (MediaQuery.of(context).size.width-75)/3,
         child: Column(
           children: [
             DYLocalImage(

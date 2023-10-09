@@ -8,7 +8,6 @@ import 'package:xiaoyun_user/pages/order/order_detail_page.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
-// import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
 import 'package:xiaoyun_user/widgets/home/notice_cell.dart';
 
 import '../../utils/toast_utils.dart';

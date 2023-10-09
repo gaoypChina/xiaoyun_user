@@ -10,10 +10,13 @@ class ResultData {
   ResultData(this.data, this.msg, this.code);
 
   factory ResultData.fromJson(Map<String, dynamic> json) {
+    var data = json.containsKey('result')?json['result']:json['data'];
+    String? msg = json.containsKey('resultDes')? json['resultDes']:json['msg'];
+    int code = json['code'];
     return ResultData(
-      json['result'],
-      json['resultDes'],
-      json['code'],
+      data,
+      msg,
+      code,
     );
   }
 }

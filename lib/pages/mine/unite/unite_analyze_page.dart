@@ -1,13 +1,16 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
+import 'package:xiaoyun_user/models/unite_analyze_entity.dart';
+import 'package:xiaoyun_user/network/apis.dart';
+import 'package:xiaoyun_user/network/http_utils.dart';
+import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/widgets/common/common_card.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
-
-import 'dart:convert';
 
 enum CardItemType {
   ///经营情况
@@ -26,54 +29,26 @@ class UniteAnalyzePage extends StatefulWidget {
 class UniteAnalyzePageState extends State<UniteAnalyzePage> {
   late RefreshController _refreshController;
 
-  List<Map<String, Object>> _data1 = [
-    {'name': 'Please wait', 'value': 0}
-  ];
-
-  getData1() async {
-    await Future.delayed(Duration(seconds: 4));
-
-    const dataObj = [
-      {
-        'name': 'Jan',
-        'value': 8726.2453,
-      },
-      {
-        'name': 'Feb',
-        'value': 2445.2453,
-      },
-      {
-        'name': 'Mar',
-        'value': 6636.2400,
-      },
-      {
-        'name': 'Apr',
-        'value': 4774.2453,
-      },
-      {
-        'name': 'May',
-        'value': 1066.2453,
-      },
-      {
-        'name': 'Jun',
-        'value': 4576.9932,
-      },
-      {
-        'name': 'Jul',
-        'value': 8926.9823,
-      }
-    ];
-
-    setState(() {
-      _data1 = dataObj;
-    });
-  }
+  UniteAnalyzeEntity? _analyzeEntity;
 
   @override
   void initState() {
     super.initState();
     _refreshController = RefreshController();
-    getData1();
+  }
+
+  void _loadData() {
+    HttpUtils.get(
+        Apis.uniteAnalyzeInfo,
+        onSuccess: (ResultData resultData){
+          _refreshController.refreshCompleted();
+          setState(() {
+            _analyzeEntity = UniteAnalyzeEntity.fromJson(resultData.data);
+          });
+        },
+        onError: (message){
+          _refreshController.refreshFailed();
+        });
   }
 
   @override
@@ -85,6 +60,7 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
       body: CommonRefresher(
         controller: _refreshController,
         scrollView: _buildListViw(),
+        onRefresh: _loadData,
       ),
     );
   }
@@ -98,266 +74,198 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
               height: 15
           ),
           _buildCardItem('本月经营情况',CardItemType.manager),
-          SizedBox(
-            height: 12,
-          ),
-          _buildCardItem('订单走势',CardItemType.trend,options: '''
+          Offstage(
+            offstage: !ObjectUtil.isEmptyList(_analyzeEntity?.countTrend),
+            child:  Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                _buildCardItem(
+                    '订单走势',
+                    CardItemType.trend,
+                    options: '''
                     {
-                      dataset: {
-                        dimensions: ['name', 'value'],
-                        source: ${jsonEncode(_data1)},
-                      },
-                      color: ['#3398DB'],
-                      legend: {
-                        data: ['直接访问', '背景'],
-                        show: false,
-                      },
-                      grid: {
+                  grid: {
+                    left: '0%',
+                    right: '0%',
+                    bottom: '5%',
+                    top: '7%',
+                    height: '85%',
+                    containLabel: true,
+                 },
+                 xAxis: {
+                   type: 'category',
+                   data: ['1', '2', '3', '4', '5', '6', '11']
+                 },
+                 yAxis: {
+                   type: 'value'
+                 },
+                 series: [{
+                   data: [5, 14, 3, 6, 9, 16, 4],
+                   type: 'line'
+                 }
+                 ]}
+                    ''')
+              ],
+            ),
+          ),
+          Offstage(
+            offstage: !ObjectUtil.isEmptyList(_analyzeEntity?.monthCountRank),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                _buildCardItem('本月客户订单',CardItemType.trend,options: ''' 
+                {
+                  grid: {
+                    left: '0%',
+                    right: '0%',
+                    bottom: '5%',
+                    top: '7%',
+                    width: '95%',
+                    containLabel: true,
+                  },
+                  tooltip:{},
+                  yAxis: {
+                   type: 'category',
+                   data: ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷']
+                  },
+                  xAxis: {
+                   type: 'value'
+                  },
+                  series: [{
+                   data: [8,15,19,22,31,35,41],
+                   type: 'bar'
+                  }
+                  ]
+                 }
+                '''),
+              ],
+            ),
+          ),
+          Offstage(
+            offstage: !ObjectUtil.isEmptyList(_analyzeEntity?.monthCustomerRank),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                _buildCardItem(
+                    '本月推广客户',
+                    CardItemType.trend,
+                    options: '''
+                    {
+                  grid: {
+                    left: '0%',
+                    right: '0%',
+                    bottom: '5%',
+                    top: '7%',
+                    width: '95%',
+                    containLabel: true,
+                  },
+                  tooltip:{},
+                  yAxis: {
+                   type: 'category',
+                   data: ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷']
+                  },
+                  xAxis: {
+                   type: 'value'
+                  },
+                  series: [{
+                   data: [8,15,19,22,31,35,41],
+                   type: 'bar'
+                  }
+                  ]
+                 }
+                  ''')
+              ],
+            ),
+          ),
+          Offstage(
+            offstage: !ObjectUtil.isEmptyList(_analyzeEntity?.customerRank),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                _buildCardItem(
+                    '推广客户总数',
+                    CardItemType.trend,
+                    options: '''
+                     {
+                  grid: {
+                    left: '0%',
+                    right: '0%',
+                    bottom: '5%',
+                    top: '7%',
+                    width: '95%',
+                    containLabel: true,
+                  },
+                  tooltip:{},
+                  yAxis: {
+                   type: 'category',
+                   data: ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷']
+                  },
+                  xAxis: {
+                   type: 'value'
+                  },
+                  series: [{
+                   data: [8,15,19,22,31,35,41],
+                   type: 'bar'
+                  }
+                  ]
+                 }
+                 '''),
+              ],
+            ),
+          ),
+          Offstage(
+            offstage: !ObjectUtil.isEmptyList(_analyzeEntity?.monthData),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                _buildCardItem(''
+                    '月度数据',
+                    CardItemType.trend,
+                    options: '''
+                     {
+                       grid: {
                         left: '0%',
                         right: '0%',
-                        bottom: '5%',
                         top: '7%',
+                        bottom: '5%',
                         height: '85%',
                         containLabel: true,
-                        z: 22,
-                      },
-                      xAxis: [{
-                        type: 'category',
-                        gridIndex: 0,
-                        axisTick: {
-                          show: false,
-                        },
-                        axisLine: {
-                          lineStyle: {
-                            color: '#0c3b71',
-                          },
-                        },
-                        axisLabel: {
-                          show: true,
-                          color: 'rgb(170,170,170)',
-                          formatter: function xFormatter(value, index) {
-                            if (index === 6) {
-                              return `\${value}\\n*`;
-                            }
-                            return value;
-                          },
-                        },
-                      }],
-                      yAxis: {
-                        type: 'value',
-                        gridIndex: 0,
-                        splitLine: {
-                          show: false,
-                        },
-                        axisTick: {
-                            show: false,
-                        },
-                        axisLine: {
-                          lineStyle: {
-                            color: '#0c3b71',
-                          },
-                        },
-                        axisLabel: {
-                          color: 'rgb(170,170,170)',
-                        },
-                        splitNumber: 12,
-                        splitArea: {
-                          show: true,
-                          areaStyle: {
-                            color: ['rgba(250,250,250,0.0)', 'rgba(250,250,250,0.05)'],
-                          },
-                        },
-                      },
-                      series: [{
-                        name: '合格率',
-                        type: 'bar',
-                        barWidth: '50%',
-                        xAxisIndex: 0,
-                        yAxisIndex: 0,
-                        itemStyle: {
-                          normal: {
-                            barBorderRadius: 5,
-                            color: {
-                              type: 'linear',
-                              x: 0,
-                              y: 0,
-                              x2: 0,
-                              y2: 1,
-                              colorStops: [
-                                {
-                                  offset: 0, color: '#00feff',
-                                },
-                                {
-                                  offset: 1, color: '#027eff',
-                                },
-                                {
-                                  offset: 1, color: '#0286ff',
-                                },
-                              ],
-                            },
-                          },
-                        },
-                        zlevel: 11,
-                      }],
-                    }
-                  '''),
-          SizedBox(
-            height: 12,
-          ),
-          _buildCardItem('本月客户订单',CardItemType.trend,options: ''' {
- 
- xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      }]
-    }
-  '''),
-          SizedBox(
-            height: 12,
-          ),
-          _buildCardItem('本月推广客户',CardItemType.trend,options: '''
-                    {
-                      dataset: {
-                        dimensions: ['name', 'value'],
-                        source: ${jsonEncode(_data1)},
-                      },
-                      color: ['#3398DB'],
-                      legend: {
-                        data: ['直接访问', '背景'],
-                        show: false,
-                      },
-                      grid: {
-                        left: '0%',
-                        right: '0%',
-                        bottom: '5%',
-                        top: '7%',
-                        height: '85%',
-                        containLabel: true,
-                        z: 22,
-                      },
-                      xAxis: [{
-                        type: 'category',
-                        gridIndex: 0,
-                        axisTick: {
-                          show: false,
-                        },
-                        axisLine: {
-                          lineStyle: {
-                            color: '#0c3b71',
-                          },
-                        },
-                        axisLabel: {
-                          show: true,
-                          color: 'rgb(170,170,170)',
-                          formatter: function xFormatter(value, index) {
-                            if (index === 6) {
-                              return `\${value}\\n*`;
-                            }
-                            return value;
-                          },
-                        },
-                      }],
-                      yAxis: {
-                        type: 'value',
-                        gridIndex: 0,
-                        splitLine: {
-                          show: false,
-                        },
-                        axisTick: {
-                            show: false,
-                        },
-                        axisLine: {
-                          lineStyle: {
-                            color: '#0c3b71',
-                          },
-                        },
-                        axisLabel: {
-                          color: 'rgb(170,170,170)',
-                        },
-                        splitNumber: 12,
-                        splitArea: {
-                          show: true,
-                          areaStyle: {
-                            color: ['rgba(250,250,250,0.0)', 'rgba(250,250,250,0.05)'],
-                          },
-                        },
-                      },
-                      series: [{
-                        name: '合格率',
-                        type: 'bar',
-                        barWidth: '50%',
-                        xAxisIndex: 0,
-                        yAxisIndex: 0,
-                        itemStyle: {
-                          normal: {
-                            barBorderRadius: 5,
-                            color: {
-                              type: 'linear',
-                              x: 0,
-                              y: 0,
-                              x2: 0,
-                              y2: 1,
-                              colorStops: [
-                                {
-                                  offset: 0, color: '#00feff',
-                                },
-                                {
-                                  offset: 1, color: '#027eff',
-                                },
-                                {
-                                  offset: 1, color: '#0286ff',
-                                },
-                              ],
-                            },
-                          },
-                        },
-                        zlevel: 11,
-                      }],
-                    }
-                  '''),
-          SizedBox(
-            height: 12,
-          ),
-          _buildCardItem('推广客户总数',CardItemType.trend,options: ''' {
- 
- xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      }]
-    }
-  '''),
-          SizedBox(
-            height: 12,
-          ),
-          _buildCardItem('月度数据',CardItemType.trend,options: ''' {
- 
- xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      }]
-    }
-  ''')
+                      },      
+                      // dataset: {
+                      //  source: [
+                      //    ['1月', 100,150],
+                      //    ['2月', 140,100],
+                      //    ['3月', 230,200],
+                      //    ['4月', 100,140],
+                      //    ['5月', 130,100]
+                      //  ]
+                    // },
+                    xAxis:{
+                     type:'category',
+                     data:['1月','2月','3月','4月','5月']
+                    },
+                    yAxis:{
+                     type:'value'
+                    },
+                    series: [
+                     {type: 'bar',data:[100,140,230,100,130]},
+                     {type: 'bar',data:[140,100,200,140,100]},
+                    ]
+                   }
+                    ''')
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -398,9 +306,9 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildAnalyzeItem('0.00', '收益金额（元）'),
-          _buildAnalyzeItem('0', '推广客户（人）'),
-          _buildAnalyzeItem('0', '订单数'),
+          _buildAnalyzeItem(_analyzeEntity?.monthMoney??'0', '收益金额（元）'),
+          _buildAnalyzeItem(_analyzeEntity?.customerCount.toString()??'0', '推广客户（人）'),
+          _buildAnalyzeItem(_analyzeEntity?.monthCount.toString()??'0', '订单数'),
         ],
       ),
     );

@@ -1,6 +1,11 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
+import 'package:xiaoyun_user/models/unite_message_entity.dart';
+import 'package:xiaoyun_user/network/apis.dart';
+import 'package:xiaoyun_user/network/http_utils.dart';
+import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/pages/mine/unite/unite_message_detail_page.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
@@ -17,13 +22,73 @@ class UniteMessageCenterPage extends StatefulWidget {
 }
 
 class UniteMessageCenterPageState extends State<UniteMessageCenterPage> {
-  late RefreshController _refreshController;
   late double _screenWidth;
+  late int _pageNumber;
+  late RefreshController _refreshController;
+  late List<UniteMessageList> _dataList;
 
   @override
   void initState() {
     super.initState();
     _refreshController = RefreshController();
+    _dataList = [];
+    _pageNumber = 1;
+    _loadMessageList();
+  }
+
+  ///下拉刷新
+  void _onRefresh() {
+    _pageNumber = 1;
+    _loadMessageList();
+  }
+
+  ///上拉加载
+  void _loadMoreData() {
+    _pageNumber++;
+    _loadMessageList();
+  }
+
+  ///获取数据
+  void _loadMessageList() {
+    HttpUtils.get(
+        Apis.uniteMessageList,
+        params: {'page':_pageNumber,'pageSize':'20'},
+        onSuccess: (ResultData resultData) {
+          _refreshController.loadComplete();
+          if (resultData.data == null) {
+            return;
+          }
+          UniteMessageEntity messageEntity = UniteMessageEntity.fromJson(resultData.data);
+          if (!ObjectUtil.isEmptyList(messageEntity.list)) {
+            setState(() {
+              if (_pageNumber == 1) {
+                _dataList = messageEntity.list!;
+              } else {
+                _dataList.addAll(messageEntity.list!);
+              }
+            });
+          }
+        },
+      onError: (message) {
+          _refreshController.loadComplete();
+      }
+    );
+  }
+
+  ///已读
+  void _readMessage(String messageId) {
+    Map<String, dynamic> params = messageId.isEmpty?{}:{'id':messageId};
+    HttpUtils.post(
+        Apis.uniteMessageReader,
+        params: params,
+        onSuccess: (ResultData resultData){
+          for (UniteMessageList model in _dataList) {
+            model.isRead = 1;
+          }
+          setState(() {
+
+          });
+        });
   }
 
   @override
@@ -52,7 +117,9 @@ class UniteMessageCenterPageState extends State<UniteMessageCenterPage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      _readMessage('');
+                    },
                     child: Text(
                       '一键已读',
                       style: TextStyle(
@@ -67,6 +134,8 @@ class UniteMessageCenterPageState extends State<UniteMessageCenterPage> {
                   child: CommonRefresher(
                     scrollView: _buildListView(),
                     controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    onLoad: _loadMoreData,
                   ))
             ],
           ),
@@ -79,115 +148,124 @@ class UniteMessageCenterPageState extends State<UniteMessageCenterPage> {
   Widget _buildListView() {
     return ListView.builder(
         padding: const EdgeInsets.all(Constant.padding),
-        itemCount: 10,
+        itemCount: _dataList.length,
         itemBuilder: (context,index){
-          return _buildMessageCell('主题','尊敬的用户，恭喜您成为鲸轿合伙人，xxx尊敬的用户，恭喜您成为鲸轿合伙人，xxx尊敬的用户，恭喜您成为鲸轿合伙人，xxx尊敬的用户，恭喜您成为鲸轿合伙人，xxx!!!!!',index%2==0);
+          UniteMessageList data = _dataList[index];
+          return _buildMessageCell(data);
         });
   }
 
-  Widget _buildMessageCell(String title, String detailTitle,bool isShowDetail) {
+  Widget _buildMessageCell(UniteMessageList messageData) {
     double minHeight = (sizeHeightText('1', TextStyle(fontSize: 10), 1, _screenWidth-64) + 5) * 2;
     ///文字长度是否超过两行
-    bool overFlow = sizeHeightText(detailTitle, TextStyle(fontSize: 10), 9999,  _screenWidth-64) > minHeight;
-    double detailTextHeight =  sizeHeightText(detailTitle, TextStyle(fontSize: 10), 2,  _screenWidth-64);
-    if (overFlow && isShowDetail) {
-      detailTextHeight = sizeHeightText(detailTitle, TextStyle(fontSize: 10), 9999,  _screenWidth-64);
+    bool overFlow = sizeHeightText(messageData.content??'', TextStyle(fontSize: 10), 9999,  _screenWidth-64) > minHeight;
+    double detailTextHeight =  sizeHeightText(messageData.content??'', TextStyle(fontSize: 10), 2,  _screenWidth-64);
+    if (overFlow) {
+      detailTextHeight = sizeHeightText(messageData.content??'', TextStyle(fontSize: 10), 9999,  _screenWidth-64);
     } else {
       detailTextHeight = minHeight;
     }
-    return Column(
-      children: [
-        CommonCard(
-          padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
-          child: Container(
-            child: Column(
-              children: [
-                Container(
-                  height: 20,
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          title,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: HexColor('#25292C'),
-                              fontWeight: FontWeight.bold
-                          )
-                      ),
-                      Text(
-                          '2023-8-26 18:39',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: HexColor('#999999')
-                          )
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: detailTextHeight,
-                  child: Text(
-                    detailTitle,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: overFlow && isShowDetail ? 9999:2,
-                    style: TextStyle(
-                        fontSize: 10,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Visibility(
-                    visible: isShowDetail,
-                    child: Divider(height: 1)
-                ),
-                Visibility(
-                  visible: isShowDetail,
-                  child: GestureDetector(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: 10
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '查看详情',
+    return GestureDetector(
+      child: Column(
+        children: [
+          CommonCard(
+            padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    height: 20,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            messageData.title??'',
+                            textAlign: TextAlign.left,
                             style: TextStyle(
-                                fontSize: 10,
-                                color: HexColor('#666666')
-                            ),
-                          ),
-                          DYLocalImage(
-                            imageName: "common_right_arrow",
-                            size: 24,
-                          )
-                        ],
+                                fontSize: 14,
+                                color: HexColor('#25292C'),
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
+                        Text(
+                            messageData.createTime??'',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: HexColor('#999999')
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: detailTextHeight,
+                    child: Text(
+                      messageData.content??'',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: overFlow ? 9999:2,
+                      style: TextStyle(
+                        fontSize: 10,
                       ),
                     ),
-                    onTap: (){
-                      NavigatorUtils.showPage(context, UniteMessageCenterDetailPage());
-                    },
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Visibility(
+                      visible: overFlow,
+                      child: Divider(height: 1)
+                  ),
+                  Visibility(
+                    visible: overFlow,
+                    child: GestureDetector(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            top: 10
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '查看详情',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: HexColor('#666666')
+                              ),
+                            ),
+                            DYLocalImage(
+                              imageName: "common_right_arrow",
+                              size: 24,
+                            )
+                          ],
+                        ),
+                      ),
+                      onTap: (){
+
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 20,
-        )
-      ],
+          SizedBox(
+            height: 20,
+          )
+        ],
+      ),
+      onTap: () {
+        _readMessage(messageData.id.toString());
+        if (overFlow) {
+          NavigatorUtils.showPage(context, UniteMessageCenterDetailPage(messageId: messageData.id.toString(),));
+        }
+      },
     );
   }
 

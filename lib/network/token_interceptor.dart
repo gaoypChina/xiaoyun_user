@@ -8,10 +8,7 @@ class TokenInterceptor extends InterceptorsWrapper {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (_token == null) {
-      var authorizationCode = getAuthorization();
-      if (authorizationCode != null) {
-        _token = authorizationCode;
-      }
+      _token = getAuthorization();
     }
     options.headers["Authorization"] = "Bearer " + _token!;
     super.onRequest(options, handler);
@@ -27,10 +24,9 @@ class TokenInterceptor extends InterceptorsWrapper {
         return;
       }
 
-      if ((response.statusCode == 201 || response.statusCode == 200) &&
-          responseJson["token"] != null) {
+      if ((response.statusCode == 201 || response.statusCode == 200) && responseJson["token"] != null) {
         _token = responseJson["token"];
-        SpUtil.putString(Constant.token, _token??'');
+        SpUtil.putString(Constant.token, _token!);
       }
     } catch (e) {
       print(e);
@@ -45,9 +41,7 @@ class TokenInterceptor extends InterceptorsWrapper {
   }
 
   ///获取授权token
-  getAuthorization() {
-    String token = SpUtil.getString(Constant.token);
-    this._token = token;
-    return token;
+  String getAuthorization() {
+    return SpUtil.getString(Constant.token);
   }
 }

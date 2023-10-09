@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-// import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 
 class ChatListPage extends StatefulWidget {
