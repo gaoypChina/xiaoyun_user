@@ -11,6 +11,7 @@ class ConfirmBaseInfoCard extends StatelessWidget {
   final CarModel currentCar;
   final Poi? poi;
   final bool isAppointment;
+  final bool isStoreService;
   final String appointmentDate;
   final int expectTime;
   final Function()? showTimeView;
@@ -20,6 +21,7 @@ class ConfirmBaseInfoCard extends StatelessWidget {
     required this.currentCar,
     this.poi,
     this.isAppointment = false,
+    this.isStoreService = false,
     required this.appointmentDate,
     this.showTimeView,
     this.onCarClicked,
@@ -40,33 +42,33 @@ class ConfirmBaseInfoCard extends StatelessWidget {
             address: '${this.poi?.provinceName}' + '${this.poi?.cityName}' + '${this.poi?.adName}' + '${this.poi?.title}',
             onPressed: this.onCarClicked,
           ),
-          this.isAppointment
-              ? Column(
-                  children: [
-                    Divider(height: 1),
-                    CommonCellWidget(
-                      title: "预约时间",
-                      subtitle: this.appointmentDate,
-                      hiddenDivider: true,
-                      onClicked: this.showTimeView,
-                    ),
-                  ],
-                )
-              : Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  child: Text(
-                    "预计接单时间：大约${this.expectTime}分钟接单",
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: DYColors.primary,
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff00A2FF).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
+          // this.isAppointment
+          //     ? Column(
+          //         children: [
+          //           Divider(height: 1),
+          //           CommonCellWidget(
+          //             title: "预约时间",
+          //             subtitle: this.appointmentDate,
+          //             hiddenDivider: true,
+          //             onClicked: this.showTimeView,
+          //           ),
+          //         ],
+          //       )
+          //     : Container(
+          //         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          //         margin: const EdgeInsets.only(bottom: 20),
+          //         child: Text(
+          //           "预计接单时间：大约${this.expectTime}分钟接单",
+          //           style: TextStyle(
+          //             fontSize: 11,
+          //             color: DYColors.primary,
+          //           ),
+          //         ),
+          //         decoration: BoxDecoration(
+          //           color: Color(0xff00A2FF).withOpacity(0.1),
+          //           borderRadius: BorderRadius.circular(4),
+          //         ),
+          //       ),
         ],
       ),
     );

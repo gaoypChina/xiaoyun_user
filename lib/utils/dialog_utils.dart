@@ -105,8 +105,8 @@ class DialogUtils {
     required BuildContext context,
     required Widget child,
     Color backgroundColor = Colors.white,
-    barrierDismissible = false,
-    insetPadding = const EdgeInsets.all(0),
+    bool barrierDismissible = false,
+    EdgeInsets insetPadding = const EdgeInsets.all(0),
   }) async {
     return showGeneralDialog(
       context: context,

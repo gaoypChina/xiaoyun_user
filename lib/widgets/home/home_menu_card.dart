@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/models/service_project_model.dart';
+import 'package:xiaoyun_user/models/store_show_entity.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/home/address_page.dart';
 import 'package:xiaoyun_user/pages/order/confirm_order_page.dart';
@@ -16,6 +17,7 @@ import 'package:xiaoyun_user/utils/sp_utils.dart';
 import 'package:xiaoyun_user/utils/toast_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_action_button.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
+import 'package:xiaoyun_user/widgets/home/store_selection_widget.dart';
 import 'package:xiaoyun_user/widgets/others/common_dot.dart';
 
 import 'home_menu_btn.dart';
@@ -50,14 +52,18 @@ class HomeMenuCard extends StatefulWidget {
 }
 
 class _HomeMenuCardState extends State<HomeMenuCard> {
-  HomeMenuType _menuType = HomeMenuType.now;
+  HomeMenuType _menuType = HomeMenuType.callService;
   late String _address;
   Poi? _currentPoi;
   String? _dateTimeStr;
+  ///门店名称
+  String? _storeName;
   DateTime? _startDate;
 
   List<ServiceProjectModel> _projectList = [];
   List<ServiceProjectModel> _selectedProjectList = [];
+  List<StoreShowEntity> _storeList = [];
+  List<StoreShowEntity> _selectStoreList = [];
 
   @override
   void didUpdateWidget(covariant HomeMenuCard oldWidget) {
@@ -78,8 +84,7 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
     return Container(
       height: widget.height,
       width: ScreenUtil().screenWidth,
-      padding: const EdgeInsets.symmetric(
-          horizontal: Constant.padding, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -92,7 +97,27 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
             },
           ),
           SizedBox(height: Constant.padding),
-          _buildAddressBtn(context),
+          ///地址选择
+          Offstage(
+            offstage: _menuType == HomeMenuType.storeService,
+            child: _buildAddressBtn(context),
+          ),
+          ///门店选择
+          Offstage(
+            offstage: _menuType == HomeMenuType.callService,
+            child: HomeSelectBtn(
+              placeholder: "请选择门店",
+              value: _selectStoreList.isEmpty
+                  ? ""
+                  : _selectStoreList.map((project) => project.name).toList().join("/"),
+              onPressed: _showStoreView,
+            ),
+          ),
+          Offstage(
+            offstage: _menuType == HomeMenuType.callService,
+            child:  SizedBox(height: Constant.padding),
+          ),
+          ///选择服务项目
           HomeSelectBtn(
             placeholder: "请选择服务项目",
             value: _selectedProjectList.isEmpty
@@ -103,15 +128,6 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
                     .join("/"),
             onPressed: _showServeView,
           ),
-          if (_menuType == HomeMenuType.appointment)
-            Padding(
-              padding: const EdgeInsets.only(top: Constant.padding),
-              child: HomeSelectBtn(
-                placeholder: "请选择预约时间段",
-                value: _dateTimeStr == null ? "" : _dateTimeStr??'',
-                onPressed: _getAppointmentTime,
-              ),
-            ),
           SizedBox(height: 30),
           CommonActionButton(
             title: "下一步",
@@ -205,6 +221,25 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
     );
   }
 
+  void _showStoreView() async {
+    bool isLogin = SpUtil.getBool(Constant.loginState);
+    if (!isLogin) {
+      NavigatorUtils.push(context, Routes.login);
+      return;
+    }
+    await _loadStoreList();
+    BottomSheetUtil.show(
+      context,
+      child: StoreSelectionWidget(
+        storeList: _storeList,
+        onConfirmed: (selectedStoreList) {
+          _selectStoreList = selectedStoreList;
+          setState(() {});
+        },
+      ),
+    );
+  }
+
   void _showTimeView(String startTime, String endTime, int earliestTime) {
     BottomSheetUtil.show(
       context,
@@ -231,8 +266,12 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
       ToastUtils.showInfo("请选择服务项目");
       return;
     }
-    if (_menuType == HomeMenuType.appointment && _dateTimeStr == null) {
-      ToastUtils.showInfo("请选择预约时间段");
+    // if (_menuType == HomeMenuType.storeService && _dateTimeStr == null) {
+    //   ToastUtils.showInfo("请选择预约时间段");
+    //   return;
+    // }
+    if (_menuType == HomeMenuType.storeService && _selectStoreList.isEmpty) {
+      ToastUtils.showInfo("请选择门店");
       return;
     }
     bool isLogin = SpUtil.getBool(Constant.loginState);
@@ -250,8 +289,9 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
       ConfirmOrderPage(
         poi: _currentPoi,
         projectList: _selectedProjectList,
-        isAppointment: _menuType == HomeMenuType.appointment,
+        isStoreService: _menuType == HomeMenuType.storeService,
         appointmentTime: _dateTimeStr,
+        storeShowEntity: _selectStoreList.isEmpty?null:_selectStoreList.first,
         startDate: _startDate,
         staffCode: widget.staffCode,
       ),
@@ -336,5 +376,22 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
         });
       },
     );
+  }
+
+  Future _loadStoreList()  {
+    ToastUtils.showLoading('加载中');
+    return Future.delayed(Duration(seconds: 1),(){
+      ToastUtils.dismiss();
+      _storeList.clear();
+      for(int i = 0; i < 10; i++) {
+        StoreShowEntity storeShowEntity = StoreShowEntity();
+        storeShowEntity.id = i;
+        storeShowEntity.name = i % 2 == 0 ? '鲸轿养车世贸店':'鲸轿养车滨江店';
+        storeShowEntity.address = '西湖区曙光路122号2冬浙江君澜大饭店停车场B1(距离8.89KM)';
+        storeShowEntity.phone = '18668222523';
+        storeShowEntity.isChecked = false;
+        _storeList.add(storeShowEntity);
+      }
+    });
   }
 }

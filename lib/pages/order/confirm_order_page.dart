@@ -1,4 +1,5 @@
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,13 @@ import 'package:xiaoyun_user/models/confirm_order_model.dart';
 import 'package:xiaoyun_user/models/contact_info_model.dart';
 import 'package:xiaoyun_user/models/coupon_model.dart';
 import 'package:xiaoyun_user/models/service_project_model.dart';
+import 'package:xiaoyun_user/models/store_show_entity.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/pages/home/pay_page.dart';
 import 'package:xiaoyun_user/pages/mine/contact_info_page.dart';
 import 'package:xiaoyun_user/pages/mine/my_car_page.dart';
 import 'package:xiaoyun_user/utils/bottom_sheet_utils.dart';
+import 'package:xiaoyun_user/utils/common_utils.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/utils/toast_utils.dart';
 
@@ -33,7 +36,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 class ConfirmOrderPage extends StatefulWidget {
   final Poi? poi;
   final List<ServiceProjectModel> projectList;
-  final bool isAppointment;
+  final StoreShowEntity? storeShowEntity;
+  final bool isStoreService;
   final String? appointmentTime;
   final DateTime? startDate;
   final String? staffCode;
@@ -42,7 +46,8 @@ class ConfirmOrderPage extends StatefulWidget {
     super.key,
     this.poi,
     required this.projectList,
-    this.isAppointment = false,
+    this.storeShowEntity,
+    this.isStoreService = false,
     this.appointmentTime,
     this.startDate,
     this.staffCode,
@@ -71,11 +76,11 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   @override
   void initState() {
     super.initState();
-    _appointmentDate = widget.appointmentTime??'';
+    _appointmentDate = widget.appointmentTime??(widget.isStoreService?'请选择到店时间':'可预约7天内时间');
     _startDate = widget.startDate??DateTime.now();
     _calculatePrice();
     _calculateCouponList();
-    if (!widget.isAppointment) {
+    if (!widget.isStoreService) {
       _expectOrderTime();
     }
   }
@@ -150,6 +155,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         SizedBox(height: 12),
         _buildBaseInfoWidget(),
         SizedBox(height: 12),
+        Offstage(
+          offstage: widget.isStoreService,
+          child: _buildAppointmentTimeWidget(),
+        ),
+        Offstage(
+          offstage: widget.isStoreService,
+          child:  SizedBox(height: 12),
+        ),
         // OrderConfirmStarWidget(
         //   isStarServe: _isStarServe,
         //   price: _orderGroupInfo.allStarFee,
@@ -165,6 +178,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         // SizedBox(height: 12),
         _buildServiceWidget(),
         SizedBox(height: 12),
+        Offstage(
+          offstage: !widget.isStoreService,
+          child: _buildStoreInfoWidget(),
+        ),
+        Offstage(
+          offstage: !widget.isStoreService,
+          child:  SizedBox(height: 12),
+        ),
         _buildInputWidget(),
         SizedBox(height: 12),
         CommonCard(
@@ -182,6 +203,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     );
   }
 
+  //顶部提示语
   Widget _buildTipsWidget() {
     return CommonCard(
       radius: 8,
@@ -206,7 +228,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       ),
     );
   }
-
+  //联系人信息
   Widget _buildInputWidget() {
     return CommonCard(
       padding:
@@ -306,7 +328,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       ),
     );
   }
-
+  //性别选项
   Widget _genderBtn({bool isMale = true}) {
     bool isSelected = isMale ? _sexIndex == 0 : _sexIndex == 1;
     return CommonActionButton(
@@ -325,7 +347,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       },
     );
   }
-
+  //服务信息
   Widget _buildServiceWidget() {
     List<Widget> children =
         List.generate(_orderGroupInfo!.projects.length, (index) {
@@ -419,12 +441,12 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       ),
     );
   }
-
+  //基础信息
   Widget _buildBaseInfoWidget() {
     return ConfirmBaseInfoCard(
       currentCar: _currentCar!,
       poi: widget.poi,
-      isAppointment: widget.isAppointment,
+      isAppointment: widget.isStoreService,
       appointmentDate: _appointmentDate,
       expectTime: _expectTime,
       showTimeView: _getAppointmentTime,
@@ -442,6 +464,184 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
             },
     );
   }
+  //预约时间
+  Widget _buildAppointmentTimeWidget() {
+    return GestureDetector(
+      child: CommonCard(
+          padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        '预约时间',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black
+                        )
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade200,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(4),
+                        ),
+                      ),
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        _appointmentDate,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue.shade400
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              DYLocalImage(imageName: "common_right_arrow", size: 24)
+            ],
+          )
+      ),
+      onTap: _getAppointmentTime
+    );
+  }
+  //门店信息
+  Widget _buildStoreInfoWidget() {
+    return CommonCard(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                  '门店名称',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey
+                  )
+              ),
+              Expanded(
+                child: Text(
+                    widget.storeShowEntity?.name??'',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black
+                    )
+                ),
+              ),
+            ],
+          ),
+          Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                  '门店地址',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey
+                  )
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(child: Text(
+                  widget.storeShowEntity?.address??'',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black
+                  )
+              )),
+            ],
+          ),
+          Divider(),
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                        '门店电话',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey
+                        )
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: Text(
+                          widget.storeShowEntity?.phone??'',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black
+                          )
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              IconButton(onPressed: (){
+                if(!ObjectUtil.isEmpty(widget.storeShowEntity?.phone)) {
+                  CommonUtils.launchTelUrl(widget.storeShowEntity!.phone!);
+                }
+              }, icon: Icon(Icons.phone,size: 20,))
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        '到店时间',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey
+                        )
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade200,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(4),
+                        ),
+                      ),
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        _appointmentDate,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade400
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_right,size: 20,))
+            ],
+          )
+        ],
+      ),
+    );
+  }
 
   void _showTimeView(String startTime, String endTime, int earliestTime) {
     BottomSheetUtil.show(
@@ -453,8 +653,8 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         earliestTime: earliestTime,
         confirmTimeCallback: (dateTimeStr, startDate) {
           _appointmentDate = dateTimeStr;
-          setState(() {});
           _startDate = startDate;
+          setState(() {});
         },
       ),
     );
@@ -467,8 +667,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       onSuccess: (resultData) {
         ToastUtils.dismiss();
         var data = resultData.data;
-        _showTimeView(
-            data["startTime"], data["endTime"], data["appointmentTime"]);
+        _showTimeView(data["startTime"], data["endTime"], data["appointmentTime"]);
       },
     );
   }
@@ -596,7 +795,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       "address": '${widget.poi?.provinceName}' + '${widget.poi?.cityName}' + '${widget.poi?.adName}' + '${widget.poi?.title}',
       "contact": _nameController.text,
       "gps": "${widget.poi?.latLng?.latitude},${widget.poi?.latLng?.longitude}",
-      "isReserve": widget.isAppointment ? 1 : 0,
+      "isReserve": widget.isStoreService ? 1 : 0,
       "phone": _phoneController.text,
       "projectFee": _orderGroupInfo!.projectFee,
       "projectIds": ids,
@@ -604,7 +803,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       "starfeeStatus": _isStarServe ? 1 : 0,
       "sex": _sexIndex,
     };
-    if (widget.isAppointment) {
+    if (widget.isStoreService) {
       List<String> format = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss];
       String start = formatDate(_startDate, format);
       DateTime endTime = _startDate.add(Duration(minutes: 30));

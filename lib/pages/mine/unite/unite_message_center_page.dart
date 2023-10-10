@@ -136,6 +136,7 @@ class UniteMessageCenterPageState extends State<UniteMessageCenterPage> {
                     controller: _refreshController,
                     onRefresh: _onRefresh,
                     onLoad: _loadMoreData,
+                    showEmpty: true,
                   ))
             ],
           ),

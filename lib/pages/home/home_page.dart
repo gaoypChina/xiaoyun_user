@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             Flexible(
               child: Stack(
                 children: [
-                  _buildAmapView(),
+                  _buildAMapView(),
                   _buildHomeTopBar(context),
                   HomeCenterMarker(
                     isEnd: _isMapMoveEnd,
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       locationCity: _locationCity,
       staffCode: _staffCode,
       menuChanged: (menuType) {
-        _menuCardHeight = menuType == HomeMenuType.now ? 264 : 330;
+        _menuCardHeight = menuType == HomeMenuType.callService ? 264 : 276;
         setState(() {});
       },
       onAddressChanged: (poi) {
@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  AmapView _buildAmapView() {
+  AmapView _buildAMapView() {
     List<String> latLngList = SpUtil.getStringList(Constant.latLng);
     LatLng? latLng;
     if (latLngList.length >= 2) {

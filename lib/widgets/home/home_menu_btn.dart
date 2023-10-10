@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 
-enum HomeMenuType { now, appointment }
+enum HomeMenuType {
+  /// 上门洗车
+  callService,
+  /// 到店服务
+  storeService
+}
 
 class HomeMenuBtn extends StatelessWidget {
   final HomeMenuType menuType;
@@ -10,7 +15,7 @@ class HomeMenuBtn extends StatelessWidget {
   const HomeMenuBtn({
     super.key,
     required this.menuBtnClicked,
-    this.menuType = HomeMenuType.now,
+    this.menuType = HomeMenuType.callService,
   });
 
   @override
@@ -19,18 +24,18 @@ class HomeMenuBtn extends StatelessWidget {
       child: Row(
         children: [
           MenuBtnItem(
-            title: "现在",
-            isChecked: menuType == HomeMenuType.now,
+            title: "上门洗车",
+            isChecked: menuType == HomeMenuType.callService,
             onPressed: () {
-              this.menuBtnClicked(HomeMenuType.now);
+              this.menuBtnClicked(HomeMenuType.callService);
             },
           ),
           SizedBox(width: 32),
           MenuBtnItem(
-            title: "预约",
-            isChecked: menuType == HomeMenuType.appointment,
+            title: "到店服务",
+            isChecked: menuType == HomeMenuType.storeService,
             onPressed: () {
-              this.menuBtnClicked(HomeMenuType.appointment);
+              this.menuBtnClicked(HomeMenuType.storeService);
             },
           ),
         ],
@@ -56,7 +61,7 @@ class MenuBtnItem extends StatelessWidget {
         children: [
           if (isChecked)
             Container(
-              width: 32,
+              width: 64,
               height: 8,
               color: DYColors.primary,
             ),
