@@ -10,12 +10,12 @@ class NoticeModel {
   String title = '';
 
   NoticeModel.fromJson(Map<String, dynamic> json) {
-    id = json["id"];
-    content = json["content"];
-    createTime = json["createTime"];
-    messageType = json["messageType"];
-    messageChildType = json["messageChildType"];
-    orderId = json["orderId"];
+    id = json["id"]??0;
+    content = json["content"]??'';
+    createTime = json["createTime"]??'';
+    messageType = json["messageType"]??1;
+    messageChildType = json["messageChildType"]??1;
+    orderId = json["orderId"]??0;
     isRead = json["readStatus"] == 1;
     if (messageChildType > 6) {
       title = "系统消息";

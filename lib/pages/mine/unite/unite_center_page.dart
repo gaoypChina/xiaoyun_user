@@ -18,6 +18,7 @@ import 'package:xiaoyun_user/pages/mine/unite/unite_share_page.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/utils/dialog_utils.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
+import 'package:xiaoyun_user/utils/toast_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
 import 'package:xiaoyun_user/widgets/common/common_network_image.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
@@ -49,12 +50,15 @@ class UniteCenterPageState extends State<UniteCenterPage> {
 
 
   void _loadCenterData() {
+    ToastUtils.showLoading('加载中');
     HttpUtils.get(Apis.uniteBaseInfo,onSuccess: (resultData){
+      ToastUtils.dismiss();
       _refreshController.refreshCompleted();
-     setState(() {
-       _baseInfoEntity = UniteBaseInfoEntity.fromJson(resultData.data);
-     });
+      setState(() {
+        _baseInfoEntity = UniteBaseInfoEntity.fromJson(resultData.data);
+      });
     },onError: (String msg) {
+      ToastUtils.dismiss();
       _refreshController.refreshCompleted();
     });
   }
@@ -202,37 +206,40 @@ class UniteCenterPageState extends State<UniteCenterPage> {
   }
 
   Widget _buildBalanceAndCouponCard() {
-    return Container(
-      height: 72,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0)
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildHeaderBtn(
-              title: '当月流水',
-              value: _baseInfoEntity?.monthMoney??'0.0',
-              icon: "mine_home_balance",
-              onPressed: () {
-
-              },
-            ),
+    return Stack(
+      children: [
+        DYLocalImage(
+          imageName: "mine_home_middle_bg",
+          height: 94,
+          width: double.infinity,
+          fit: BoxFit.fill,
+        ),
+        Container(
+          height: 94,
+          alignment: Alignment.center,
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildHeaderBtn(
+                  title: '当月流水',
+                  value: _baseInfoEntity?.monthMoney??'0.0',
+                  icon: "mine_home_balance",
+                  onPressed: () {},
+                ),
+              ),
+              Container(width: 1, height: 30, color: HexColor('#FFFFFF'),),
+              Expanded(
+                child: _buildHeaderBtn(
+                  title: '当月订单',
+                  value: _baseInfoEntity?.monthCount.toString()??'0',
+                  icon: "mine_home_coupon",
+                  onPressed: () {},
+                ),
+              ),
+            ],
           ),
-          Container(width: 0.5, height: 20, color: HexColor('333333'),),
-          Expanded(
-            child: _buildHeaderBtn(
-              title: '当月订单',
-              value: _baseInfoEntity?.monthCount.toString()??'0',
-              icon: "mine_home_coupon",
-              onPressed: () {
-
-              },
-            ),
-          ),
-        ],
-      ),
+        )
+      ],
     );
   }
 
@@ -250,7 +257,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18,
-                  color: HexColor('#25292C'),
+                  color: HexColor('#FFFFFF'),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -259,8 +266,8 @@ class UniteCenterPageState extends State<UniteCenterPage> {
                 title??'',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 11,
-                  color: HexColor('#333333'),
+                  fontSize: 14,
+                  color: HexColor('#FFFFFF'),
                 ),
               )
             ],
@@ -312,7 +319,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
                   NavigatorUtils.showPage(context, UniteGroupManagerPage());
                 }),
               ),
-              _buildActionItemWidget('mine_unite_message','消息中心',onPressed: (){
+              _buildActionItemWidget((_baseInfoEntity?.messagePoint == null || _baseInfoEntity?.messagePoint! == 1)?'mine_unite_message_no':'mine_unite_message','消息中心',onPressed: (){
                 NavigatorUtils.showPage(context, UniteMessageCenterPage());
               }),
               _buildActionItemWidget('mine_unite_share','推荐分享',onPressed: (){
@@ -342,7 +349,7 @@ class UniteCenterPageState extends State<UniteCenterPage> {
                 NavigatorUtils.goWebViewPage(context, '我的权益', 'https://www.baidu.com');
               }),
               _buildActionItemWidget('mine_unite_set','账号设置',onPressed: (){
-                NavigatorUtils.showPage(context, UniteAccountSettingPage());
+                NavigatorUtils.showPage(context, UniteAccountSettingPage(isChangeInfo:true));
               })
             ],
           )

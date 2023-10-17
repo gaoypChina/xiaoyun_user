@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
@@ -8,6 +10,7 @@ import 'package:xiaoyun_user/network/apis.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
+import 'package:xiaoyun_user/utils/toast_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_card.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
@@ -38,15 +41,18 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
   }
 
   void _loadData() {
+    ToastUtils.showLoading('加载中');
     HttpUtils.get(
         Apis.uniteAnalyzeInfo,
         onSuccess: (ResultData resultData){
+          ToastUtils.dismiss();
           _refreshController.refreshCompleted();
           setState(() {
             _analyzeEntity = UniteAnalyzeEntity.fromJson(resultData.data);
           });
         },
         onError: (message){
+          ToastUtils.dismiss();
           _refreshController.refreshFailed();
         });
   }
@@ -84,29 +90,10 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 _buildCardItem(
                     '订单走势',
                     CardItemType.trend,
-                    options: '''
-                    {
-                  grid: {
-                    left: '0%',
-                    right: '0%',
-                    bottom: '5%',
-                    top: '7%',
-                    height: '85%',
-                    containLabel: true,
-                 },
-                 xAxis: {
-                   type: 'category',
-                   data: ['1', '2', '3', '4', '5', '6', '11']
-                 },
-                 yAxis: {
-                   type: 'value'
-                 },
-                 series: [{
-                   data: [5, 14, 3, 6, 9, 16, 4],
-                   type: 'line'
-                 }
-                 ]}
-                    ''')
+                    options: _getLineOption(
+                      ['1', '2', '3', '4', '5', '6', '11'],
+                        [5, 14, 3, 6, 9, 16, 4]
+                    ))
               ],
             ),
           ),
@@ -117,31 +104,14 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 SizedBox(
                   height: 12,
                 ),
-                _buildCardItem('本月客户订单',CardItemType.trend,options: ''' 
-                {
-                  grid: {
-                    left: '0%',
-                    right: '0%',
-                    bottom: '5%',
-                    top: '7%',
-                    width: '95%',
-                    containLabel: true,
-                  },
-                  tooltip:{},
-                  yAxis: {
-                   type: 'category',
-                   data: ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷']
-                  },
-                  xAxis: {
-                   type: 'value'
-                  },
-                  series: [{
-                   data: [8,15,19,22,31,35,41],
-                   type: 'bar'
-                  }
-                  ]
-                 }
-                '''),
+                _buildCardItem(
+                    '本月客户订单',
+                    CardItemType.trend,
+                    options: _getBarOption(
+                        ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷'],
+                        [8,15,19,22,31,35,41]
+                    )
+                ),
               ],
             ),
           ),
@@ -155,31 +125,10 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 _buildCardItem(
                     '本月推广客户',
                     CardItemType.trend,
-                    options: '''
-                    {
-                  grid: {
-                    left: '0%',
-                    right: '0%',
-                    bottom: '5%',
-                    top: '7%',
-                    width: '95%',
-                    containLabel: true,
-                  },
-                  tooltip:{},
-                  yAxis: {
-                   type: 'category',
-                   data: ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷']
-                  },
-                  xAxis: {
-                   type: 'value'
-                  },
-                  series: [{
-                   data: [8,15,19,22,31,35,41],
-                   type: 'bar'
-                  }
-                  ]
-                 }
-                  ''')
+                    options: _getBarOption(
+                        ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷'],
+                        [8,15,19,22,31,35,41]
+                    )),
               ],
             ),
           ),
@@ -193,31 +142,10 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 _buildCardItem(
                     '推广客户总数',
                     CardItemType.trend,
-                    options: '''
-                     {
-                  grid: {
-                    left: '0%',
-                    right: '0%',
-                    bottom: '5%',
-                    top: '7%',
-                    width: '95%',
-                    containLabel: true,
-                  },
-                  tooltip:{},
-                  yAxis: {
-                   type: 'category',
-                   data: ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷']
-                  },
-                  xAxis: {
-                   type: 'value'
-                  },
-                  series: [{
-                   data: [8,15,19,22,31,35,41],
-                   type: 'bar'
-                  }
-                  ]
-                 }
-                 '''),
+                    options: _getBarOption(
+                        ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷'],
+                        [8,15,19,22,31,35,41]
+                    )),
               ],
             ),
           ),
@@ -231,38 +159,11 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 _buildCardItem(''
                     '月度数据',
                     CardItemType.trend,
-                    options: '''
-                     {
-                       grid: {
-                        left: '0%',
-                        right: '0%',
-                        top: '7%',
-                        bottom: '5%',
-                        height: '85%',
-                        containLabel: true,
-                      },      
-                      // dataset: {
-                      //  source: [
-                      //    ['1月', 100,150],
-                      //    ['2月', 140,100],
-                      //    ['3月', 230,200],
-                      //    ['4月', 100,140],
-                      //    ['5月', 130,100]
-                      //  ]
-                    // },
-                    xAxis:{
-                     type:'category',
-                     data:['1月','2月','3月','4月','5月']
-                    },
-                    yAxis:{
-                     type:'value'
-                    },
-                    series: [
-                     {type: 'bar',data:[100,140,230,100,130]},
-                     {type: 'bar',data:[140,100,200,140,100]},
-                    ]
-                   }
-                    ''')
+                    options: _getTwoBarOption(
+                        ['1月','2月','3月','4月','5月'],
+                        [100,140,230,100,130],
+                        [140,100,200,140,100]
+                    ))
               ],
             ),
           )
@@ -350,5 +251,85 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
       width: 300,
       height: 250,
     );
+  }
+
+  String _getLineOption(List<String> crossLineData,List<int> mainLineData) {
+    return '''
+      {
+        grid: {
+          left: '0%',
+          right: '0%',
+          bottom: '5%',
+          top: '7%',
+          height: '85%',
+          containLabel: true,
+        },
+        tooltip:{},
+        xAxis: {
+          type: 'category',
+          data: ${jsonEncode(crossLineData)}
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+         data: ${jsonEncode(mainLineData)},
+         type: 'line'
+        }
+        ]}
+     ''';
+  }
+
+  String _getBarOption(List<String> crossLineData,List<int> mainLineData) {
+    return ''' 
+                {
+                  grid: {
+                    left: '0%',
+                    right: '0%',
+                    bottom: '5%',
+                    top: '7%',
+                    width: '95%',
+                    containLabel: true,
+                  },
+                  tooltip:{},
+                  yAxis: {
+                   type: 'category',
+                   data: ${jsonEncode(crossLineData)}
+                  },
+                  xAxis: {
+                   type: 'value'
+                  },
+                  series: [{
+                    type: 'bar',
+                   data: ${jsonEncode(mainLineData)}
+                  }
+                  ]
+                 }
+                ''';
+  }
+
+  String _getTwoBarOption(List<String> crossDataList,List<int> mainOneDataList,List<int> mainTwoDataList) {
+    return '''{
+              grid: {
+                left: '0%',
+                right: '0%',
+                top: '7%',
+                bottom: '5%',
+                height: '85%',
+                containLabel: true,
+              },
+              tooltip:{},
+              xAxis:{
+                type:'category',
+                data: ${jsonEncode(crossDataList)}
+              },
+              yAxis:{
+                type:'value'
+              },
+              series: [
+                {type: 'bar',data:${jsonEncode(mainOneDataList)}},
+                {type: 'bar',data:${jsonEncode(mainTwoDataList)}}F,
+              ]
+             }''';
   }
 }

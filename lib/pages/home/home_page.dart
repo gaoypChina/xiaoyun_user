@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -305,9 +306,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       NavigatorUtils.push(context, Routes.login);
       return;
     }
-    String code = await NavigatorUtils.showPage(context, ScannerPage());
-    if (code.isNotEmpty) {
-      _verifyCode(code);
+    String? code = await NavigatorUtils.showPage(context, ScannerPage());
+    if (!ObjectUtil.isEmptyString(code)) {
+      _verifyCode(code!);
     }
   }
 

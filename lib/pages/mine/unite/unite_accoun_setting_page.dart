@@ -1,4 +1,5 @@
 import 'package:common_utils/common_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 import 'package:xiaoyun_user/models/unite_setting_entity.dart';
@@ -13,26 +14,11 @@ import 'package:xiaoyun_user/widgets/common/common_cell_widget.dart';
 import 'package:xiaoyun_user/widgets/common/common_text_field.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 
-enum SettingType {
-  ///未知
-  unKnown,
-  ///真实姓名
-  realName,
-  ///性别
-  sex,
-  ///手机号码
-  phone,
-  ///身份证
-  idCard,
-  ///邮箱
-  email,
-  ///银行卡号
-  bankNum,
-  ///开户行
-  bankName;
-}
-
 class UniteAccountSettingPage extends StatefulWidget {
+  final bool isChangeInfo;
+
+  const UniteAccountSettingPage({super.key,this.isChangeInfo = false});
+
   @override
   State<StatefulWidget> createState() {
     return UniteAccountSettingPageState();
@@ -41,31 +27,99 @@ class UniteAccountSettingPage extends StatefulWidget {
 
 class UniteAccountSettingPageState extends State<UniteAccountSettingPage> {
   UniteSettingEntity? _settingEntity;
-  late SettingType _settingType;
-  late TextEditingController _couponController;
+  late String _sexStr;
+  late TextEditingController _realNameController;
+  late TextEditingController _phoneNumberController;
+  late TextEditingController _idCardController;
+  late TextEditingController _emailController;
+  late TextEditingController _bankCardController;
+  late TextEditingController _bankNameController;
 
   @override
   void initState() {
     super.initState();
-    _settingType = SettingType.unKnown;
-    _couponController = TextEditingController();
-    _loadSettingData();
+    _sexStr = '未知';
+    _realNameController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+    _idCardController = TextEditingController();
+    _emailController = TextEditingController();
+    _bankCardController = TextEditingController();
+    _bankNameController = TextEditingController();
+    if (widget.isChangeInfo) {
+      _loadSettingData();
+    }
   }
 
   ///获取账号信息
   void _loadSettingData() {
+    ToastUtils.showLoading('加载中');
     HttpUtils.get(Apis.uniteAccountInfo,onSuccess: (ResultData resultData) {
-      setState(() {
-        _settingEntity = UniteSettingEntity.fromJson(resultData.data);
-      });
+      ToastUtils.dismiss();
+      if (resultData.data == null) {
+        return;
+      }
+      _settingEntity = UniteSettingEntity.fromJson(resultData.data);
+      if (_settingEntity!.sex != 0) {
+        _sexStr = _settingEntity!.sex == 1 ? '男':'女';
+      }
+      _realNameController.text = _settingEntity!.realName??'';
+      _phoneNumberController.text = _settingEntity!.mobile??'';
+      _idCardController.text = _settingEntity!.idCard??'';
+      _emailController.text = _settingEntity!.email??'';
+      _bankCardController.text = _settingEntity!.bankCard??'';
+      _bankNameController.text = _settingEntity!.bankName??'';
+      setState(() {});
     });
   }
 
   ///修改设置信息
-  void _changeSettingInfo(Map<String, dynamic> mapData) {
+  void _changeSettingInfo() {
+    if (_realNameController.text.isEmpty) {
+      ToastUtils.showText('姓名不能为空');
+      return;
+    }
+
+    if (!RegexUtil.isMobileSimple(_phoneNumberController.text)) {
+      ToastUtils.showText('请输入11位有效的手机号');
+      return;
+    }
+
+    if (!RegexUtil.isIDCard(_idCardController.text)) {
+      ToastUtils.showText('身份证号码不正确');
+      return;
+    }
+
+    if (!RegexUtil.isEmail(_emailController.text)) {
+      ToastUtils.showText('邮箱地址不正确');
+      return;
+    }
+
+    if (_bankCardController.text.isEmpty) {
+      ToastUtils.showText('银行卡号不能为空');
+      return;
+    }
+
+    if (_bankNameController.text.isEmpty) {
+      ToastUtils.showText('开户行名称不能为空');
+      return;
+    }
+
+    Map<String,dynamic>? dataMap;
+    dataMap = {'real_name':_realNameController.text};
+    int sex = 0;
+    if (_sexStr != '未知') {
+      sex = _sexStr == '男' ? 1:2;
+    }
+    dataMap = {'sex':sex};
+    dataMap = {'mobile':_phoneNumberController.text};
+    dataMap = {'id_card':_idCardController.text};
+    dataMap = {'email':_emailController.text};
+    dataMap = {'bank_name':_bankCardController.text};
+    dataMap = {'bank_card':_bankCardController.text};
+
     HttpUtils.post(
         Apis.uniteChangeAccountInfo,
-        params: mapData,
+        params: dataMap,
         onSuccess: (ResultData resultData){
           _loadSettingData();
         });
@@ -81,105 +135,20 @@ class UniteAccountSettingPageState extends State<UniteAccountSettingPage> {
         ActionSheetDialogItem(
           title: "男",
           onPressed: () {
-            Map<String,dynamic>? dataMap;
-            dataMap = {'sex':'1'};
-            _changeSettingInfo(dataMap);
-
+            setState(() {
+              _sexStr = '男';
+            });
           },
         ),
         ActionSheetDialogItem(
           title: "女",
           onPressed: () {
-            Map<String,dynamic>? dataMap;
-            dataMap = {'sex':'2'};
-            _changeSettingInfo(dataMap);
+            setState(() {
+              _sexStr = '女';
+            });
           },
         )
       ],
-    );
-  }
-
-  void _showSettingAlert(String tipTitle,String placeholder,String currentTitle) {
-    _couponController.text = currentTitle;
-
-    DialogUtils.showAlertDialog(
-      context,
-      title: tipTitle,
-      autoDismiss: false,
-      onDismissCallback: (type) {},
-      body: Column(
-        children: [
-          Text(
-            tipTitle,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: DYColors.text_normal,
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 25),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-            child: SizedBox(
-              height: 40,
-              child: DYTextField(
-                controller: _couponController,
-                placeholder: placeholder
-              ),
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: DYColors.divider,
-              ),
-            ),
-          ),
-        ],
-      ),
-      cancelAction: () {},
-      confirmAction: () {
-        if(_couponController.text.isEmpty) {
-          ToastUtils.showText('内容不能为空');
-          return;
-        }
-        Map<String,dynamic>? dataMap;
-        if (_settingType == SettingType.phone) {
-          if (!RegexUtil.isMobileSimple(_couponController.text)) {
-            ToastUtils.showText('请输入11位有效的手机号');
-            return;
-          } else {
-            dataMap = {'mobile':_couponController.text};
-          }
-        }
-        if (_settingType == SettingType.idCard) {
-          if (!RegexUtil.isIDCard(_couponController.text)) {
-            ToastUtils.showText('请输入有效身份证号码');
-            return;
-          } else {
-            dataMap = {'id_card':_couponController.text};
-          }
-        }
-        if (_settingType == SettingType.email) {
-          if (!RegexUtil.isEmail(_couponController.text)) {
-            ToastUtils.showText('请输入有效邮箱号码');
-            return;
-          } else {
-            dataMap = {'email':_couponController.text};
-          }
-        }
-        if (_settingType == SettingType.realName) {
-          dataMap = {'real_name':_couponController.text};
-        }
-        if (_settingType == SettingType.bankNum) {
-          dataMap = {'bank_card':_couponController.text};
-        }
-        if (_settingType == SettingType.bankName) {
-          dataMap = {'bank_name':_couponController.text};
-        }
-        _changeSettingInfo(dataMap!);
-        _couponController.clear();
-        NavigatorUtils.goBack(context);
-      },
     );
   }
 
@@ -188,6 +157,18 @@ class UniteAccountSettingPageState extends State<UniteAccountSettingPage> {
     return Scaffold(
       appBar: DYAppBar(
         title: '账号设置',
+        actions: [
+          TextButton(
+              onPressed: _changeSettingInfo,
+              child: Text(
+                '保存',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blue
+                ),
+              )
+          )
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(Constant.padding),
@@ -198,59 +179,61 @@ class UniteAccountSettingPageState extends State<UniteAccountSettingPage> {
               children: [
                 CommonCellWidget(
                   title: '真实姓名',
-                  subtitle: _settingEntity?.realName??'',
-                  onClicked: ()  {
-                    _settingType = SettingType.realName;
-                    _showSettingAlert('修改真实姓名', '请输入名称', _settingEntity?.realName??'');
-                  },
+                  subtitleWidget: DYTextField(
+                    textAlign: TextAlign.right,
+                    controller: _realNameController,
+                    clearButtonMode: OverlayVisibilityMode.never,
+                  ),
                 ),
                 CommonCellWidget(
                   title: '性别',
-                  subtitle: _settingEntity?.sex! == 0 ? '女':'男',
+                  subtitle: _sexStr,
                   onClicked: () {
-                    _settingType = SettingType.sex;
                     _showSexSheetDialog();
                   },
                 ),
                 CommonCellWidget(
                   title: '手机号码',
-                  subtitle: _settingEntity?.mobile??'',
-                  onClicked: ()  {
-                    _settingType = SettingType.phone;
-                    _showSettingAlert('修改手机号码', '请输入手机号', _settingEntity?.mobile??'');
-                  },
+                  subtitleWidget: DYTextField(
+                    textAlign: TextAlign.right,
+                    controller: _phoneNumberController,
+                    clearButtonMode: OverlayVisibilityMode.never,
+                  ),
                 ),
                 CommonCellWidget(
                   title: '身份证',
-                  subtitle: _settingEntity?.idCard??'',
-                  onClicked: () {
-                    _settingType = SettingType.idCard;
-                    _showSettingAlert('修改身份证', '请输入身份证号码', _settingEntity?.idCard??'');
-                  },
+                  subtitleWidget: DYTextField(
+                    textAlign: TextAlign.right,
+                    controller: _idCardController,
+                    clearButtonMode: OverlayVisibilityMode.never,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                 ),
                 CommonCellWidget(
                   title: '邮箱',
-                  subtitle: _settingEntity?.email??'',
-                  onClicked: ()  {
-                    _settingType = SettingType.email;
-                    _showSettingAlert('修改邮箱', '请输入邮箱号码', _settingEntity?.email??'');
-                  },
+                  subtitleWidget: DYTextField(
+                    textAlign: TextAlign.right,
+                    controller: _emailController,
+                    clearButtonMode: OverlayVisibilityMode.never,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                 ),
                 CommonCellWidget(
                   title: '银行卡',
-                  subtitle: _settingEntity?.bankCard??'',
-                  onClicked: () {
-                    _settingType = SettingType.bankNum;
-                    _showSettingAlert('修改银行卡号', '请输入银行卡号', _settingEntity?.bankCard??'');
-                  },
+                  subtitleWidget: DYTextField(
+                    textAlign: TextAlign.right,
+                    controller: _bankCardController,
+                    clearButtonMode: OverlayVisibilityMode.never,
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
                 CommonCellWidget(
                   title: '开户行',
-                  subtitle: _settingEntity?.bankName??'',
-                  onClicked: () {
-                    _settingType = SettingType.bankName;
-                    _showSettingAlert('修改开户行', '请输入开户行名称', _settingEntity?.bankName??'');
-                  },
+                  subtitleWidget: DYTextField(
+                    textAlign: TextAlign.right,
+                    controller: _bankNameController,
+                    clearButtonMode: OverlayVisibilityMode.never,
+                  ),
                 )
               ],
             ),

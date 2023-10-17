@@ -9,6 +9,7 @@ import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/network/result_data.dart';
 import 'package:xiaoyun_user/utils/color_util.dart';
 import 'package:xiaoyun_user/utils/date_picker_utils.dart';
+import 'package:xiaoyun_user/utils/toast_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_refresher.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 
@@ -20,11 +21,11 @@ class UniteOrderRecordsListPage extends StatefulWidget {
 }
 
 class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> with SingleTickerProviderStateMixin {
-  late DateTime _startTime;
-  late DateTime _endTime;
-  late int _page;
-  late int _dateType;
-  late RefreshController _refreshController;
+   DateTime? _startTime;
+   DateTime? _endTime;
+   late int _page;
+   late int _dateType;
+   late RefreshController _refreshController;
 
   List<UniteOrderListList>? _dataList;
 
@@ -34,8 +35,6 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
     _page = 1;
     _dateType = 1;
     _dataList = [];
-    _startTime = DateTime.now();
-    _endTime = DateTime.now();
     _refreshController = RefreshController();
     _onRefresh();
   }
@@ -51,26 +50,24 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
   }
 
   void _loadData() {
-    Map _params = {};
+    Map<String,dynamic> _params = {};
     if (_dateType == - 1) {
       _params = {
         'page':_page,
         'pageSize':'10',
-        'starTime':formatDate(_startTime, [yyyy, '-', mm, '-', dd]),
-        'endTime':formatDate(_endTime, [yyyy, '-', mm, '-', dd])
+        'starTime':formatDate(_startTime!, [yyyy, '-', mm, '-', dd]),
+        'endTime':formatDate(_endTime!, [yyyy, '-', mm, '-', dd])
       };
     } else {
       _params = {
         'page':_page,
         'pageSize':'10',
         'dataType':_dateType,
-        'starTime':'',
-        'endTime':''
       };
     }
     HttpUtils.post(
         Apis.uniteOrderList,
-        params: _params as Map<String,dynamic>,
+        params: _params,
         onSuccess: (ResultData resultData){
           _refreshController.refreshCompleted();
           UniteOrderListEntity uniteOrderListEntity = UniteOrderListEntity.fromJson(resultData.data);
@@ -140,7 +137,7 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
           ),
         ),
         _buildTimeBtn('开始时间', dateTime: _startTime, isStart: true,onTap: (){
-          _showDatePicker(_startTime,true);
+          _showDatePicker(_startTime??DateTime.now(),true);
         }),
         Container(
             height: 0.5,
@@ -149,12 +146,22 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
             padding: EdgeInsets.symmetric(horizontal: 15.0)
         ),
         _buildTimeBtn('结束时间', dateTime: _endTime, isStart: false,onTap: (){
-          _showDatePicker(_startTime,false);
+          _showDatePicker(_startTime??DateTime.now(),false);
         }),
-        Icon(
-            Icons.search,
-            size: 18.0
-        )
+        IconButton(
+            onPressed: (){
+              if (_startTime == null || _endTime == null) {
+                ToastUtils.showText('时间不能为空');
+                return;
+              }
+              if (_startTime!.isAfter(_endTime!)) {
+                ToastUtils.showText('开始时间不能晚于结束时间');
+                return;
+              }
+              _dateType = - 1;
+              _onRefresh();
+            },
+            icon: Icon(Icons.search,size: 18.0,))
       ],
     );
   }
@@ -171,9 +178,9 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
         ),
         padding: EdgeInsets.only(
             top: 5,
-          left: 10,
-          right: 3,
-          bottom: 5
+            left: 10,
+            right: 3,
+            bottom: 5
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -188,17 +195,6 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
                     : DYColors.text_light_gray,
               ),
             ),
-            SizedBox(width: 3),
-            GestureDetector(
-              child: Icon(
-                Icons.search,
-                size: 8.0,
-              ),
-              onTap: (){
-                _dateType = -1;
-                _onRefresh();
-              },
-            ),
           ],
         ),
       ),
@@ -212,27 +208,36 @@ class UniteOrderRecordsListPageState extends State<UniteOrderRecordsListPage> wi
       children: [
         _buildTypeItemWidget('今日',_dateType == 1,onPress: (){
           if (_dateType != 1) {
+            _dateType = 1;
+            _startTime = null;
+            _endTime = null;
+            _onRefresh();
             setState(() {
-              _dateType = 1;
+
             });
           }
-          _onRefresh();
         }),
         _buildTypeItemWidget('本周',_dateType == 2,onPress: (){
           if (_dateType != 2) {
+            _dateType = 2;
+            _startTime = null;
+            _endTime = null;
+            _onRefresh();
             setState(() {
-              _dateType = 2;
+
             });
           }
-          _onRefresh();
         }),
         _buildTypeItemWidget('本月',_dateType == 3,onPress: (){
           if (_dateType != 3) {
+            _dateType = 3;
+            _startTime = null;
+            _endTime = null;
+            _onRefresh();
             setState(() {
-              _dateType = 3;
+
             });
           }
-          _onRefresh();
         }),
       ],
     );
