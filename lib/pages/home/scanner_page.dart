@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:wakelock/wakelock.dart';
 import 'package:xiaoyun_user/utils/dialog_utils.dart';
 import 'package:xiaoyun_user/utils/photo_picker_utils.dart';
 import 'package:xiaoyun_user/widgets/common/common_local_image.dart';
@@ -31,12 +30,10 @@ class _ScannerPageState extends State<ScannerPage>
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat();
-    Wakelock.enable();
   }
 
   @override
   void dispose() {
-    Wakelock.disable();
     _controller.dispose();
     _scannerController.dispose();
     super.dispose();

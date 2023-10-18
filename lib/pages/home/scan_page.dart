@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:wakelock/wakelock.dart';
 import 'package:xiaoyun_user/utils/navigator_utils.dart';
 import 'package:xiaoyun_user/widgets/common/navigation_item.dart';
 
@@ -19,13 +18,11 @@ class _ScanPageState extends State<ScanPage> {
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    Wakelock.disable();
     super.dispose();
   }
 

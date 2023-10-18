@@ -30,7 +30,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  #网络请求 https://pub.dev/packages/dio
+  # 网络请求 https://pub.dev/packages/dio
   dio: ^5.3.3
   # 拍照，从相册中选择 https://pub.flutter-io.cn/packages/image_picker
   image_picker: ^1.0.4
@@ -38,7 +38,7 @@ dependencies:
   multi_image_picker: ^4.8.01
   # 仿微信图片选择器 https://pub.flutter-io.cn/packages/wechat_assets_picker
   wechat_assets_picker: ^8.7.1
-  #下拉刷新 https://pub.dev/packages/pull_to_refresh
+  # 下拉刷新 https://pub.dev/packages/pull_to_refresh
   pull_to_refresh: ^2.0.0
   # 网络图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   cached_network_image: ^3.2.3
@@ -47,9 +47,9 @@ dependencies:
   # 用户权限申请 https://pub.dev/packages/permission_handler
   permission_handler: ^11.0.0
   # App信息 https://pub.dev/packages/package_info
-  package_info: ^2.0.2
+#  package_info: ^2.0.2
   # App信息 https://pub.dev/packages/package_info_plus
-#  package_info_plus: ^4.0.2
+  package_info_plus: ^4.2.0
   #字体/尺寸适配  https://pub.dev/packages/flutter_screenutil
   flutter_screenutil: ^5.9.0
   #路由  https://pub.dev/packages/fluro
@@ -76,8 +76,6 @@ dependencies:
   awesome_dialog: ^3.1.0
   # 底部弹窗 https://pub.dev/packages/modal_bottom_sheet
   modal_bottom_sheet: ^3.0.0-pre
-  # 性能优化插件 https://pub.dev/packages/wakelock
-  wakelock: any
   # json动画库 https://pub.dev/packages/lottie
   lottie: ^2.6.0
   # 时间格式转换 https://pub.dev/packages/date_format
@@ -114,7 +112,7 @@ dependencies:
   amap_map_fluttify: ^2.0.2
   # rongcloud_im_plugin: ^5.1.8+6
   # 设备信息 https://pub.dev/packages/device_info_plus
-  device_info_plus: ^4.1.3
+  device_info_plus: ^9.1.0
   # 常用工具类(时间轴，倒计时等) https://pub.flutter-io.cn/packages/common_utils
   common_utils: ^2.1.0
   # 图形图表 https://pub.flutter-io.cn/packages/flutter_echarts
