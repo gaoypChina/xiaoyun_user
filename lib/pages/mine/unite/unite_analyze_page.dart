@@ -145,7 +145,8 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                     options: _getBarOption(
                         ['张一鸣','丽丽','王一','三儿','陈大头','周杰伦','赵雷'],
                         [8,15,19,22,31,35,41]
-                    )),
+                    )
+                ),
               ],
             ),
           ),
@@ -159,11 +160,7 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 _buildCardItem(''
                     '月度数据',
                     CardItemType.trend,
-                    options: _getTwoBarOption(
-                        ['1月','2月','3月','4月','5月'],
-                        [100,140,230,100,130],
-                        [140,100,200,140,100]
-                    ))
+                    options: _getCustomerOption())
               ],
             ),
           )
@@ -308,28 +305,57 @@ class UniteAnalyzePageState extends State<UniteAnalyzePage> {
                 ''';
   }
 
-  String _getTwoBarOption(List<String> crossDataList,List<int> mainOneDataList,List<int> mainTwoDataList) {
+  String _getCustomerOption() {
     return '''{
-              grid: {
-                left: '0%',
-                right: '0%',
-                top: '7%',
-                bottom: '5%',
-                height: '85%',
-                containLabel: true,
-              },
-              tooltip:{},
-              xAxis:{
-                type:'category',
-                data: ${jsonEncode(crossDataList)}
-              },
-              yAxis:{
-                type:'value'
-              },
-              series: [
-                {type: 'bar',data:${jsonEncode(mainOneDataList)}},
-                {type: 'bar',data:${jsonEncode(mainTwoDataList)}}F,
-              ]
-             }''';
-  }
+       grid: {
+         left: '0%',
+         right: '0%',
+         height: '90%',
+         bottom: '5%',
+         containLabel: true,
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      xAxis: [
+        {
+          type: 'category',
+          axisTick: {show: true},
+          data: ['1月', '2月', '3月', '4月', '5月']
+        }
+      ],
+     yAxis: [
+      {
+        type: 'value'
+      }
+     ],
+     series: [
+     {
+       name: '数据',
+       type: 'bar',
+       barGap: '0',
+       emphasis: {
+         focus: 'series'
+       },
+       itemStyle: {
+         borderType: 'solid',
+         color: '#00B6F1'
+       },
+       data: [100, 140, 230, 100, 130]
+     },
+    {
+      name: '数据2',
+      type: 'bar',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [150, 100, 200, 140, 100]
+    },
+  ]
+}
+    ''';
+}
 }
