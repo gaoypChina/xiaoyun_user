@@ -37,6 +37,7 @@ class ConfirmOrderPage extends StatefulWidget {
   final Poi? poi;
   final List<ServiceProjectModel> projectList;
   final StoreShowEntity? storeShowEntity;
+  final bool isAppointment;
   final bool isStoreService;
   final String? appointmentTime;
   final DateTime? startDate;
@@ -46,6 +47,7 @@ class ConfirmOrderPage extends StatefulWidget {
     super.key,
     this.poi,
     required this.projectList,
+    this.isAppointment = false,
     this.storeShowEntity,
     this.isStoreService = false,
     this.appointmentTime,
@@ -76,11 +78,12 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   @override
   void initState() {
     super.initState();
-    _appointmentDate = widget.appointmentTime??(widget.isStoreService?'请选择到店时间':'可预约7天内时间');
+    // _appointmentDate = widget.appointmentTime??(widget.isStoreService?'请选择到店时间':'可预约7天内时间');
+    _appointmentDate = widget.appointmentTime??'';
     _startDate = widget.startDate??DateTime.now();
     _calculatePrice();
     _calculateCouponList();
-    if (!widget.isStoreService) {
+    if (!widget.isAppointment) {
       _expectOrderTime();
     }
   }
@@ -155,14 +158,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         SizedBox(height: 12),
         _buildBaseInfoWidget(),
         SizedBox(height: 12),
-        Offstage(
-          offstage: widget.isStoreService,
-          child: _buildAppointmentTimeWidget(),
-        ),
-        Offstage(
-          offstage: widget.isStoreService,
-          child:  SizedBox(height: 12),
-        ),
+        // Offstage(
+        //   offstage: widget.isStoreService,
+        //   child: _buildAppointmentTimeWidget(),
+        // ),
+        // Offstage(
+        //   offstage: widget.isStoreService,
+        //   child:  SizedBox(height: 12),
+        // ),
         // OrderConfirmStarWidget(
         //   isStarServe: _isStarServe,
         //   price: _orderGroupInfo.allStarFee,
@@ -178,14 +181,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         // SizedBox(height: 12),
         _buildServiceWidget(),
         SizedBox(height: 12),
-        Offstage(
-          offstage: !widget.isStoreService,
-          child: _buildStoreInfoWidget(),
-        ),
-        Offstage(
-          offstage: !widget.isStoreService,
-          child:  SizedBox(height: 12),
-        ),
+        // Offstage(
+        //   offstage: !widget.isStoreService,
+        //   child: _buildStoreInfoWidget(),
+        // ),
+        // Offstage(
+        //   offstage: !widget.isStoreService,
+        //   child:  SizedBox(height: 12),
+        // ),
         _buildInputWidget(),
         SizedBox(height: 12),
         CommonCard(
@@ -446,7 +449,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     return ConfirmBaseInfoCard(
       currentCar: _currentCar!,
       poi: widget.poi,
-      isAppointment: widget.isStoreService,
+      isAppointment: widget.isAppointment,
       appointmentDate: _appointmentDate,
       expectTime: _expectTime,
       showTimeView: _getAppointmentTime,
@@ -668,6 +671,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         ToastUtils.dismiss();
         var data = resultData.data;
         _showTimeView(data["startTime"], data["endTime"], data["appointmentTime"]);
+        // _showTimeView(data["startTime"], data["endTime"], data["appointmentTime"]);
       },
     );
   }
@@ -795,7 +799,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       "address": '${widget.poi?.provinceName}' + '${widget.poi?.cityName}' + '${widget.poi?.adName}' + '${widget.poi?.title}',
       "contact": _nameController.text,
       "gps": "${widget.poi?.latLng?.latitude},${widget.poi?.latLng?.longitude}",
-      "isReserve": widget.isStoreService ? 1 : 0,
+      "isReserve": widget.isAppointment ? 1 : 0,
       "phone": _phoneController.text,
       "projectFee": _orderGroupInfo!.projectFee,
       "projectIds": ids,
@@ -803,7 +807,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       "starfeeStatus": _isStarServe ? 1 : 0,
       "sex": _sexIndex,
     };
-    if (widget.isStoreService) {
+    if (widget.isAppointment) {
       List<String> format = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss];
       String start = formatDate(_startDate, format);
       DateTime endTime = _startDate.add(Duration(minutes: 30));

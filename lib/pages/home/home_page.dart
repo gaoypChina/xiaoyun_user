@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       locationCity: _locationCity,
       staffCode: _staffCode,
       menuChanged: (menuType) {
-        _menuCardHeight = menuType == HomeMenuType.callService ? 264 : 276;
+        _menuCardHeight = menuType == HomeMenuType.now ? 264 : 330;
         setState(() {});
       },
       onAddressChanged: (poi) {

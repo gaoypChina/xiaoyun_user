@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
 
 enum HomeMenuType {
-  /// 上门洗车
-  callService,
-  /// 到店服务
-  storeService
+  // /// 上门洗车
+  // callService,
+  // /// 到店服务
+  // storeService
+  now,appointment
 }
 
 class HomeMenuBtn extends StatelessWidget {
@@ -15,7 +16,7 @@ class HomeMenuBtn extends StatelessWidget {
   const HomeMenuBtn({
     super.key,
     required this.menuBtnClicked,
-    this.menuType = HomeMenuType.callService,
+    this.menuType = HomeMenuType.now,
   });
 
   @override
@@ -23,19 +24,33 @@ class HomeMenuBtn extends StatelessWidget {
     return Container(
       child: Row(
         children: [
+          // MenuBtnItem(
+          //   title: "上门洗车",
+          //   isChecked: menuType == HomeMenuType.callService,
+          //   onPressed: () {
+          //     this.menuBtnClicked(HomeMenuType.callService);
+          //   },
+          // ),
           MenuBtnItem(
-            title: "上门洗车",
-            isChecked: menuType == HomeMenuType.callService,
+            title: '现在',
+            isChecked: menuType == HomeMenuType.now,
             onPressed: () {
-              this.menuBtnClicked(HomeMenuType.callService);
+              this.menuBtnClicked(HomeMenuType.now);
             },
           ),
           SizedBox(width: 32),
+          // MenuBtnItem(
+          //   title: "到店服务",
+          //   isChecked: menuType == HomeMenuType.storeService,
+          //   onPressed: () {
+          //     this.menuBtnClicked(HomeMenuType.storeService);
+          //   },
+          // ),
           MenuBtnItem(
-            title: "到店服务",
-            isChecked: menuType == HomeMenuType.storeService,
+            title: "预约",
+            isChecked: menuType == HomeMenuType.appointment,
             onPressed: () {
-              this.menuBtnClicked(HomeMenuType.storeService);
+              this.menuBtnClicked(HomeMenuType.appointment);
             },
           ),
         ],
@@ -61,7 +76,7 @@ class MenuBtnItem extends StatelessWidget {
         children: [
           if (isChecked)
             Container(
-              width: 64,
+              width: 32,
               height: 8,
               color: DYColors.primary,
             ),

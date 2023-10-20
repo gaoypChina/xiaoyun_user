@@ -52,7 +52,7 @@ class HomeMenuCard extends StatefulWidget {
 }
 
 class _HomeMenuCardState extends State<HomeMenuCard> {
-  HomeMenuType _menuType = HomeMenuType.callService;
+  HomeMenuType _menuType = HomeMenuType.now;
   late String _address;
   Poi? _currentPoi;
   String? _dateTimeStr;
@@ -97,26 +97,27 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
             },
           ),
           SizedBox(height: Constant.padding),
-          ///地址选择
-          Offstage(
-            offstage: _menuType == HomeMenuType.storeService,
-            child: _buildAddressBtn(context),
-          ),
-          ///门店选择
-          Offstage(
-            offstage: _menuType == HomeMenuType.callService,
-            child: HomeSelectBtn(
-              placeholder: "请选择门店",
-              value: _selectStoreList.isEmpty
-                  ? ""
-                  : _selectStoreList.map((project) => project.name).toList().join("/"),
-              onPressed: _showStoreView,
-            ),
-          ),
-          Offstage(
-            offstage: _menuType == HomeMenuType.callService,
-            child:  SizedBox(height: Constant.padding),
-          ),
+          _buildAddressBtn(context),
+          // ///地址选择
+          // Offstage(
+          //   offstage: _menuType == HomeMenuType.storeService,
+          //   child: _buildAddressBtn(context),
+          // ),
+          // ///门店选择
+          // Offstage(
+          //   offstage: _menuType == HomeMenuType.callService,
+          //   child: HomeSelectBtn(
+          //     placeholder: "请选择门店",
+          //     value: _selectStoreList.isEmpty
+          //         ? ""
+          //         : _selectStoreList.map((project) => project.name).toList().join("/"),
+          //     onPressed: _showStoreView,
+          //   ),
+          // ),
+          // Offstage(
+          //   offstage: _menuType == HomeMenuType.callService,
+          //   child:  SizedBox(height: Constant.padding),
+          // ),
           ///选择服务项目
           HomeSelectBtn(
             placeholder: "请选择服务项目",
@@ -128,6 +129,15 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
                     .join("/"),
             onPressed: _showServeView,
           ),
+          if (_menuType == HomeMenuType.appointment)
+            Padding(
+              padding: const EdgeInsets.only(top: Constant.padding),
+              child: HomeSelectBtn(
+                placeholder: "请选择预约时间段",
+                value: _dateTimeStr == null ? "" : _dateTimeStr??'',
+                onPressed: _getAppointmentTime,
+              ),
+            ),
           SizedBox(height: 30),
           CommonActionButton(
             title: "下一步",
@@ -266,14 +276,14 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
       ToastUtils.showInfo("请选择服务项目");
       return;
     }
-    // if (_menuType == HomeMenuType.storeService && _dateTimeStr == null) {
-    //   ToastUtils.showInfo("请选择预约时间段");
-    //   return;
-    // }
-    if (_menuType == HomeMenuType.storeService && _selectStoreList.isEmpty) {
-      ToastUtils.showInfo("请选择门店");
+    if (_menuType == HomeMenuType.appointment && _dateTimeStr == null) {
+      ToastUtils.showInfo("请选择预约时间段");
       return;
     }
+    // if (_menuType == HomeMenuType.storeService && _selectStoreList.isEmpty) {
+    //   ToastUtils.showInfo("请选择门店");
+    //   return;
+    // }
     bool isLogin = SpUtil.getBool(Constant.loginState);
     if (!isLogin) {
       NavigatorUtils.push(context, Routes.login);
@@ -289,9 +299,8 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
       ConfirmOrderPage(
         poi: _currentPoi,
         projectList: _selectedProjectList,
-        isStoreService: _menuType == HomeMenuType.storeService,
+        isAppointment: _menuType == HomeMenuType.appointment,
         appointmentTime: _dateTimeStr,
-        storeShowEntity: _selectStoreList.isEmpty?null:_selectStoreList.first,
         startDate: _startDate,
         staffCode: widget.staffCode,
       ),

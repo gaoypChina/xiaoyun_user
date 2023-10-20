@@ -60,6 +60,13 @@ class _AboutPageState extends State<AboutPage> {
                         onClicked: () {
                           _showAgreement("隐私政策", 5);
                         },
+                      ),
+                      CommonCellWidget(
+                        title: "第三方信息共享清单",
+                        titleWidth: 180,
+                        onClicked: () {
+                          _showAgreement("第三方信息共享清单", 5);
+                        },
                       )
                     ],
                   ),

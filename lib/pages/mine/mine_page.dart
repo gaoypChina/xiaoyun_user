@@ -239,14 +239,14 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
               }
             },
           ),
-          _buildCellItem(
-              'mine_cell_unite',
-              '合作中心',
-              onPressed: () {
-                if(_userInfo == null) return;
-                NavigatorUtils.showPage(context, UniteCenterPage(userModelEntity: _userInfo!));
-              }
-          ),
+          // _buildCellItem(
+          //     'mine_cell_unite',
+          //     '合作中心',
+          //     onPressed: () {
+          //       if(_userInfo == null) return;
+          //       NavigatorUtils.showPage(context, UniteCenterPage(userModelEntity: _userInfo!));
+          //     }
+          // ),
           _buildCellItem(
             "mine_cell_feedback",
             "意见反馈",
