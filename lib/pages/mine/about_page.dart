@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xiaoyun_user/constant/constant.dart';
@@ -61,12 +63,15 @@ class _AboutPageState extends State<AboutPage> {
                           _showAgreement("隐私政策", 5);
                         },
                       ),
-                      CommonCellWidget(
-                        title: "第三方信息共享清单",
-                        titleWidth: 180,
-                        onClicked: () {
-                          _showAgreement("第三方信息共享清单", 5);
-                        },
+                      Offstage(
+                        offstage:Platform.isIOS,
+                        child: CommonCellWidget(
+                          title: "第三方信息共享清单",
+                          titleWidth: 180,
+                          onClicked: () {
+                            _showAgreement("第三方信息共享清单", 10);
+                          },
+                        ),
                       )
                     ],
                   ),

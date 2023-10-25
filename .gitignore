@@ -29,6 +29,7 @@
 .pub-cache/
 .pub/
 /build/
+/android/app/build/
 *.lock
 .flutter-plugins-dependencies
 
