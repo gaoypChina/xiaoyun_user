@@ -170,6 +170,26 @@ class _SettingPageState extends State<SettingPage> {
             );
           },
         ),
+        SizedBox(height: 20),
+        CommonActionButton(
+          bgColor: Colors.white,
+          title: "注销账号",
+          titleColor: DYColors.text_red,
+          onPressed: () {
+            DialogUtils.showAlertDialog(
+                context,
+                title: '提示',
+                message: '是否确认删除账号,进行本操作后账号所有数据保留七天，七天内未登陆会删除所有数据',
+                cancelAction:(){},
+                confirmAction: (){
+                  SpUtil.putBool(Constant.loginState, false);
+                  UserEventBus().fire(UserStateChangedEvent(false));
+                  JPush().deleteAlias();
+                  NavigatorUtils.goBack(context);
+                });
+          },
+        ),
+
       ],
     );
   }
