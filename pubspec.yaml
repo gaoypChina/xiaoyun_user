@@ -3,7 +3,7 @@ description: 鲸轿洗车用户端
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 2.0.1+2
+version: 2.0.1+3
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -46,8 +46,6 @@ dependencies:
   shared_preferences: ^2.2.1
   # 用户权限申请 https://pub.dev/packages/permission_handler
   permission_handler: ^11.0.0
-  # App信息 https://pub.dev/packages/package_info
-#  package_info: ^2.0.2
   # App信息 https://pub.dev/packages/package_info_plus
   package_info_plus: ^4.2.0
   #字体/尺寸适配  https://pub.dev/packages/flutter_screenutil
