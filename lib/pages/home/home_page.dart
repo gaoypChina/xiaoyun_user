@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     bool serviceStatus = await Permission.location.serviceStatus.isEnabled;
     PermissionStatus? status = statuses[Permission.location];
     if (serviceStatus) {
-      if (status == PermissionStatus.permanentlyDenied) {//用户永久拒绝
+      if (status == PermissionStatus.permanentlyDenied || status == PermissionStatus.denied) {//用户永久拒绝
         _locationStatus = false;
         if (!isInit) {
           ToastUtils.showError('定位权限被拒绝\n请进入手机设置页面打开定位权限');
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  AmapView _buildAMapView() {
+  Widget _buildAMapView() {
     List<String> latLngList = SpUtil.getStringList(Constant.latLng);
     LatLng? latLng;
     if (latLngList.length >= 2) {
@@ -260,6 +260,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         double.tryParse(latLngList[0])??0,
         double.tryParse(latLngList[1])??0,
       );
+    }
+    if (Platform.isAndroid && !_locationStatus) {
+      return Container();
     }
     return AmapView(
       mapType: MapType.Standard,
@@ -281,6 +284,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         );
         print("onMapCreated ");
         if (latLng != null) {
+          print("onMapCreated ");
           _getCurrentAddress(latLng);
         }
       },

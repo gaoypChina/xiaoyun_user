@@ -1,7 +1,9 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
+import 'package:xiaoyun_user/utils/common_utils.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 
 class AgreementPage extends StatefulWidget {
@@ -28,7 +30,13 @@ class _AgreementPageState extends State<AgreementPage> {
     return Scaffold(
       appBar: DYAppBar(title: widget.title),
       body: SingleChildScrollView(
-        child: HtmlWidget(_content),
+        child: HtmlWidget(
+          _content,
+          onTapUrl: (urlStr) async {
+            if (ObjectUtil.isEmptyString(urlStr)) return false;
+            CommonUtils.launchWebUrl(urlStr);
+            return true;
+          }),
       ),
     );
   }
