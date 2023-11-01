@@ -56,7 +56,7 @@ class _AddressPageState extends State<AddressPage> {
         titleWidget: _buildSearchField(),
         actions: [
           NavigationItem(
-            title: "取消",
+            title: '取消',
             onPressed: () {
               NavigatorUtils.goBack(context);
             },

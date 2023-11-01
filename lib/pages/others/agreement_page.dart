@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:xiaoyun_user/network/http_utils.dart';
 import 'package:xiaoyun_user/widgets/common/custom_app_bar.dart';
 
@@ -27,7 +28,7 @@ class _AgreementPageState extends State<AgreementPage> {
     return Scaffold(
       appBar: DYAppBar(title: widget.title),
       body: SingleChildScrollView(
-        child: Html(data: _content),
+        child: HtmlWidget(_content),
       ),
     );
   }

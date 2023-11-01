@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   Poi? _currentPoi;
   String? _staffCode;
   String? _deviceId;
+  late bool _locationStatus; ///定位状态
 
   late StreamSubscription _subscription;
   List<ServicePhoneModel> _servicePhoneList = [];
@@ -53,7 +54,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    _requestPermission();
+    _locationStatus = false;
+    _requestPermission(isInit:true);
     _subscription = UserEventBus().on<UserStateChangedEvent>().listen((event) {
       bool isRegister = event.isRegister;
       if (isRegister) {
@@ -79,21 +81,40 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     super.dispose();
   }
 
-  void _requestPermission() async {
+  void _requestPermission({bool isInit = false}) async {
     Map<Permission, PermissionStatus> statuses = await [Permission.location,].request();
     bool serviceStatus = await Permission.location.serviceStatus.isEnabled;
-    if (statuses[Permission.location] == PermissionStatus.granted && serviceStatus) {
-      Location location = await AmapLocation.instance.fetchLocation(needAddress: true);
-      SpUtil.putStringList(Constant.latLng, [
-        location.latLng!.latitude.toString(),
-        location.latLng!.longitude.toString(),
-      ]);
-      _cityName = location.city??'';
-      _locationCity = _cityName;
-      _controller?.showMyLocation(
-        MyLocationOption(show: true),
-      );
+    PermissionStatus? status = statuses[Permission.location];
+    if (serviceStatus) {
+      if (status == PermissionStatus.permanentlyDenied) {//用户永久拒绝
+        _locationStatus = false;
+        if (!isInit) {
+          ToastUtils.showError('定位权限被拒绝\n请进入手机设置页面打开定位权限');
+          _cityName = '定位失败';
+          _locationCity = '定位失败';
+        }
+      } else {
+        if (status == PermissionStatus.granted) {
+          _locationStatus = true;
+          Location location = await AmapLocation.instance.fetchLocation(needAddress: true);
+          SpUtil.putStringList(Constant.latLng, [
+            location.latLng!.latitude.toString(),
+            location.latLng!.longitude.toString(),
+          ]);
+          _cityName = location.city??'';
+          _locationCity = _cityName;
+          _controller?.showMyLocation(
+            MyLocationOption(show: true),
+          );
+        } else {
+          _locationStatus = false;
+          ToastUtils.showError('定位失败\n请打开定位权限');
+          _cityName = '定位失败';
+          _locationCity = "定位失败";
+        }
+      }
     } else {
+      _locationStatus = false;
       ToastUtils.showError("定位失败\n请打开定位权限");
       _cityName = "定位失败";
       _locationCity = "定位失败";
@@ -161,6 +182,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       city: _cityName,
       onScanAction: _scanAction,
       onCityPressed: () async {
+        if (!_locationStatus) {
+          _requestPermission();
+          return;
+        }
         String? selectedCity = await NavigatorUtils.showPage(context, CityPage(locationCity: _locationCity));
         if (selectedCity == null || selectedCity == _cityName) return;
         _cityName = selectedCity;
@@ -177,9 +202,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       poi: _currentPoi??Poi(),
       locationCity: _locationCity,
       staffCode: _staffCode,
+      locationStatus: _locationStatus,
       menuChanged: (menuType) {
         _menuCardHeight = menuType == HomeMenuType.now ? 264 : 330;
         setState(() {});
+      },
+      requestLocation: () {
+        _requestPermission();
       },
       onAddressChanged: (poi) {
         _currentPoi = poi;
@@ -274,9 +303,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           return;
         }
         _isMapMoveEnd = true;
-        // ReGeocode reGeocode =
-        //     await AmapSearch.instance.searchAround(move.coordinate);
-        //  List<Poi> poiList = reGeocode.poiList;
         _getCurrentAddress(move.coordinate!);
       },
     );
@@ -287,7 +313,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
     if (poiList.isEmpty) {
       setState(() {
-        _address = "获取位置信息失败";
+        _address = '获取位置信息失败';
         _currentPoi = Poi();
       });
       return;

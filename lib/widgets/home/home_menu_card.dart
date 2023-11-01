@@ -30,9 +30,11 @@ class HomeMenuCard extends StatefulWidget {
   final String? address;
   final double? height;
   final String? staffCode;
+  final bool locationStatus;
   final Function(HomeMenuType menuType)? menuChanged;
   final Function(Poi poi)? onAddressChanged;
   final Function()? showNextPageEnd;
+  final Function()? requestLocation;
   final String locationCity;
 
   const HomeMenuCard({
@@ -42,9 +44,11 @@ class HomeMenuCard extends StatefulWidget {
     this.menuChanged,
     this.onAddressChanged,
     this.showNextPageEnd,
+    this.requestLocation,
     this.address,
     required this.locationCity,
     this.staffCode,
+    this.locationStatus = true
   });
 
   @override
@@ -189,8 +193,12 @@ class _HomeMenuCardState extends State<HomeMenuCard> {
           ],
         ),
         onPressed: () async {
+          if (!widget.locationStatus) {
+            widget.requestLocation?.call();
+            return;
+          }
           if (_currentPoi == null) {
-            ToastUtils.showError("获取位置信息失败");
+            ToastUtils.showError('获取位置信息失败');
             return;
           }
           Poi? poi = await NavigatorUtils.showPage(
