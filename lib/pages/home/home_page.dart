@@ -55,7 +55,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   void initState() {
     super.initState();
     _locationStatus = false;
-    _requestPermission(isInit:true);
+    if (Platform.isIOS) {
+      _requestPermission(isInit:true);
+    }
     _subscription = UserEventBus().on<UserStateChangedEvent>().listen((event) {
       bool isRegister = event.isRegister;
       if (isRegister) {
@@ -71,7 +73,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       _deviceId = iosDeviceInfo.identifierForVendor??'';
     } else {
       AndroidDeviceInfo androidDeviceInfo = await _deviceInfo.androidInfo;
-      _deviceId = androidDeviceInfo.id??'';
+      _deviceId = androidDeviceInfo.id;
     }
   }
 
